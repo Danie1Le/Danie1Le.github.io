@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getImagePath } from "@/lib/utils"
 import { ChevronDown, Github, Linkedin, Mail, MapPin } from "lucide-react"
 import { useEffect, useState } from "react"
 
@@ -134,7 +135,7 @@ export default function Portfolio() {
               isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
             }`} style={{ width: '256px', height: '256px', minWidth: '256px', minHeight: '256px', maxWidth: '256px', maxHeight: '256px' }}>
               <img
-                src="/IMG_6880.PNG"
+                src={getImagePath("/IMG_6880.PNG")}
                 alt="Daniel Le"
                 className="w-full h-full object-cover object-center"
                 style={{ objectPosition: 'center 25%' }}
@@ -474,7 +475,7 @@ function ProjectCarousel() {
     {
       title: "AI ChatBot",
       description: "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
-      image: "/Ai chatBot.png",
+      image: getImagePath("/Ai chatBot.png"),
       tech: ["JavaScript", "HTML", "CSS", "LangChain", "DocArray", "Jest"],
       github: "",
       live: "",
@@ -482,7 +483,7 @@ function ProjectCarousel() {
     {
       title: "Expense Tracker",
       description: "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
-      image: "/Expense budget.png",
+      image: getImagePath("/Expense budget.png"),
       tech: ["JavaScript", "HTML", "CSS", "Firebase"],
       github: "https://github.com/Danie1Le/Expense-Budget",
       live: "",
@@ -490,7 +491,7 @@ function ProjectCarousel() {
     {
       title: "Type Racer",
       description: "Typing speed game with real-time feedback and customizable word lists.",
-      image: "/Type Racer.png",
+      image: getImagePath("/Type Racer.png"),
       tech: ["JavaScript", "HTML", "CSS"],
       github: "",
       live: "https://danie1le.github.io/Type-Racer/",
@@ -498,7 +499,7 @@ function ProjectCarousel() {
     {
       title: "Up the River Down the River",
       description: "Android card game with dynamic scorekeeping and team collaboration.",
-      image: "/UptheRiverDowntheRiver.png",
+      image: getImagePath("/UptheRiverDowntheRiver.png"),
       tech: ["Java", "Android Studio"],
       github: "https://github.com/divPak9876/UpDownRiver",
       live: "",
@@ -509,7 +510,7 @@ function ProjectCarousel() {
       image: "turbine",
       tech: ["C++", "Arduino"],
       github: "",
-      live: "/Media1.mp4",
+      live: getImagePath("/Media1.mp4"),
     },
   ]
 
@@ -554,12 +555,12 @@ function ProjectCarousel() {
                 {project.image === "turbine" ? (
                   <div className="w-full h-full flex">
                     <img
-                      src="/turbine1.jpg"
+                      src={getImagePath("/turbine1.jpg")}
                       alt="Turbine 1"
                       className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <img
-                      src="/turbine2.jpg"
+                      src={getImagePath("/turbine2.jpg")}
                       alt="Turbine 2"
                       className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />

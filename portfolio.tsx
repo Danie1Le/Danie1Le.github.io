@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
+  const [expandedJob, setExpandedJob] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,18 +81,24 @@ export default function Portfolio() {
             <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
             </p>
             <div className="flex justify-center space-x-4 mb-12">
-              <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </Button>
-              <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                <Linkedin className="w-5 h-5 mr-2" />
-                LinkedIn
-              </Button>
-              <Button size="lg" className="bg-white text-gray-950 hover:bg-gray-200">
-                <Mail className="w-5 h-5 mr-2" />
-                Get In Touch
-              </Button>
+              <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+                  <Github className="w-5 h-5 mr-2" />
+                  GitHub
+                </Button>
+              </a>
+              <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+                  <Linkedin className="w-5 h-5 mr-2" />
+                  LinkedIn
+                </Button>
+              </a>
+              <a href="mailto:danielle8262005@gmail.com">
+                <Button size="lg" className="bg-white text-gray-950 hover:bg-gray-200">
+                  <Mail className="w-5 h-5 mr-2" />
+                  Get In Touch
+                </Button>
+              </a>
             </div>
           </div>
           <button
@@ -115,36 +122,38 @@ export default function Portfolio() {
               <div className="space-y-12">
                 {[
                   {
-                    title: "",
-                    company: "",
-                    period: "",
-                    location: "",
-                    description:
-                      "",
-                    skills: [""],
+                    title: "Software Developer Intern",
+                    company: "ResVR",
+                    period: "May 2025 - Aug 2025",
+                    location: "Remote",
+                    description: "Built an AI-powered virtual tour system using LLMs and real-time video streaming.",
+                    details: [
+                      "Developed an AI-powered virtual tour system converting natural language to real-time video responses using AI avatars and Gemma3 LLM.",
+                      "Developed backend model to interpret user commands and a frontend model to generate natural language responses used as video scripts.",
+                      "Integrated 3D avatar video generation using HeyGen to deliver dynamic, lifelike responses based on LLM output.",
+                      "Implemented real-time video streaming with asynchronous generation, status polling, and dynamic video switching for seamless user experience.",
+                      "Created a responsive web interface with speech recognition, optimized video processing (rate limiting, error handling), and an interactive demo page to showcase the system to teammates."
+                    ],
+                    skills: ["AI", "LLM", "HeyGen",],
                     side: "right",
                     current: true,
                   },
                   {
-                    title: "",
-                    company: "",
-                    period: "",
-                    location: "",
-                    description:
-                      "",
-                    skills: [""],
+                    title: "Machine Learning Researcher",
+                    company: "CognitiveABM",
+                    period: "Jan 2024 - May 2025",
+                    location: "Portland, Oregon",
+                    description: "Helped develop AI agents to simulate animal behavior using .NET and C#.",
+                    details: [
+                      "Helped develop an AI project using .NET and C#, with the goal to create AI agents that emulate behavioral patterns of animals to replicate brain functions of real life organisms.",
+                      "Created varied simulated landscapes to evaluate agent behavior across multiple dynamic and challenging environments.",
+                      "Built multiple different landscapes to dynamically deploy different environments on agents to assess performance in varying simulated environments.",
+                      "Developed a real-time system to classify agents by elevation behavior as Climbers, Descenders, or Collectors.",
+                      "Contributed to weekly scrum meetings to develop new ideas for bug fixes and optimizations.",
+                      "Presented project goals, technical development, and research findings on Founder's Day."
+                    ],
+                    skills: [".NET", "C#", "AI", "Simulation", "Agile"],
                     side: "left",
-                    current: false,
-                  },
-                  {
-                    title: "",
-                    company: "",
-                    period: "",
-                    location: "",
-                    description:
-                      "",
-                    skills: [""],
-                    side: "right",
                     current: false,
                   },
                 ].map((job, index) => (
@@ -209,7 +218,17 @@ export default function Portfolio() {
                             </div>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-gray-300 mb-4">{job.description}</p>
+                            <p className="text-gray-300 mb-4 cursor-pointer" onClick={() => setExpandedJob(expandedJob === index ? null : index)}>
+                              {job.description}
+                              <span className="ml-2 text-purple-400 underline">{expandedJob === index ? "Hide details" : "Show details"}</span>
+                            </p>
+                            {expandedJob === index && (
+                              <ul className="list-disc list-inside text-gray-400 mb-4">
+                                {job.details.map((point, i) => (
+                                  <li key={i}>{point}</li>
+                                ))}
+                              </ul>
+                            )}
                             <div className="flex flex-wrap gap-2">
                               {job.skills.map((skill) => (
                                 <Badge
@@ -250,29 +269,47 @@ export default function Portfolio() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                title: "",
+                title: "AI ChatBot",
                 description:
-                  "",
+                  "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
                 image: "",
-                tech: [""],
+                tech: ["JavaScript", "HTML", "CSS", "LangChain", "DocArray", "Jest"],
                 github: "",
                 live: "",
               },
               {
-                title: "",
+                title: "Expense Tracker",
                 description:
-                  "",
+                  "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
                 image: "",
-                tech: [""],
+                tech: ["JavaScript", "HTML", "CSS", "Firebase"],
                 github: "",
                 live: "",
               },
               {
-                title: "",
+                title: "Type Racer",
                 description:
-                  "",
+                  "Typing speed game with real-time feedback and customizable word lists.",
                 image: "",
-                tech: [""],
+                tech: ["JavaScript", "HTML", "CSS"],
+                github: "",
+                live: "",
+              },
+              {
+                title: "Up the River Down the River",
+                description:
+                  "Android card game with dynamic scorekeeping and team collaboration.",
+                image: "",
+                tech: ["Java", "Android Studio"],
+                github: "",
+                live: "",
+              },
+              {
+                title: "Wind Turbine Project",
+                description:
+                  "Arduino-powered wind turbine model with LED indicators for wind speed.",
+                image: "",
+                tech: ["C++", "Arduino"],
                 github: "",
                 live: "",
               },
@@ -321,53 +358,47 @@ export default function Portfolio() {
       <section id="contact" className="py-20 px-6">
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold mb-8">Let's Work Together</h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-12">
-            I'm always interested in new opportunities and exciting projects. Whether you have a question or just want
-            to say hi, feel free to reach out!
+          <p className="text-xl text-gray-400 max-w-2x2 mx-auto mb-12">
+            feel free to reach out! I'm always interested in new opportunities and exciting projects.
           </p>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
             <Card className="bg-gray-900 border-gray-800">
               <CardContent className="pt-6 text-center">
                 <Mail className="w-8 h-8 mx-auto mb-4 text-purple-400" />
-                <h3 className="font-semibold mb-2">Email</h3>
-                <p className="text-gray-400">your.email@example.com</p>
+                <h3 className="font-semibold text-white mb-2">Email</h3>
+                <a href="mailto:danielle8262005@gmail.com" className="text-purple-400 hover:underline break-all">danielle8262005@gmail.com</a>
               </CardContent>
             </Card>
 
             <Card className="bg-gray-900 border-gray-800">
               <CardContent className="pt-6 text-center">
                 <Linkedin className="w-8 h-8 mx-auto mb-4 text-purple-400" />
-                <h3 className="font-semibold mb-2">LinkedIn</h3>
-                <p className="text-gray-400">linkedin.com/in/yourname</p>
+                <h3 className="font-semibold text-white mb-2">LinkedIn</h3>
+                <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline break-all">linkedin.com/in/danie1-le</a>
               </CardContent>
             </Card>
 
             <Card className="bg-gray-900 border-gray-800">
               <CardContent className="pt-6 text-center">
                 <Github className="w-8 h-8 mx-auto mb-4 text-purple-400" />
-                <h3 className="font-semibold mb-2">GitHub</h3>
-                <p className="text-gray-400">github.com/yourusername</p>
+                <h3 className="font-semibold text-white mb-2">GitHub</h3>
+                <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:underline break-all">github.com/Danie1Le</a>
               </CardContent>
             </Card>
           </div>
 
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-          >
-            <Mail className="w-5 h-5 mr-2" />
-            Send Me a Message
-          </Button>
+          <a href="mailto:danielle8262005@gmail.com">
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+            >
+              <Mail className="w-5 h-5 mr-2" />
+              Send Me a Message
+            </Button>
+          </a>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="py-8 px-6 border-t border-gray-800">
-        <div className="container mx-auto text-center">
-          <p className="text-gray-400">© 2024 Your Name. Built with Next.js and Tailwind CSS.</p>
-        </div>
-      </footer>
     </div>
   )
 }

@@ -268,123 +268,10 @@ export default function Portfolio() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-gray-900">
-        <div className="container mx-auto">
+      <section id="projects" className="min-h-screen py-20 px-6 bg-gray-900 flex items-center">
+        <div className="container mx-auto w-full">
           <h2 className="text-4xl font-bold text-center mb-16">Projects</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                title: "AI ChatBot",
-                description:
-                  "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
-                image: "/Ai chatBot.png",
-                tech: ["JavaScript", "HTML", "CSS", "LangChain", "DocArray", "Jest"],
-                github: "",
-                live: "",
-              },
-              {
-                title: "Expense Tracker",
-                description:
-                  "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
-                image: "/Expense budget.png",
-                tech: ["JavaScript", "HTML", "CSS", "Firebase"],
-                github: "https://github.com/Danie1Le/Expense-Budget",
-                live: "",
-              },
-              {
-                title: "Type Racer",
-                description:
-                  "Typing speed game with real-time feedback and customizable word lists.",
-                image: "/Type Racer.png",
-                tech: ["JavaScript", "HTML", "CSS"],
-                github: "",
-                live: "https://danie1le.github.io/Type-Racer/",
-              },
-              {
-                title: "Up the River Down the River",
-                description:
-                  "Android card game with dynamic scorekeeping and team collaboration.",
-                image: "/UptheRiverDowntheRiver.png",
-                tech: ["Java", "Android Studio"],
-                github: "https://github.com/divPak9876/UpDownRiver",
-                live: "",
-              },
-              {
-                title: "Wind Turbine Project",
-                description:
-                  "Arduino-powered wind turbine model with LED indicators for wind speed.",
-                image: "turbine", // Special case for side-by-side images
-                tech: ["C++", "Arduino"],
-                github: "",
-                live: "/Media1.mp4",
-              },
-            ].map((project, index) => {
-              const link = project.live || project.github || null;
-              const cardContent = (
-                <>
-                                  <div className="aspect-video bg-gray-800 relative overflow-hidden">
-                  {project.image === "turbine" ? (
-                    <div className="w-full h-full flex">
-                      <img
-                        src="/turbine1.jpg"
-                        alt="Turbine 1"
-                        className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <img
-                        src="/turbine2.jpg"
-                        alt="Turbine 2"
-                        className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  ) : (
-                    <img
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  )}
-                </div>
-                                  <CardHeader className="pb-2">
-                  <CardTitle className="text-white text-lg">{project.title}</CardTitle>
-                  <CardDescription className="text-gray-400 text-sm line-clamp-3">{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex flex-wrap gap-1">
-                    {project.tech.map((tech) => (
-                      <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-                </>
-              );
-              if (link) {
-                return (
-                  <a
-                    key={index}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block group"
-                  >
-                    <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-96">
-                      {cardContent}
-                    </Card>
-                  </a>
-                );
-              } else {
-                return (
-                  <Card
-                    key={index}
-                    className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-96"
-                  >
-                    {cardContent}
-                  </Card>
-                );
-              }
-            })}
-          </div>
+          <ProjectCarousel />
         </div>
       </section>
 
@@ -421,18 +308,168 @@ export default function Portfolio() {
               </CardContent>
             </Card>
           </div>
-
-          <a href="mailto:danielle8262005@gmail.com">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
-            >
-              <Mail className="w-5 h-5 mr-2" />
-              Send Me a Message
-            </Button>
-          </a>
         </div>
       </section>
+    </div>
+  )
+}
+
+function ProjectCarousel() {
+  const [startIndex, setStartIndex] = useState(0)
+
+  const projects = [
+    {
+      title: "AI ChatBot",
+      description: "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
+      image: "/Ai chatBot.png",
+      tech: ["JavaScript", "HTML", "CSS", "LangChain", "DocArray", "Jest"],
+      github: "",
+      live: "",
+    },
+    {
+      title: "Expense Tracker",
+      description: "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
+      image: "/Expense budget.png",
+      tech: ["JavaScript", "HTML", "CSS", "Firebase"],
+      github: "https://github.com/Danie1Le/Expense-Budget",
+      live: "",
+    },
+    {
+      title: "Type Racer",
+      description: "Typing speed game with real-time feedback and customizable word lists.",
+      image: "/Type Racer.png",
+      tech: ["JavaScript", "HTML", "CSS"],
+      github: "",
+      live: "https://danie1le.github.io/Type-Racer/",
+    },
+    {
+      title: "Up the River Down the River",
+      description: "Android card game with dynamic scorekeeping and team collaboration.",
+      image: "/UptheRiverDowntheRiver.png",
+      tech: ["Java", "Android Studio"],
+      github: "https://github.com/divPak9876/UpDownRiver",
+      live: "",
+    },
+    {
+      title: "Wind Turbine Project",
+      description: "Arduino-powered wind turbine model with LED indicators for wind speed.",
+      image: "turbine",
+      tech: ["C++", "Arduino"],
+      github: "",
+      live: "/Media1.mp4",
+    },
+  ]
+
+  const visibleProjects = projects.slice(startIndex, startIndex + 3)
+  const canGoNext = startIndex + 3 < projects.length
+  const canGoPrev = startIndex > 0
+
+  return (
+    <div className="relative max-w-6xl mx-auto">
+      {/* Navigation */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -translate-x-16">
+        <button
+          onClick={() => setStartIndex(Math.max(0, startIndex - 1))}
+          disabled={!canGoPrev}
+          className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
+            canGoPrev ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
+          }`}
+        >
+          <ChevronDown className="w-5 h-5 rotate-90" />
+        </button>
+      </div>
+
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 translate-x-16">
+        <button
+          onClick={() => setStartIndex(Math.min(projects.length - 3, startIndex + 1))}
+          disabled={!canGoNext}
+          className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
+            canGoNext ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
+          }`}
+        >
+          <ChevronDown className="w-5 h-5 -rotate-90" />
+        </button>
+      </div>
+
+      {/* Projects Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {visibleProjects.map((project, index) => {
+          const link = project.live || project.github || null;
+          const cardContent = (
+            <>
+              <div className="aspect-video bg-gray-800 relative overflow-hidden">
+                {project.image === "turbine" ? (
+                  <div className="w-full h-full flex">
+                    <img
+                      src="/turbine1.jpg"
+                      alt="Turbine 1"
+                      className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <img
+                      src="/turbine2.jpg"
+                      alt="Turbine 2"
+                      className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={project.image || "/placeholder.svg"}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                )}
+              </div>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-white text-lg">{project.title}</CardTitle>
+                <CardDescription className="text-gray-400 text-sm line-clamp-3">{project.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex flex-wrap gap-1">
+                  {project.tech.map((tech) => (
+                    <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </>
+          );
+
+          if (link) {
+            return (
+              <a
+                key={index}
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
+              >
+                <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-[420px]">
+                  {cardContent}
+                </Card>
+              </a>
+            );
+          } else {
+            return (
+              <Card
+                key={index}
+                className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px]"
+              >
+                {cardContent}
+              </Card>
+            );
+          }
+        })}
+      </div>
+
+      {/* Progress Dots */}
+      <div className="flex justify-center mt-8">
+        <div className="flex space-x-2">
+          {Array.from({ length: Math.ceil(projects.length / 3) }).map((_, i) => (
+            <div key={i} className={`h-1 rounded-full transition-all ${Math.floor(startIndex / 3) === i ? "bg-white w-8" : "bg-gray-700 w-2"}`} />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

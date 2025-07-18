@@ -9,26 +9,53 @@ import { useEffect, useState } from "react"
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
 
   useEffect(() => {
+    // Trigger initial load animation
+    setIsLoaded(true)
+    
     const handleScroll = () => {
       const sections = ["hero", "about", "experience", "projects", "contact"]
       const scrollPosition = window.scrollY + 100
 
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
-          }
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i])
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(sections[i])
+          break
         }
       }
     }
 
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections(prev => {
+              const newSet = new Set(prev)
+              newSet.add(entry.target.id)
+              return newSet
+            })
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: "-50px" }
+    )
+
+    // Observe all sections
+    sections.forEach((sectionId) => {
+      const element = document.getElementById(sectionId)
+      if (element) observer.observe(element)
+    })
+
     window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      observer.disconnect()
+    }
   }, [])
 
   const scrollToSection = (sectionId: string) => {
@@ -64,6 +91,8 @@ export default function Portfolio() {
     }
   }
 
+  const sections = ["hero", "about", "experience", "projects", "contact"]
+
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100">
       {/* Navigation */}
@@ -95,10 +124,14 @@ export default function Portfolio() {
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="min-h-screen flex items-center justify-center px-6">
+      <section id="hero" className={`min-h-screen flex items-center justify-center px-6 transition-all duration-1000 ${
+        isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}>
         <div className="container mx-auto text-center">
           <div className="mb-8">
-            <div className="w-32 h-32 rounded-full mx-auto mb-6 overflow-hidden border-4 border-purple-500 mt-5">
+            <div className={`w-32 h-32 rounded-full mx-auto mb-6 overflow-hidden border-4 border-purple-500 mt-5 transition-all duration-1000 delay-200 ${
+              isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
+            }`}>
               <img
                 src="/IMG_6878.PNG"
                 alt="Daniel Le"
@@ -106,13 +139,23 @@ export default function Portfolio() {
                 style={{ objectPosition: 'center 30%' }}
               />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+            <h1 className={`text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent transition-all duration-1000 delay-300 ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
               Daniel Le
             </h1>
-            <p className="text-xl md:text-2xl text-gray-400 mb-2">Computer Science Student</p>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
+            <p className={`text-xl md:text-2xl text-gray-400 mb-2 transition-all duration-1000 delay-400 ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
+              Computer Science Student
             </p>
-            <div className="flex justify-center space-x-4 mb-12">
+            <p className={`text-lg text-gray-500 max-w-2xl mx-auto mb-8 transition-all duration-1000 delay-500 ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
+            </p>
+            <div className={`flex justify-center space-x-4 mb-12 transition-all duration-1000 delay-600 ${
+              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
               <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
                   <Github className="w-5 h-5 mr-2" />
@@ -137,11 +180,19 @@ export default function Portfolio() {
       </section>
 
       {/* About Me Section */}
-      <section id="about" className="min-h-screen py-20 px-6 flex items-center">
+      <section id="about" className={`min-h-screen py-20 px-6 flex items-center transition-all duration-1000 ${
+        visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}>
         <div className="container mx-auto w-full">
-          <h2 className="text-4xl font-bold text-center mb-16">About Me</h2>
+          <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
+            visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
+            About Me
+          </h2>
           <div className="max-w-4xl mx-auto">
-            <div className="text-center space-y-6">
+            <div className={`text-center space-y-6 transition-all duration-1000 delay-400 ${
+              visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
               <h3 className="text-2xl font-semibold text-white mb-4">Computer Science Student & Developer</h3>
               <p className="text-gray-300 leading-relaxed">
               I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
@@ -155,7 +206,9 @@ export default function Portfolio() {
               </p>
               
               {/* Skills/Interests */}
-              <div className="pt-4">
+              <div className={`pt-4 transition-all duration-1000 delay-600 ${
+                visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}>
                 <h4 className="text-lg font-semibold text-white mb-3">What I'm passionate about:</h4>
                 <div className="flex flex-wrap gap-2 justify-center">
                   <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
@@ -178,10 +231,18 @@ export default function Portfolio() {
       </section>
 
       {/* Experience Section */}
-      <section id="experience" className="min-h-screen py-20 px-6 flex items-center">
+      <section id="experience" className={`min-h-screen py-20 px-6 flex items-center transition-all duration-1000 ${
+        visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}>
         <div className="container mx-auto w-full">
-          <h2 className="text-4xl font-bold text-center mb-16">Career Roadmap</h2>
-          <div className="max-w-4xl mx-auto">
+          <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
+            visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
+            Career Roadmap
+          </h2>
+          <div className={`max-w-4xl mx-auto transition-all duration-1000 delay-400 ${
+            visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
             <div className="relative">
               {/* Vertical Timeline Line */}
               <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-purple-500 via-pink-500 to-purple-500 rounded-full"></div>
@@ -241,7 +302,15 @@ export default function Portfolio() {
                     </div>
 
                     {/* Job Card */}
-                    <div className={`flex ${job.side === "left" ? "justify-start" : "justify-end"}`}>
+                    <div className={`flex ${job.side === "left" ? "justify-start" : "justify-end"} transition-all duration-1000 ${
+                      visibleSections.has('experience') 
+                        ? (job.side === "left" 
+                            ? 'opacity-100 translate-x-0' 
+                            : 'opacity-100 translate-x-0')
+                        : (job.side === "left" 
+                            ? 'opacity-0 -translate-x-10' 
+                            : 'opacity-0 translate-x-10')
+                    }`} style={{ transitionDelay: `${index * 200}ms` }}>
                       <div className={`w-full md:w-5/12 ${job.side === "left" ? "md:pr-8" : "md:pl-8"}`}>
                         <Card
                           className={`bg-gray-900 border-gray-800 relative cursor-pointer hover:border-gray-600 transition-all duration-300 ${
@@ -336,17 +405,29 @@ export default function Portfolio() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="min-h-screen py-20 px-6 bg-gray-900 flex items-center">
+      <section id="projects" className={`min-h-screen py-20 px-6 bg-gray-900 flex items-center transition-all duration-1000 ${
+        visibleSections.has('projects') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}>
         <div className="container mx-auto w-full">
-          <h2 className="text-4xl font-bold text-center mb-16">Projects</h2>
-          <ProjectCarousel />
+          <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
+            visibleSections.has('projects') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
+            Projects
+          </h2>
+          <div className={`transition-all duration-1000 delay-400 ${
+            visibleSections.has('projects') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
+            <ProjectCarousel />
+          </div>
         </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-20 px-6">
         <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-8">Let's Work Together</h2>
+          <h2 className="text-4xl font-bold mb-8">
+            Let's Work Together
+          </h2>
           <p className="text-xl text-gray-400 max-w-2x2 mx-auto mb-12">
             feel free to reach out! I'm always interested in new opportunities and exciting projects.
           </p>

@@ -12,7 +12,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["hero", "experience", "projects", "contact"]
+      const sections = ["hero", "about", "experience", "projects", "contact"]
       const scrollPosition = window.scrollY + 100
 
       for (const section of sections) {
@@ -74,6 +74,7 @@ export default function Portfolio() {
             <div className="hidden md:flex space-x-6">
               {[
                 { id: "hero", label: "Home" },
+                { id: "about", label: "About" },
                 { id: "experience", label: "Experience" },
                 { id: "projects", label: "Projects" },
                 { id: "contact", label: "Contact" },
@@ -132,12 +133,47 @@ export default function Portfolio() {
               </a>
             </div>
           </div>
-          <button
-            onClick={() => scrollToSection("experience")}
-            className="animate-bounce text-gray-400 hover:text-white transition-colors"
-          >
-            <ChevronDown className="w-8 h-8" />
-          </button>
+        </div>
+      </section>
+
+      {/* About Me Section */}
+      <section id="about" className="min-h-screen py-20 px-6 flex items-center">
+        <div className="container mx-auto w-full">
+          <h2 className="text-4xl font-bold text-center mb-16">About Me</h2>
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center space-y-6">
+              <h3 className="text-2xl font-semibold text-white mb-4">Computer Science Student & Developer</h3>
+              <p className="text-gray-300 leading-relaxed">
+              I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
+                  My journey in tech started with being curious and a uncertianty of a career that I wanted to pursue. but throughout my journey, I have been put into
+                  really cool intriguing projects that incorporate technologies such as AI, Machine Learning, and Web Development that has gave me a passion for the field and
+                  has evolved into a drive to build meaningful applications that could solve real-world problems.
+              </p>
+              <p className="text-gray-300 leading-relaxed">
+              When I'm not coding, you can find me exploring new technologies, going to the gym, playing videos games, or picking up new hobbies. 
+              I want to be a continuous learner and be able to be apart of interesting projects that could be able to help not only myself but others.
+              </p>
+              
+              {/* Skills/Interests */}
+              <div className="pt-4">
+                <h4 className="text-lg font-semibold text-white mb-3">What I'm passionate about:</h4>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                    Artificial Intelligence
+                  </Badge>
+                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                    Machine Learning
+                  </Badge>
+                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                    Web Development
+                  </Badge>
+                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                    Software Engineering
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

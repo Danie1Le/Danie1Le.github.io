@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronDown, ExternalLink, Github, Linkedin, Mail, MapPin } from "lucide-react"
+import { ChevronDown, Github, Linkedin, Mail, MapPin } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export default function Portfolio() {
@@ -270,14 +270,14 @@ export default function Portfolio() {
       {/* Projects Section */}
       <section id="projects" className="py-20 px-6 bg-gray-900">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">Featured Projects</h2>
+          <h2 className="text-4xl font-bold text-center mb-16">Projects</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
                 title: "AI ChatBot",
                 description:
                   "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
-                image: "",
+                image: "/Ai chatBot.png",
                 tech: ["JavaScript", "HTML", "CSS", "LangChain", "DocArray", "Jest"],
                 github: "",
                 live: "",
@@ -286,75 +286,104 @@ export default function Portfolio() {
                 title: "Expense Tracker",
                 description:
                   "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
-                image: "",
+                image: "/Expense budget.png",
                 tech: ["JavaScript", "HTML", "CSS", "Firebase"],
-                github: "",
+                github: "https://github.com/Danie1Le/Expense-Budget",
                 live: "",
               },
               {
                 title: "Type Racer",
                 description:
                   "Typing speed game with real-time feedback and customizable word lists.",
-                image: "",
+                image: "/Type Racer.png",
                 tech: ["JavaScript", "HTML", "CSS"],
                 github: "",
-                live: "",
+                live: "https://danie1le.github.io/Type-Racer/",
               },
               {
                 title: "Up the River Down the River",
                 description:
                   "Android card game with dynamic scorekeeping and team collaboration.",
-                image: "",
+                image: "/UptheRiverDowntheRiver.png",
                 tech: ["Java", "Android Studio"],
-                github: "",
+                github: "https://github.com/divPak9876/UpDownRiver",
                 live: "",
               },
               {
                 title: "Wind Turbine Project",
                 description:
                   "Arduino-powered wind turbine model with LED indicators for wind speed.",
-                image: "",
+                image: "turbine", // Special case for side-by-side images
                 tech: ["C++", "Arduino"],
                 github: "",
-                live: "",
+                live: "/Media1.mp4",
               },
-            ].map((project, index) => (
-              <Card
-                key={index}
-                className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors"
-              >
-                <div className="aspect-video bg-gray-800 relative overflow-hidden">
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+            ].map((project, index) => {
+              const link = project.live || project.github || null;
+              const cardContent = (
+                <>
+                                  <div className="aspect-video bg-gray-800 relative overflow-hidden">
+                  {project.image === "turbine" ? (
+                    <div className="w-full h-full flex">
+                      <img
+                        src="/turbine1.jpg"
+                        alt="Turbine 1"
+                        className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <img
+                        src="/turbine2.jpg"
+                        alt="Turbine 2"
+                        className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  ) : (
+                    <img
+                      src={project.image || "/placeholder.svg"}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  )}
                 </div>
-                <CardHeader>
-                  <CardTitle className="text-white">{project.title}</CardTitle>
-                  <CardDescription className="text-gray-400">{project.description}</CardDescription>
+                                  <CardHeader className="pb-2">
+                  <CardTitle className="text-white text-lg">{project.title}</CardTitle>
+                  <CardDescription className="text-gray-400 text-sm line-clamp-3">{project.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2 mb-4">
+                <CardContent className="pt-0">
+                  <div className="flex flex-wrap gap-1">
                     {project.tech.map((tech) => (
-                      <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300">
+                      <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
                         {tech}
                       </Badge>
                     ))}
                   </div>
-                  <div className="flex space-x-3">
-                    <Button variant="outline" size="sm" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                      <Github className="w-4 h-4 mr-2" />
-                      Code
-                    </Button>
-                    <Button variant="outline" size="sm" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Live Demo
-                    </Button>
-                  </div>
                 </CardContent>
-              </Card>
-            ))}
+                </>
+              );
+              if (link) {
+                return (
+                  <a
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block group"
+                  >
+                    <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-96">
+                      {cardContent}
+                    </Card>
+                  </a>
+                );
+              } else {
+                return (
+                  <Card
+                    key={index}
+                    className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-96"
+                  >
+                    {cardContent}
+                  </Card>
+                );
+              }
+            })}
           </div>
         </div>
       </section>

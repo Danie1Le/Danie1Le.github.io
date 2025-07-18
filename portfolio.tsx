@@ -71,8 +71,13 @@ export default function Portfolio() {
       <section id="hero" className="min-h-screen flex items-center justify-center px-6">
         <div className="container mx-auto text-center">
           <div className="mb-8">
-            <div className="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-6 flex items-center justify-center text-4xl font-bold">
-              DL
+            <div className="w-32 h-32 rounded-full mx-auto mb-6 overflow-hidden border-4 border-purple-500 mt-5">
+              <img
+                src="/IMG_6878.PNG"
+                alt="Daniel Le"
+                className="w-full h-full object-cover object-top"
+                style={{ objectPosition: 'center 30%' }}
+              />
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
               Daniel Le

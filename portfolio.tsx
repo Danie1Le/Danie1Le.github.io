@@ -34,7 +34,33 @@ export default function Portfolio() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      const offset = 80 // Account for fixed navigation
+      const elementPosition = element.offsetTop - offset
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth"
+      })
+    }
+  }
+
+  const handleCardClick = (index: number) => {
+    if (expandedJob === index) {
+      // Hide the card
+      setExpandedJob(null);
+    } else {
+      // Show the card
+      setExpandedJob(index);
+      
+      // Scroll to the expanded card after a short delay to allow animation to start
+      setTimeout(() => {
+        const cardElement = document.querySelector(`[data-job-index="${index}"]`);
+        if (cardElement) {
+          cardElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
     }
   }
 
@@ -116,8 +142,8 @@ export default function Portfolio() {
       </section>
 
       {/* Experience Section */}
-      <section id="experience" className="py-20 px-6">
-        <div className="container mx-auto">
+      <section id="experience" className="min-h-screen py-20 px-6 flex items-center">
+        <div className="container mx-auto w-full">
           <h2 className="text-4xl font-bold text-center mb-16">Career Roadmap</h2>
           <div className="max-w-4xl mx-auto">
             <div className="relative">
@@ -182,9 +208,11 @@ export default function Portfolio() {
                     <div className={`flex ${job.side === "left" ? "justify-start" : "justify-end"}`}>
                       <div className={`w-full md:w-5/12 ${job.side === "left" ? "md:pr-8" : "md:pl-8"}`}>
                         <Card
-                          className={`bg-gray-900 border-gray-800 relative ${
+                          className={`bg-gray-900 border-gray-800 relative cursor-pointer hover:border-gray-600 transition-all duration-300 ${
                             job.current ? "ring-2 ring-purple-500/50 shadow-lg shadow-purple-500/20" : ""
-                          }`}
+                          } ${expandedJob === index ? "scale-105 shadow-2xl" : ""}`}
+                          onClick={() => handleCardClick(index)}
+                          data-job-index={index}
                         >
                           {/* Arrow pointing to timeline */}
                           <div
@@ -223,17 +251,21 @@ export default function Portfolio() {
                             </div>
                           </CardHeader>
                           <CardContent>
-                            <p className="text-gray-300 mb-4 cursor-pointer" onClick={() => setExpandedJob(expandedJob === index ? null : index)}>
+                            <p className="text-gray-300 mb-4">
                               {job.description}
-                              <span className="ml-2 text-purple-400 underline">{expandedJob === index ? "Hide details" : "Show details"}</span>
                             </p>
-                            {expandedJob === index && (
-                              <ul className="list-disc list-inside text-gray-400 mb-4">
-                                {job.details.map((point, i) => (
-                                  <li key={i}>{point}</li>
-                                ))}
-                              </ul>
-                            )}
+                            <div className={`overflow-hidden transition-all duration-300 ${expandedJob === index ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                              <div className="space-y-4 pt-4 border-t border-gray-700">
+                                <div>
+                                  <h4 className="text-sm font-semibold text-white mb-2">Key Responsibilities</h4>
+                                  <ul className="list-disc list-inside text-gray-400 space-y-1 text-sm">
+                                    {job.details.map((point, i) => (
+                                      <li key={i}>{point}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
                             <div className="flex flex-wrap gap-2">
                               {job.skills.map((skill) => (
                                 <Badge

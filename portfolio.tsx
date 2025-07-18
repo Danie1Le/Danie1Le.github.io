@@ -499,10 +499,24 @@ function ProjectCarousel() {
 
       {/* Progress Dots */}
       <div className="flex justify-center mt-8">
-        <div className="flex space-x-2">
-          {Array.from({ length: Math.ceil(projects.length / 3) }).map((_, i) => (
-            <div key={i} className={`h-1 rounded-full transition-all ${Math.floor(startIndex / 3) === i ? "bg-white w-8" : "bg-gray-700 w-2"}`} />
-          ))}
+        <div className="flex items-center space-x-4">
+          <span className="text-gray-400 text-sm">
+            {startIndex === 0 ? "1-3" : 
+             startIndex === 1 ? "2-4" : "3-5"}
+          </span>
+          <div className="flex space-x-2">
+            {Array.from({ length: Math.ceil(projects.length / 3) }).map((_, i) => {
+              const isActive = Math.floor(startIndex / 3) === i;
+              return (
+                <div
+                  key={i}
+                  className={`h-1 rounded-full transition-all duration-300 ${
+                    isActive ? "bg-white w-8" : "bg-gray-700 w-2"
+                  }`}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

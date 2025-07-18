@@ -100,7 +100,7 @@ export default function Portfolio() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold">Daniel Le</h1>
-            <div className="hidden md:flex space-x-6">
+            <div className="hidden md:flex space-x-6 ml-auto">
               {[
                 { id: "hero", label: "Home" },
                 { id: "about", label: "About" },
@@ -180,7 +180,7 @@ export default function Portfolio() {
       </section>
 
       {/* About Me Section */}
-      <section id="about" className={`min-h-screen py-20 px-6 flex items-center transition-all duration-1000 ${
+      <section id="about" className={`min-h-screen py-12 px-6 flex items-center transition-all duration-1000 ${
         visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       }`}>
         <div className="container mx-auto w-full">

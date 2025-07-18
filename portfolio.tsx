@@ -127,53 +127,54 @@ export default function Portfolio() {
       <section id="hero" className={`min-h-screen flex items-center justify-center px-6 transition-all duration-1000 ${
         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
       }`}>
-        <div className="container mx-auto text-center">
-          <div className="mb-8">
-            <div className={`w-32 h-32 rounded-full mx-auto mb-6 overflow-hidden border-4 border-purple-500 mt-5 transition-all duration-1000 delay-200 ${
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
+            {/* Left side - Profile Picture */}
+            <div className={`w-64 h-64 rounded-full overflow-hidden border-4 border-purple-500 transition-all duration-1000 delay-200 ${
               isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
-            }`}>
+            }`} style={{ width: '256px', height: '256px', minWidth: '256px', minHeight: '256px', maxWidth: '256px', maxHeight: '256px' }}>
               <img
-                src="/IMG_6878.PNG"
+                src="/IMG_6880.PNG"
                 alt="Daniel Le"
-                className="w-full h-full object-cover object-top"
-                style={{ objectPosition: 'center 30%' }}
+                className="w-full h-full object-cover object-center"
+                style={{ objectPosition: 'center 25%' }}
               />
             </div>
-            <h1 className={`text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent transition-all duration-1000 delay-300 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              Daniel Le
-            </h1>
-            <p className={`text-xl md:text-2xl text-gray-400 mb-2 transition-all duration-1000 delay-400 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              Computer Science Student
-            </p>
-            <p className={`text-lg text-gray-500 max-w-2xl mx-auto mb-8 transition-all duration-1000 delay-500 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-            </p>
-            <div className={`flex justify-center space-x-4 mb-12 transition-all duration-1000 delay-600 ${
-              isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                  <Github className="w-5 h-5 mr-2" />
-                  GitHub
-                </Button>
-              </a>
-              <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                  <Linkedin className="w-5 h-5 mr-2" />
-                  LinkedIn
-                </Button>
-              </a>
-              <a href="mailto:danielle8262005@gmail.com">
-                <Button size="lg" className="bg-white text-gray-950 hover:bg-gray-200">
-                  <Mail className="w-5 h-5 mr-2" />
-                  Get In Touch
-                </Button>
-              </a>
+            
+            {/* Right side - Name and Links */}
+            <div className="text-center md:text-left">
+              <h1 className={`text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent transition-all duration-1000 delay-300 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}>
+                Daniel Le
+              </h1>
+              <p className={`text-xl md:text-2xl text-gray-400 mb-6 transition-all duration-1000 delay-400 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}>
+                Computer Science Student
+              </p>
+              <div className={`flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 transition-all duration-1000 delay-600 ${
+                isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}>
+                <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+                    <Github className="w-5 h-5 mr-2" />
+                    GitHub
+                  </Button>
+                </a>
+                <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+                    <Linkedin className="w-5 h-5 mr-2" />
+                    LinkedIn
+                  </Button>
+                </a>
+                <a href="mailto:danielle8262005@gmail.com">
+                  <Button size="lg" className="bg-white text-gray-950 hover:bg-gray-200">
+                    <Mail className="w-5 h-5 mr-2" />
+                    Get In Touch
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -196,13 +197,13 @@ export default function Portfolio() {
               <h3 className="text-2xl font-semibold text-white mb-4">Computer Science Student & Developer</h3>
               <p className="text-gray-300 leading-relaxed">
               I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
-                  My journey in tech started with being curious and a uncertianty of a career that I wanted to pursue. but throughout my journey, I have been put into
+                  My journey in tech started with being curious and a uncertianty of a career that I wanted to pursue. I've been put into
                   really cool intriguing projects that incorporate technologies such as AI, Machine Learning, and Web Development that has gave me a passion for the field and
                   has evolved into a drive to build meaningful applications that could solve real-world problems.
               </p>
               <p className="text-gray-300 leading-relaxed">
               When I'm not coding, you can find me exploring new technologies, going to the gym, playing videos games, or picking up new hobbies. 
-              I want to be a continuous learner and be able to be apart of interesting projects that could be able to help not only myself but others.
+              I want to be a continuous learner and be able to be apart of interesting projects that could be able to help not only myself but others as well.
               </p>
               
               {/* Skills/Interests */}

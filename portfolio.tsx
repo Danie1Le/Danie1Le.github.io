@@ -485,7 +485,7 @@ function ProjectCarousel() {
       description: "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
       image: getImagePath("/Expense budget.png"),
       tech: ["JavaScript", "HTML", "CSS", "Firebase"],
-      github: "https://github.com/Danie1Le/Expense-Budget",
+      github: "https://danie1le.github.io/Expense-Budget/",
       live: "",
     },
     {

@@ -13,6 +13,12 @@ export default function Portfolio() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
 
+  const handleEmailClick = (e: React.MouseEvent) => {
+    // Open Gmail compose with pre-filled email
+    const gmailUrl = 'https://mail.google.com/mail/?view=cm&to=danielle8262005@gmail.com'
+    window.open(gmailUrl, '_blank')
+  }
+
   useEffect(() => {
     // Trigger initial load animation
     setIsLoaded(true)
@@ -169,12 +175,14 @@ export default function Portfolio() {
                     LinkedIn
                   </Button>
                 </a>
-                <a href="mailto:danielle8262005@gmail.com">
-                  <Button size="lg" className="bg-white text-gray-950 hover:bg-gray-200">
-                    <Mail className="w-5 h-5 mr-2" />
-                    Get In Touch
-                  </Button>
-                </a>
+                <Button 
+                  size="lg" 
+                  className="bg-white text-gray-950 hover:bg-gray-200"
+                  onClick={handleEmailClick}
+                >
+                  <Mail className="w-5 h-5 mr-2" />
+                  Get In Touch
+                </Button>
               </div>
             </div>
           </div>
@@ -435,14 +443,15 @@ export default function Portfolio() {
           </p>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
-            <a href="mailto:danielle8262005@gmail.com" className="block">
-              <Card className="bg-gray-900 border-gray-800 cursor-pointer hover:border-gray-600 transition-colors">
-                <CardContent className="pt-6 text-center">
-                  <Mail className="w-8 h-8 mx-auto mb-4 text-purple-400" />
-                  <h3 className="font-semibold text-white mb-2">Email</h3>
-                </CardContent>
-              </Card>
-            </a>
+            <Card 
+              className="bg-gray-900 border-gray-800 cursor-pointer hover:border-gray-600 transition-colors"
+              onClick={handleEmailClick}
+            >
+              <CardContent className="pt-6 text-center">
+                <Mail className="w-8 h-8 mx-auto mb-4 text-purple-400" />
+                <h3 className="font-semibold text-white mb-2">Email</h3>
+              </CardContent>
+            </Card>
 
             <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer" className="block">
               <Card className="bg-gray-900 border-gray-800 cursor-pointer hover:border-gray-600 transition-colors">

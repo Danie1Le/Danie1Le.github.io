@@ -482,6 +482,14 @@ function ProjectCarousel() {
 
   const projects = [
     {
+      title: "NBA Prediction Model",
+      description: "AI-powered NBA game predictor using XGBoost and team statistics, achieving 80%+ accuracy with interactive web interface.",
+      image: getImagePath("/NBA_predict.png"),
+      tech: ["Python", "XGBoost", "Scikit-learn", "Streamlit", "Plotly", "Pandas", "NumPy"],
+      github: "https://github.com/Danie1Le/NBA-Predict",
+      live: "https://nba-predict.streamlit.app/",
+    },
+    {
       title: "AI ChatBot",
       description: "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
       image: getImagePath("/Ai chatBot.png"),
@@ -494,8 +502,8 @@ function ProjectCarousel() {
       description: "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
       image: getImagePath("/Expense budget.png"),
       tech: ["JavaScript", "HTML", "CSS", "Firebase"],
-      github: "https://danie1le.github.io/Expense-Budget/",
-      live: "",
+      github: "",
+      live: "https://danie1le.github.io/Expense-Budget/",
     },
     {
       title: "Type Racer",
@@ -630,11 +638,12 @@ function ProjectCarousel() {
         <div className="flex items-center space-x-4">
           <span className="text-gray-400 text-sm">
             {startIndex === 0 ? "1-3" : 
-             startIndex === 1 ? "2-4" : "3-5"}
+             startIndex === 1 ? "2-4" : 
+             startIndex === 2 ? "3-5" : "4-6"}
           </span>
           <div className="flex space-x-2">
-            {Array.from({ length: Math.ceil(projects.length / 3) }).map((_, i) => {
-              const isActive = Math.floor(startIndex / 3) === i;
+            {Array.from({ length: projects.length - 3 + 1 }).map((_, i) => {
+              const isActive = startIndex === i;
               return (
                 <div
                   key={i}

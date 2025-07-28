@@ -137,7 +137,7 @@ export default function Portfolio() {
         <div className="container mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-center gap-12">
             {/* Left side - Profile Picture */}
-            <div className={`w-64 h-64 rounded-full overflow-hidden border-4 border-purple-500 transition-all duration-1000 delay-200 ${
+            <div className={`w-64 h-64 rounded-full overflow-hidden border-4 border-blue-500 transition-all duration-1000 delay-200 ${
               isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
             }`} style={{ width: '256px', height: '256px', minWidth: '256px', minHeight: '256px', maxWidth: '256px', maxHeight: '256px' }}>
               <img
@@ -221,16 +221,16 @@ export default function Portfolio() {
               }`}>
                 <h4 className="text-lg font-semibold text-white mb-3">What I'm passionate about:</h4>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                  <Badge variant="outline" className="border-blue-500 text-blue-400 bg-blue-500/10">
                     Artificial Intelligence
                   </Badge>
-                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                  <Badge variant="outline" className="border-blue-500 text-blue-400 bg-blue-500/10">
                     Machine Learning
                   </Badge>
-                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                  <Badge variant="outline" className="border-blue-500 text-blue-400 bg-blue-500/10">
                     Web Development
                   </Badge>
-                  <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                  <Badge variant="outline" className="border-blue-500 text-blue-400 bg-blue-500/10">
                     Software Engineering
                   </Badge>
                 </div>
@@ -255,7 +255,7 @@ export default function Portfolio() {
           }`}>
             <div className="relative">
               {/* Vertical Timeline Line */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-purple-500 via-pink-500 to-purple-500 rounded-full"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 via-yellow-500 to-blue-500 rounded-full"></div>
 
               <div className="space-y-12">
                 {[
@@ -301,12 +301,12 @@ export default function Portfolio() {
                       <div
                         className={`w-6 h-6 rounded-full border-4 ${
                           job.current
-                            ? "bg-gradient-to-r from-purple-500 to-pink-500 border-white shadow-lg shadow-purple-500/50"
+                            ? "bg-gradient-to-r from-blue-500 to-yellow-500 border-white shadow-lg shadow-blue-500/50"
                             : "bg-gray-900 border-gray-600"
                         } z-10 relative`}
                       >
                         {job.current && (
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-ping opacity-75"></div>
+                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-yellow-500 animate-ping opacity-75"></div>
                         )}
                       </div>
                     </div>
@@ -324,7 +324,7 @@ export default function Portfolio() {
                       <div className={`w-full md:w-5/12 ${job.side === "left" ? "md:pr-8" : "md:pl-8"}`}>
                         <Card
                           className={`bg-gray-900 border-gray-800 relative cursor-pointer hover:border-gray-600 transition-all duration-300 ${
-                            job.current ? "ring-2 ring-purple-500/50 shadow-lg shadow-purple-500/20" : ""
+                            job.current ? "ring-2 ring-blue-500/50 shadow-lg shadow-blue-500/20" : ""
                           } ${expandedJob === index ? "scale-105 shadow-2xl" : ""}`}
                           onClick={() => handleCardClick(index)}
                           data-job-index={index}
@@ -345,14 +345,14 @@ export default function Portfolio() {
                                   variant="outline"
                                   className={`${
                                     job.current
-                                      ? "border-purple-500 text-purple-400 bg-purple-500/10"
+                                      ? "border-blue-500 text-blue-400 bg-blue-500/10"
                                       : "border-gray-600 text-gray-400"
                                   }`}
                                 >
                                   {job.period}
                                 </Badge>
                                 {job.current && (
-                                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                                  <Badge className="bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
                                     Current
                                   </Badge>
                                 )}
@@ -447,7 +447,7 @@ export default function Portfolio() {
               onClick={handleEmailClick}
             >
               <CardContent className="pt-6 text-center">
-                <Mail className="w-8 h-8 mx-auto mb-4 text-purple-400" />
+                <Mail className="w-8 h-8 mx-auto mb-4 text-blue-400" />
                 <h3 className="font-semibold text-white mb-2">Email</h3>
               </CardContent>
             </Card>
@@ -455,7 +455,7 @@ export default function Portfolio() {
             <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer" className="block">
               <Card className="bg-gray-900 border-gray-800 cursor-pointer hover:border-gray-600 transition-colors">
                 <CardContent className="pt-6 text-center">
-                  <Linkedin className="w-8 h-8 mx-auto mb-4 text-purple-400" />
+                  <Linkedin className="w-8 h-8 mx-auto mb-4 text-blue-400" />
                   <h3 className="font-semibold text-white mb-2">LinkedIn</h3>
                 </CardContent>
               </Card>
@@ -464,7 +464,7 @@ export default function Portfolio() {
             <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer" className="block">
               <Card className="bg-gray-900 border-gray-800 cursor-pointer hover:border-gray-600 transition-colors">
                 <CardContent className="pt-6 text-center">
-                  <Github className="w-8 h-8 mx-auto mb-4 text-purple-400" />
+                  <Github className="w-8 h-8 mx-auto mb-4 text-blue-400" />
                   <h3 className="font-semibold text-white mb-2">GitHub</h3>
                 </CardContent>
               </Card>

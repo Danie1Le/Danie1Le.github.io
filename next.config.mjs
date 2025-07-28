@@ -11,7 +11,7 @@ const nextConfig = {
   },
   output: 'export',
   trailingSlash: true,
-  basePath: process.env.NODE_ENV === 'production' ? '/MyPortfolio' : '',
+  basePath: '',
   skipTrailingSlashRedirect: true,
   skipMiddlewareUrlNormalize: true,
 };

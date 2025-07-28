@@ -158,7 +158,7 @@ export default function Portfolio() {
               <p className={`text-xl md:text-2xl text-gray-400 mb-6 transition-all duration-1000 delay-400 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}>
-                Computer Science Student
+                Software Engineer
               </p>
               <div className={`flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 transition-all duration-1000 delay-600 ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -205,10 +205,10 @@ export default function Portfolio() {
             }`}>
               <h3 className="text-2xl font-semibold text-white mb-4">Computer Science Student & Developer</h3>
               <p className="text-gray-300 leading-relaxed">
-              I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
-                  My journey in tech started with being curious and a uncertianty of a career that I wanted to pursue. I've been put into
-                  really cool intriguing projects that incorporate technologies such as AI, Machine Learning, and Web Development that has gave me a passion for the field and
-                  has evolved into a drive to build meaningful applications that could solve real-world problems.
+                I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
+                My journey in tech started with being curious and a uncertianty of a career that I wanted to pursue. I've been put into 
+                intriguing projects that have incorporated technologies such as AI, Machine Learning, and Web Development that's given me a passion for 
+                the field and has evolved into a drive to build meaningful applications that could solve real-world problems.
               </p>
               <p className="text-gray-300 leading-relaxed">
               When I'm not coding, you can find me exploring new technologies, going to the gym, playing videos games, or picking up new hobbies. 
@@ -406,7 +406,6 @@ export default function Portfolio() {
                   <div className="w-4 h-4 bg-gray-600 rounded-full border-2 border-gray-800"></div>
                 </div>
                 <div className="text-center pt-8">
-                  <p className="text-gray-500 text-sm">The journey begins...</p>
                 </div>
               </div>
             </div>

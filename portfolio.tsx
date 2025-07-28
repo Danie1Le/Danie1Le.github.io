@@ -478,6 +478,7 @@ export default function Portfolio() {
 
 function ProjectCarousel() {
   const [startIndex, setStartIndex] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
 
   const projects = [
     {
@@ -530,17 +531,36 @@ function ProjectCarousel() {
     },
   ]
 
-  const visibleProjects = projects.slice(startIndex, startIndex + 3)
   const canGoNext = startIndex + 3 < projects.length
   const canGoPrev = startIndex > 0
+
+  const handlePrevious = () => {
+    if (canGoPrev && !isAnimating) {
+      setIsAnimating(true)
+      setStartIndex(Math.max(0, startIndex - 1))
+      setTimeout(() => {
+        setIsAnimating(false)
+      }, 300)
+    }
+  }
+
+  const handleNext = () => {
+    if (canGoNext && !isAnimating) {
+      setIsAnimating(true)
+      setStartIndex(Math.min(projects.length - 3, startIndex + 1))
+      setTimeout(() => {
+        setIsAnimating(false)
+      }, 300)
+    }
+  }
 
   return (
     <div className="relative max-w-6xl mx-auto">
       {/* Navigation */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -translate-x-16">
         <button
-          onClick={() => setStartIndex(Math.max(0, startIndex - 1))}
-          disabled={!canGoPrev}
+          onClick={handlePrevious}
+          disabled={!canGoPrev || isAnimating}
           className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
             canGoPrev ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
           }`}
@@ -551,8 +571,8 @@ function ProjectCarousel() {
 
       <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 translate-x-16">
         <button
-          onClick={() => setStartIndex(Math.min(projects.length - 3, startIndex + 1))}
-          disabled={!canGoNext}
+          onClick={handleNext}
+          disabled={!canGoNext || isAnimating}
           className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
             canGoNext ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
           }`}
@@ -562,74 +582,78 @@ function ProjectCarousel() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {visibleProjects.map((project, index) => {
-          const link = project.live || project.github || null;
-          const cardContent = (
-            <>
-              <div className="aspect-video bg-gray-800 relative overflow-hidden">
-                {project.image === "turbine" ? (
-                  <div className="w-full h-full flex">
+      <div className="relative overflow-hidden">
+        <div className={`flex gap-6 transition-all duration-300 ease-out ${
+          isAnimating ? 'transform scale-98 opacity-95' : 'transform scale-100 opacity-100'
+        }`} style={{ transform: `translateX(-${startIndex * (100/3)}%)` }}>
+          {projects.map((project, index) => {
+            const link = project.live || project.github || null;
+            const cardContent = (
+              <>
+                <div className="aspect-video bg-gray-800 relative overflow-hidden">
+                  {project.image === "turbine" ? (
+                    <div className="w-full h-full flex">
+                      <img
+                        src={getImagePath("/turbine1.jpg")}
+                        alt="Turbine 1"
+                        className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <img
+                        src={getImagePath("/turbine2.jpg")}
+                        alt="Turbine 2"
+                        className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  ) : (
                     <img
-                      src={getImagePath("/turbine1.jpg")}
-                      alt="Turbine 1"
-                      className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      src={project.image || "/placeholder.svg"}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <img
-                      src={getImagePath("/turbine2.jpg")}
-                      alt="Turbine 2"
-                      className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ) : (
-                  <img
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                )}
-              </div>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-white text-lg">{project.title}</CardTitle>
-                <CardDescription className="text-gray-400 text-sm line-clamp-3">{project.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex flex-wrap gap-1">
-                  {project.tech.map((tech) => (
-                    <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
-                      {tech}
-                    </Badge>
-                  ))}
+                  )}
                 </div>
-              </CardContent>
-            </>
-          );
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-white text-lg">{project.title}</CardTitle>
+                  <CardDescription className="text-gray-400 text-sm line-clamp-3">{project.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex flex-wrap gap-1">
+                    {project.tech.map((tech) => (
+                      <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </>
+            );
 
-          if (link) {
-            return (
-              <a
-                key={index}
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block group"
-              >
-                <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-[420px]">
+            if (link) {
+              return (
+                <a
+                  key={index}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block group flex-shrink-0 w-full md:w-[calc(33.333%-1rem)] lg:w-[calc(33.333%-1rem)]"
+                >
+                  <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-[420px]">
+                    {cardContent}
+                  </Card>
+                </a>
+              );
+            } else {
+              return (
+                <Card
+                  key={index}
+                  className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px] flex-shrink-0 w-full md:w-[calc(33.333%-1rem)] lg:w-[calc(33.333%-1rem)]"
+                >
                   {cardContent}
                 </Card>
-              </a>
-            );
-          } else {
-            return (
-              <Card
-                key={index}
-                className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px]"
-              >
-                {cardContent}
-              </Card>
-            );
-          }
-        })}
+              );
+            }
+          })}
+        </div>
       </div>
 
       {/* Progress Dots */}

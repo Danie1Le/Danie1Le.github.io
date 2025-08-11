@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react"
 import AboutSection from "./aboutSection"
-import ContactSection from "./ContactSection"
-import ExperienceSection from "./ExperienceSection"
-import HeroSection from "./HeroSection"
+import ContactSection from "./contactSection"
+import ExperienceSection from "./experienceSection"
+import HeroSection from "./heroSection"
 import Navigation from "./navBar"
 import ProjectsSection from "./projectsSection"
 

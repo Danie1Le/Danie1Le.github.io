@@ -70,7 +70,7 @@ export default function Portfolio() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      const offset = 60
+      const offset = 10
       const elementPosition = element.offsetTop - offset
       window.scrollTo({
         top: elementPosition,

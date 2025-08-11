@@ -68,7 +68,7 @@ export default function Portfolio() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      const offset = 80 // Account for fixed navigation
+      const offset = 60
       const elementPosition = element.offsetTop - offset
       window.scrollTo({
         top: elementPosition,
@@ -215,8 +215,95 @@ export default function Portfolio() {
               I want to be a continuous learner and be able to be apart of interesting projects that could be able to help not only myself but others as well.
               </p>
               
+              {/* Technical Skills */}
+              <div className={`pt-6 transition-all duration-1000 delay-500 ${
+                visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+              }`}>
+                <h4 className="text-lg font-semibold text-white mb-4">Technical Skills:</h4>
+                <div className="space-y-4">
+                  <div>
+                    <h5 className="text-sm font-medium text-gray-300 mb-2">Programming Languages</h5>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <Badge variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
+                        Python
+                      </Badge>
+                      <Badge variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
+                        JavaScript
+                      </Badge>
+                      <Badge variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
+                        Java
+                      </Badge>
+                      <Badge variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
+                        C#
+                      </Badge>
+                      <Badge variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
+                        C
+                      </Badge>
+                      <Badge variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
+                        HTML/CSS
+                      </Badge>
+                    </div>
+                  </div>
+                                     <div>
+                     <h5 className="text-sm font-medium text-gray-300 mb-2">Technologies & Frameworks</h5>
+                     <div className="flex flex-wrap gap-2 justify-center">
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         React
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         Next.js
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         Tailwind CSS
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         .NET
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         FastAPI
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         LangChain
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         Ollama
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         Jest
+                       </Badge>
+                       <Badge variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
+                         Java Swing
+                       </Badge>
+                     </div>
+                   </div>
+                  <div>
+                    <h5 className="text-sm font-medium text-gray-300 mb-2">Development Tools</h5>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <Badge variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
+                        Visual Studio
+                      </Badge>
+                      <Badge variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
+                        VS Code
+                      </Badge>
+                      <Badge variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
+                        Android Studio
+                      </Badge>
+                      <Badge variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
+                        Git
+                      </Badge>
+                      <Badge variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
+                        Arduino
+                      </Badge>
+                      <Badge variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
+                        Unix/Linux
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               {/* Skills/Interests */}
-              <div className={`pt-4 transition-all duration-1000 delay-600 ${
+              <div className={`pt-6 transition-all duration-1000 delay-600 ${
                 visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}>
                 <h4 className="text-lg font-semibold text-white mb-3">What I'm passionate about:</h4>
@@ -272,7 +359,7 @@ export default function Portfolio() {
                       "Implemented real-time video streaming with asynchronous generation, status polling, and dynamic video switching for seamless user experience.",
                       "Created a responsive web interface with speech recognition, optimized video processing (rate limiting, error handling), and an interactive demo page to showcase the system to teammates."
                     ],
-                    skills: ["AI", "LLM", "HeyGen",],
+                    skills: ["AI", "LLM", "HeyGen","Python"],
                     side: "right",
                     current: true,
                   },

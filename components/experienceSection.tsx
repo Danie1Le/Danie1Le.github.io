@@ -118,7 +118,7 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                               </div>
                             </div>
                           </div>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-2 mt-4">
                             {job.skills.map((skill) => (
                               <Badge
                                 key={skill}

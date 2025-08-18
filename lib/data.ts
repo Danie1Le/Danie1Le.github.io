@@ -37,7 +37,7 @@ export const jobs: Job[] = [
     ],
     skills: ["AI", "LLM", "HeyGen","Python"],
     side: "right",
-    current: true,
+    current: false,
   },
   {
     title: "Machine Learning Researcher",

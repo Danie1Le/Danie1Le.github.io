@@ -91,9 +91,13 @@ export default function Portfolio() {
       setTimeout(() => {
         const cardElement = document.querySelector(`[data-job-index="${index}"]`);
         if (cardElement) {
-          cardElement.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
+          const cardRect = cardElement.getBoundingClientRect();
+          const navHeight = 80;
+          const offset = 20;
+          
+          window.scrollTo({
+            top: window.pageYOffset + cardRect.top - navHeight - offset,
+            behavior: 'smooth'
           });
         }
       }, 100);

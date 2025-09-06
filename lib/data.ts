@@ -66,7 +66,7 @@ export const projects: Project[] = [
     image: getImagePath("/NBA_predict.png"),
     tech: ["Python", "XGBoost", "Scikit-learn", "Streamlit", "Plotly", "Pandas", "NumPy"],
     github: "https://github.com/Danie1Le/NBA-Predict",
-    live: "https://nba-predict.streamlit.app/",
+    live: "https://nba-predict.vercel.app//",
   },
   {
     title: "AI ChatBot",

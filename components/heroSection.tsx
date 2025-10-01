@@ -2,14 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { getImagePath } from "@/lib/utils";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { FileText, Github, Linkedin, Mail } from "lucide-react";
 
 interface HeroSectionProps {
   isLoaded: boolean;
   handleEmailClick: (e: React.MouseEvent) => void;
+  handleResumeClick: () => void;
 }
 
-export default function HeroSection({ isLoaded, handleEmailClick }: HeroSectionProps) {
+export default function HeroSection({ isLoaded, handleEmailClick, handleResumeClick }: HeroSectionProps) {
   return (
     <section id="hero" className={`min-h-screen flex items-center justify-center px-6 transition-all duration-1000 ${
       isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -55,6 +56,15 @@ export default function HeroSection({ isLoaded, handleEmailClick }: HeroSectionP
                   LinkedIn
                 </Button>
               </a>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="bg-transparent border-gray-600 hover:bg-gray-800"
+                onClick={handleResumeClick}
+              >
+                <FileText className="w-5 h-5 mr-2" />
+                Resume
+              </Button>
               <Button 
                 size="lg" 
                 className="bg-white text-gray-950 hover:bg-gray-200"

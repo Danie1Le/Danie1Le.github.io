@@ -27,7 +27,7 @@ export const jobs: Job[] = [
     company: "University of Portland",
     period: "Sept 2025 - Present",
     location: "Portland, OR",
-    description: "Grading and mentoring students in data structures and algorithms courses.",
+    description: "Grading and mentoring students in data structures course.",
     details: [
       "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
       "Mentored 25 students through code review feedback and debugging sessions, improving programming skills"
@@ -73,7 +73,7 @@ export const jobs: Job[] = [
 export const projects: Project[] = [
   {
     title: "DinnaSwipe",
-    description: "Group restaurant recommendation app using agile methodologies with React Native and TypeScript, serving 500+ restaurants with location-based search and voting system.",
+    description: "Group restaurant recommendation app with a location-based search with 500+ restaurants and player voting system.",
     image: getImagePath("/DinnaSwipe.png"),
     tech: ["React Native", "TypeScript", "Supabase", "PostgreSQL", "Overpass API"],
     github: "https://github.com/Matttran7/Food-Finder",
@@ -81,7 +81,7 @@ export const projects: Project[] = [
   },
   {
     title: "NBA Game Predictor",
-    description: "Machine learning prediction model using XGBoost and PyTorch achieving 79% accuracy and 0.84 AUC. Full-stack application with Docker deployment and automated CI/CD pipeline.",
+    description: "Machine learning model that analyzes over 1000 games to predicts NBA game results.",
     image: getImagePath("/NBA_predict.png"),
     tech: ["Python", "XGBoost", "PyTorch", "TensorFlow", "React", "Docker"],
     github: "https://github.com/Danie1Le/NBA-Predict",
@@ -89,7 +89,7 @@ export const projects: Project[] = [
   },
   {
     title: "AI ChatBot",
-    description: "Medical training chatbot using Flask and JavaScript to help nurses practice diagnostic skills. Enhanced contextual accuracy by 85% through retrieval augmented generation (RAG).",
+    description: "Medical training chatbot nurses practice their diagnostic skill through retrieval augmented generation (RAG).",
     image: getImagePath("/Ai chatBot.png"),
     tech: ["Flask", "JavaScript", "HTML", "CSS", "LangChain", "GitHub Actions", "Jest"],
     github: "",

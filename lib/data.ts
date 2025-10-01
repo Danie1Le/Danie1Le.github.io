@@ -27,7 +27,7 @@ export const jobs: Job[] = [
     company: "University of Portland",
     period: "Sept 2025 - Present",
     location: "Portland, OR",
-    description: "Grading and mentoring students in data structures and algorithms courses.",
+    description: "Grading and mentoring students in data structures course.",
     details: [
       "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
       "Mentored 25 students through code review feedback and debugging sessions, improving programming skills"

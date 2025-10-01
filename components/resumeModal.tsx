@@ -48,8 +48,8 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
         onClick={onClose}
       />
       
-      {/* Clean Resume Modal - Just PDF */}
-      <div className="relative w-[90vw] h-[90vh] max-w-4xl bg-white shadow-2xl flex flex-col">
+       {/* Clean Resume Modal - Just PDF */}
+       <div className="relative w-[90vw] h-[98vh] max-w-4xl bg-white shadow-2xl flex flex-col">
         {/* Close Button - Top Right */}
         <Button
           variant="ghost"
@@ -63,14 +63,14 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
          {/* PDF Viewer - Zoomed out resume */}
          <div className="flex-1">
            <iframe
-             src="/Daniel_Le_resume.pdf#toolbar=0&navpanes=0&scrollbar=0&zoom=70"
+             src="/Daniel_Le_resume.pdf#toolbar=0&navpanes=0&scrollbar=0&zoom=82"
              className="w-full h-full border-0"
              title="Daniel Le Resume"
            />
          </div>
          
          {/* Download Button - At bottom of PDF */}
-         <div className="p-4 text-center">
+         <div className="py-1 px-2 text-center">
            <Button
              onClick={handleDownload}
              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 underline"

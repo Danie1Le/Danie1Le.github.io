@@ -7,17 +7,27 @@ import ExperienceSection from "./experienceSection"
 import HeroSection from "./heroSection"
 import Navigation from "./navBar"
 import ProjectsSection from "./projectsSection"
+import ResumeModal from "./resumeModal"
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false)
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
 
   const handleEmailClick = (e: React.MouseEvent) => {
     // Open Gmail compose with pre-filled email
     const gmailUrl = 'https://mail.google.com/mail/?view=cm&to=le.daniel412@gmail.com'
     window.open(gmailUrl, '_blank')
+  }
+
+  const handleResumeClick = () => {
+    setIsResumeModalOpen(true)
+  }
+
+  const closeResumeModal = () => {
+    setIsResumeModalOpen(false)
   }
 
   useEffect(() => {
@@ -113,7 +123,8 @@ export default function Portfolio() {
       
       <HeroSection 
         isLoaded={isLoaded} 
-        handleEmailClick={handleEmailClick} 
+        handleEmailClick={handleEmailClick}
+        handleResumeClick={handleResumeClick}
       />
       
       <AboutSection 
@@ -132,6 +143,11 @@ export default function Portfolio() {
       
       <ContactSection 
         handleEmailClick={handleEmailClick} 
+      />
+
+      <ResumeModal 
+        isOpen={isResumeModalOpen}
+        onClose={closeResumeModal}
       />
     </div>
   )

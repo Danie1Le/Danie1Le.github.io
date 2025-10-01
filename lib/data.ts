@@ -23,56 +23,75 @@ export interface Project {
 
 export const jobs: Job[] = [
   {
+    title: "Computer Science Grader",
+    company: "University of Portland",
+    period: "Sept 2025 - Present",
+    location: "Portland, OR",
+    description: "Grading and mentoring students in data structures and algorithms courses.",
+    details: [
+      "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
+      "Mentored 25 students through code review feedback and debugging sessions, improving programming skills"
+    ],
+    skills: ["Data Structures", "Mentoring", "Code Review", "Debugging"],
+    side: "right",
+    current: true,
+  },
+  {
     title: "Software Developer Intern",
     company: "ResVR",
     period: "May 2025 - Aug 2025",
     location: "Remote",
-    description: "Built an AI-powered virtual tour system using LLMs and real-time video streaming.",
+    description: "Enhanced 3D avatar rendering and video conversion systems with seamless API integration.",
     details: [
-      "Developed an AI-powered virtual tour system converting natural language to real-time video responses using AI avatars and Gemma3 LLM.",
-      "Developed backend model to interpret user commands and a frontend model to generate natural language responses used as video scripts.",
-      "Integrated 3D avatar video generation using HeyGen to deliver dynamic, lifelike responses based on LLM output.",
-      "Implemented real-time video streaming with asynchronous generation, status polling, and dynamic video switching for seamless user experience.",
-      "Created a responsive web interface with speech recognition, optimized video processing (rate limiting, error handling), and an interactive demo page to showcase the system to teammates."
+      "Improved 3D avatar rendering system by 62% through seamless API integration, enhancing user engagement by allowing natural conversations with AI avatars",
+      "Achieved 100% script-to-video conversion through a dual-model backend pipeline and frontend integration",
+      "Increased video completion rate to 95% by optimizing backend stability and error handling mechanisms",
+      "Enhanced user experience through real-time status updates using WebSocket polling for video rendering progress"
     ],
-    skills: ["AI", "LLM", "HeyGen","Python"],
-    side: "right",
+    skills: ["AI", "LLM", "Python", "API Integration", "WebSocket", "3D Rendering", "Backend Development", "HeyGen"],
+    side: "left",
     current: false,
   },
   {
     title: "Machine Learning Researcher",
     company: "CognitiveABM",
     period: "Jan 2024 - May 2025",
-    location: "Portland, Oregon",
-    description: "Helped develop AI agents to simulate animal behavior using .NET and C#.",
+    location: "Portland, OR",
+    description: "Optimized AI agent behavioral patterns and developed analytics systems for organism simulation.",
     details: [
-      "Helped develop an AI project using .NET and C#, with the goal to create AI agents that emulate behavioral patterns of animals to replicate brain functions of real life organisms.",
-      "Created varied simulated landscapes to evaluate agent behavior across multiple dynamic and challenging environments.",
-      "Built multiple different landscapes to dynamically deploy different environments on agents to assess performance in varying simulated environments.",
-      "Developed a real-time system to classify agents by elevation behavior as Climbers, Descenders, or Collectors.",
-      "Contributed to weekly scrum meetings to develop new ideas for bug fixes and optimizations.",
-      "Presented project goals, technical development, and research findings on Founder's Day."
+      "Optimized AI agent behavioral fitness scores by 30% using advanced algorithms in C#/.NET to replicate behavioral patterns of living organisms",
+      "Identified 3 behavioral patterns, boosting stability across 4 newly built environments with 100+ generations",
+      "Accelerated analysis workflows by 40% by creating a Python-based classification system with real-time analytics",
+      "Designed a metrics framework elevating reward discovery by 12% while reducing computational overhead"
     ],
-    skills: [".NET", "C#", "AI", "Simulation", "Agile"],
-    side: "left",
+    skills: ["C#", ".NET", "Python", "Machine Learning", "Real-time Analytics", "Algorithm Optimization"],
+    side: "right",
     current: false,
   },
 ];
 
 export const projects: Project[] = [
   {
-    title: "NBA Prediction Model",
-    description: "AI-powered NBA game predictor using XGBoost and team statistics, achieving 80%+ accuracy with interactive web interface.",
+    title: "DinnaSwipe",
+    description: "Group restaurant recommendation app using agile methodologies with React Native and TypeScript, serving 500+ restaurants with location-based search and voting system.",
+    image: getImagePath("/DinnaSwipe.png"),
+    tech: ["React Native", "TypeScript", "Supabase", "PostgreSQL", "Overpass API"],
+    github: "https://github.com/Matttran7/Food-Finder",
+    live: "",
+  },
+  {
+    title: "NBA Game Predictor",
+    description: "Machine learning prediction model using XGBoost and PyTorch achieving 79% accuracy and 0.84 AUC. Full-stack application with Docker deployment and automated CI/CD pipeline.",
     image: getImagePath("/NBA_predict.png"),
-    tech: ["Python", "XGBoost", "Scikit-learn", "Streamlit", "Plotly", "Pandas", "NumPy"],
+    tech: ["Python", "XGBoost", "PyTorch", "TensorFlow", "React", "Docker"],
     github: "https://github.com/Danie1Le/NBA-Predict",
     live: "https://nba-predict.vercel.app//",
   },
   {
     title: "AI ChatBot",
-    description: "AI chatbot for nursing students to practice diagnostic skills, using real-time chat and LLM-powered responses.",
+    description: "Medical training chatbot using Flask and JavaScript to help nurses practice diagnostic skills. Enhanced contextual accuracy by 85% through retrieval augmented generation (RAG).",
     image: getImagePath("/Ai chatBot.png"),
-    tech: ["JavaScript", "HTML", "CSS", "LangChain", "DocArray", "Jest"],
+    tech: ["Flask", "JavaScript", "HTML", "CSS", "LangChain", "GitHub Actions", "Jest"],
     github: "",
     live: "",
   },
@@ -112,14 +131,14 @@ export const projects: Project[] = [
 
 export const skills = {
   programmingLanguages: [
-    "Python", "JavaScript", "Java", "C#", "C", "HTML/CSS"
+    "Python", "Java", "C", "C#", "JavaScript", "TypeScript", "HTML/CSS", "SQL"
   ],
   technologies: [
-    "React", "Next.js", "Tailwind CSS", ".NET", "FastAPI", 
-    "LangChain", "Ollama", "Jest", "Java Swing"
+    "React", "Flask", "LangChain", "Pandas", "PyTorch", "TensorFlow", "scikit-learn", "XGBoost", 
+    "React Native", "Next.js", "Tailwind CSS", ".NET", "Supabase", "PostgreSQL"
   ],
   developmentTools: [
-    "Visual Studio", "VS Code", "Android Studio", "Git", "Arduino", "Unix/Linux"
+    "Git", "Linux", "VS Code", "GitHub Actions", "Docker", "Render", "Vercel", "Jest", "CI/CD"
   ],
   interests: [
     "Artificial Intelligence", "Machine Learning", "Web Development", "Software Engineering"

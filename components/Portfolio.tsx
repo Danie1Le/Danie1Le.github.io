@@ -16,7 +16,7 @@ export default function Portfolio() {
 
   const handleEmailClick = (e: React.MouseEvent) => {
     // Open Gmail compose with pre-filled email
-    const gmailUrl = 'https://mail.google.com/mail/?view=cm&to=danielle8262005@gmail.com'
+    const gmailUrl = 'https://mail.google.com/mail/?view=cm&to=le.daniel412@gmail.com'
     window.open(gmailUrl, '_blank')
   }
 

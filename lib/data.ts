@@ -30,7 +30,8 @@ export const jobs: Job[] = [
     description: "Grading and mentoring students in data structures course.",
     details: [
       "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
-      "Mentored 25 students through code review feedback and debugging sessions, improving programming skills"
+      "Improved programming skills for 25 students by providing targeted code review and debugging support"
+
     ],
     skills: ["Data Structures", "Mentoring", "Code Review", "Debugging"],
     side: "right",
@@ -40,10 +41,10 @@ export const jobs: Job[] = [
     title: "Software Developer Intern",
     company: "ResVR",
     period: "May 2025 - Aug 2025",
-    location: "Remote",
+    location: "Canada (Remote)",
     description: "Enhanced 3D avatar rendering and video conversion systems with seamless API integration.",
     details: [
-      "Improved 3D avatar rendering system by 62% through seamless API integration, enhancing user engagement by allowing natural conversations with AI avatars",
+      "Improved 3D avatar rendering system by 62% by integrating HeyGen API with Python and Gemma 3B LLM, enhancing user engagement by allowing natural conversations with AI avatars",
       "Achieved 100% script-to-video conversion through a dual-model backend pipeline and frontend integration",
       "Increased video completion rate to 95% by optimizing backend stability and error handling mechanisms",
       "Enhanced user experience through real-time status updates using WebSocket polling for video rendering progress"

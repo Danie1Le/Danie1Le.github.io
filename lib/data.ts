@@ -61,7 +61,7 @@ export const jobs: Job[] = [
     description: "Optimized AI agent behavioral patterns and developed analytics systems for organism simulation.",
     details: [
       "Optimized AI agent behavioral fitness scores by 30% using advanced algorithms in C#/.NET to replicate behavioral patterns of living organisms",
-      "Identified 3 behavioral patterns, boosting stability across 4 newly built environments with 100+ generations",
+      "Identified 3 behavioral patterns, boosting stability across 4 newly built environments over 100+ generations",
       "Accelerated analysis workflows by 40% by creating a Python-based classification system with real-time analytics",
       "Designed a metrics framework elevating reward discovery by 12% while reducing computational overhead"
     ],

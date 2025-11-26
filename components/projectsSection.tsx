@@ -327,7 +327,9 @@ function ProjectCarousel() {
             <span className="text-gray-400 text-sm">
               {startIndex === 0 ? "1-3" : 
                startIndex === 1 ? "2-4" : 
-               startIndex === 2 ? "3-5" : "4-6"}
+               startIndex === 2 ? "3-5" :
+               startIndex === 3 ? "4-6" :
+               startIndex === 4 ? "5-7" : "6-8"}
             </span>
             <div className="flex space-x-2">
               {Array.from({ length: projects.length - 3 + 1 }).map((_, i) => {

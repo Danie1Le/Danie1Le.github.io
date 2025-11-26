@@ -33,7 +33,7 @@ export const jobs: Job[] = [
       "Improved programming skills for 25 students by providing targeted code review and debugging support"
 
     ],
-    skills: ["Data Structures", "Mentoring", "Code Review", "Debugging"],
+    skills: ["Data Structures", "Code Review", "Debugging", "C"],
     side: "right",
     current: true,
   },
@@ -55,7 +55,7 @@ export const jobs: Job[] = [
   },
   {
     title: "Machine Learning Researcher",
-    company: "CognitiveABM",
+    company: "University of Portland",
     period: "Jan 2024 - May 2025",
     location: "Portland, OR",
     description: "Optimized AI agent behavioral patterns and developed analytics systems for organism simulation.",
@@ -72,6 +72,14 @@ export const jobs: Job[] = [
 ];
 
 export const projects: Project[] = [
+  {
+    title: "Job Application Tracker",
+    description: "Web application to track job applications faster and stay organized.",
+    image: getImagePath("/Job Application Tracker.png"),
+    tech: ["React", "TypeScript", "Supabase", "PostgreSQL", "Google Auth"],
+    github: "",
+    live: "https://job-application-tracker-delta-eight.vercel.app/dashboard",
+  },
   {
     title: "DinnaSwipe",
     description: "Group restaurant recommendation app with a location-based search with 500+ restaurants and player voting system.",

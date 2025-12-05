@@ -143,8 +143,8 @@ export const skills = {
     "Python", "Java", "C", "C#", "JavaScript", "TypeScript", "HTML/CSS", "SQL"
   ],
   technologies: [
-    "React", "Flask", "LangChain", "Pandas", "PyTorch", "TensorFlow", "scikit-learn", "XGBoost", 
-    "React Native", "Next.js", "Tailwind CSS", ".NET", "Supabase", "PostgreSQL"
+    "React", "Node.js", "Next.js","Flask", "LangChain", "Pandas", "PyTorch", "TensorFlow", "scikit-learn", "XGBoost", 
+    "React Native", "Tailwind CSS", ".NET", "Supabase", "PostgreSQL"
   ],
   developmentTools: [
     "Git", "Linux", "VS Code", "GitHub Actions", "Docker", "Render", "Vercel", "Jest", "CI/CD"

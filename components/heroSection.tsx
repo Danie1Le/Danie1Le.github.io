@@ -44,18 +44,6 @@ export default function HeroSection({ isLoaded, handleEmailClick, handleResumeCl
             <div className={`flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 transition-all duration-1000 delay-600 ${
               isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}>
-              <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                  <Github className="w-5 h-5 mr-2" />
-                  GitHub
-                </Button>
-              </a>
-              <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
-                  <Linkedin className="w-5 h-5 mr-2" />
-                  LinkedIn
-                </Button>
-              </a>
               <Button 
                 variant="outline" 
                 size="lg" 
@@ -65,6 +53,18 @@ export default function HeroSection({ isLoaded, handleEmailClick, handleResumeCl
                 <FileText className="w-5 h-5 mr-2" />
                 Resume
               </Button>
+              <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+                  <Linkedin className="w-5 h-5 mr-2" />
+                  LinkedIn
+                </Button>
+              </a>
+              <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+                  <Github className="w-5 h-5 mr-2" />
+                  GitHub
+                </Button>
+              </a>
               <Button 
                 size="lg" 
                 className="bg-white text-gray-950 hover:bg-gray-200"

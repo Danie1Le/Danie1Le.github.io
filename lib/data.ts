@@ -150,6 +150,6 @@ export const skills = {
     "Git", "Linux", "VS Code", "GitHub Actions", "Docker", "Render", "Vercel", "Jest", "CI/CD"
   ],
   interests: [
-    "Artificial Intelligence", "Machine Learning", "Web Development", "Software Engineering"
+    "Software Engineering", "Artificial Intelligence", "Machine Learning", "Web Development"
   ]
 };

@@ -25,9 +25,9 @@ export const jobs: Job[] = [
   {
     title: "Computer Science Grader",
     company: "University of Portland",
-    period: "Sept 2025 - Present",
+    period: "Sept 2025 - Dec 2025",
     location: "Portland, OR",
-    description: "Grading and mentoring students in data structures course.",
+    description: "Graded students assignments in data structures course.",
     details: [
       "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
       "Improved programming skills for 25 students by providing targeted code review and debugging support"
@@ -35,7 +35,7 @@ export const jobs: Job[] = [
     ],
     skills: ["Data Structures", "Code Review", "Debugging", "C"],
     side: "right",
-    current: true,
+    current: false,
   },
   {
     title: "Software Developer Intern",

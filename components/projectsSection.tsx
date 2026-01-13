@@ -247,10 +247,10 @@ function ProjectCarousel() {
         </div>
 
         {/* Projects Grid */}
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden w-full">
           <div className={`flex gap-6 transition-all duration-300 ease-out ${
             isAnimating ? 'transform scale-98 opacity-95' : 'transform scale-100 opacity-100'
-          }`} style={{ transform: `translateX(-${startIndex * (100/3)}%)` }}>
+          }`} style={{ transform: `translateX(calc(-${startIndex} * (calc((100% - 3rem) / 3) + 1.5rem)))` }}>
             {projects.map((project, index) => {
               const link = project.live || project.github || null;
               const cardContent = (
@@ -300,7 +300,7 @@ function ProjectCarousel() {
                     href={link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block group flex-shrink-0 w-full md:w-[calc(33.333%-1rem)] lg:w-[calc(33.333%-1rem)]"
+                    className="block group flex-shrink-0 w-full md:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-3rem)/3)]"
                   >
                     <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-[420px]">
                       {cardContent}
@@ -311,7 +311,7 @@ function ProjectCarousel() {
                 return (
                   <Card
                     key={index}
-                    className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px] flex-shrink-0 w-full md:w-[calc(33.333%-1rem)] lg:w-[calc(33.333%-1rem)]"
+                    className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px] flex-shrink-0 w-full md:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-3rem)/3)]"
                   >
                     {cardContent}
                   </Card>

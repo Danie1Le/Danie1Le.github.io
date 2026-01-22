@@ -76,7 +76,7 @@ export const projects: Project[] = [
     title: "Job Application Tracker",
     description: "Web application to track job applications faster and stay organized.",
     image: getImagePath("/Job Application Tracker.png"),
-    tech: ["React", "TypeScript", "Supabase", "PostgreSQL", "Google Auth"],
+    tech: ["React", "TypeScript", "PostgreSQL", "Google Auth"],
     github: "",
     live: "https://job-application-tracker-delta-eight.vercel.app/dashboard",
   },
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     title: "DinnaSwipe",
     description: "Group restaurant recommendation app with a location-based search with 500+ restaurants and player voting system.",
     image: getImagePath("/DinnaSwipe.png"),
-    tech: ["React Native", "TypeScript", "Supabase", "PostgreSQL", "Overpass API"],
+    tech: ["React Native", "TypeScript", "PostgreSQL", "Overpass API"],
     github: "https://github.com/Matttran7/Food-Finder",
     live: "",
   },
@@ -144,7 +144,7 @@ export const skills = {
   ],
   technologies: [
     "React", "Node.js", "Next.js","Flask", "LangChain", "Pandas", "PyTorch", "TensorFlow", "scikit-learn", "XGBoost", 
-    "React Native", "Tailwind CSS", ".NET", "Supabase", "PostgreSQL"
+    "React Native", "Tailwind CSS", ".NET", "PostgreSQL"
   ],
   developmentTools: [
     "Git", "Linux", "VS Code", "GitHub Actions", "Docker", "Render", "Vercel", "Jest", "CI/CD"

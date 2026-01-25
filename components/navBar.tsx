@@ -24,8 +24,10 @@ export default function Navigation({ activeSection, scrollToSection }: Navigatio
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`transition-colors hover:text-white ${
-                  activeSection === item.id ? "text-white" : "text-gray-400"
+                className={`px-2.5 py-1 rounded-full transition-all duration-300 ${
+                  activeSection === item.id 
+                    ? "bg-gray-800 text-white" 
+                    : "text-gray-400 hover:text-white"
                 }`}
               >
                 {item.label}

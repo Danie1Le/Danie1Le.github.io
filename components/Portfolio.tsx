@@ -38,6 +38,13 @@ export default function Portfolio() {
       const sections = ["hero", "about", "experience", "projects", "contact"]
       const scrollPosition = window.scrollY + 100
 
+      // Check if user has scrolled to the bottom of the page
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50
+      if (isAtBottom) {
+        setActiveSection("contact")
+        return
+      }
+
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i])
         if (section && section.offsetTop <= scrollPosition) {

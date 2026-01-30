@@ -65,7 +65,7 @@ export const jobs: Job[] = [
       "Accelerated analysis workflows by 40% by creating a Python-based classification system with real-time analytics",
       "Designed a metrics framework elevating reward discovery by 12% while reducing computational overhead"
     ],
-    skills: ["C#", ".NET", "Python", "Machine Learning", "Real-time Analytics", "Algorithm Optimization"],
+    skills: ["C#", ".NET", "Python", "Machine Learning", "Algorithm Optimization"],
     side: "right",
     current: false,
   },

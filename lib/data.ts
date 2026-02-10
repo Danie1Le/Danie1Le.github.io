@@ -94,7 +94,7 @@ export const projects: Project[] = [
     image: getImagePath("/NBA_predict.png"),
     tech: ["Python", "XGBoost", "PyTorch", "TensorFlow", "React", "Docker"],
     github: "https://github.com/Danie1Le/NBA-Predict",
-    live: "https://nba-predict.vercel.app//",
+    live: "https://nba-predict.vercel.app/",
   },
   {
     title: "AI ChatBot",

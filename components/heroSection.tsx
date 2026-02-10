@@ -22,7 +22,7 @@ export default function HeroSection({ isLoaded, handleEmailClick, handleResumeCl
             isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
           }`} style={{ width: '256px', height: '256px', minWidth: '256px', minHeight: '256px', maxWidth: '256px', maxHeight: '256px' }}>
             <img
-              src={getImagePath("/IMG_6880.PNG")}
+              src={getImagePath("/Profile_Picture.png")}
               alt="Daniel Le"
               className="w-full h-full object-cover object-center"
               style={{ objectPosition: 'center 25%' }}

@@ -25,13 +25,13 @@ export default function AboutSection({ visibleSections }: AboutSectionProps) {
             <h3 className="text-2xl font-semibold text-white mb-4">Computer Science Student & Developer</h3>
             <p className="text-gray-300 leading-relaxed">
               I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
-              My journey in tech started with being curious and a uncertianty of a career that I wanted to pursue. I've been put into 
+              My journey in tech started with curiosity and an uncertainty of a career that I wanted to pursue. I've been put into 
               intriguing projects that have incorporated technologies such as AI, Machine Learning, and Web Development that's given me a passion for 
               the field and has evolved into a drive to build meaningful applications that could solve real-world problems.
             </p>
             <p className="text-gray-300 leading-relaxed">
             When I'm not coding, you can find me exploring new technologies, going to the gym, playing videos games, or picking up new hobbies. 
-            I want to be a continuous learner and be able to be apart of interesting projects that could be able to help not only myself but others as well.
+            I want to be a continuous learner and be able to be a part of interesting projects that could help not only myself but others as well.
             </p>
             
             {/* Technical Skills */}

@@ -41,11 +41,12 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-label="Resume viewer">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
+        aria-hidden="true"
       />
       
        {/* Clean Resume Modal - Just PDF */}
@@ -56,6 +57,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           size="sm"
           onClick={onClose}
           className="absolute top-2 right-2 z-10 bg-black/20 hover:bg-black/40 text-white rounded-full p-2"
+          aria-label="Close resume viewer"
         >
           <X className="w-4 h-4" />
         </Button>
@@ -73,7 +75,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
          <div className="py-1 px-2 text-center">
            <Button
              onClick={handleDownload}
-             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 underline"
+             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
            >
              Download
            </Button>

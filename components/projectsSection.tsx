@@ -91,6 +91,7 @@ function ProjectCarousel() {
           <button
             onClick={handleMobilePrevious}
             disabled={!mobileCanGoPrev || isAnimating}
+            aria-label="Previous projects"
             className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
               mobileCanGoPrev ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
             }`}
@@ -103,6 +104,7 @@ function ProjectCarousel() {
           <button
             onClick={handleMobileNext}
             disabled={!mobileCanGoNext || isAnimating}
+            aria-label="Next projects"
             className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
               mobileCanGoNext ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
             }`}
@@ -226,6 +228,7 @@ function ProjectCarousel() {
           <button
             onClick={handlePrevious}
             disabled={!canGoPrev || isAnimating}
+            aria-label="Previous projects"
             className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
               canGoPrev ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
             }`}
@@ -238,6 +241,7 @@ function ProjectCarousel() {
           <button
             onClick={handleNext}
             disabled={!canGoNext || isAnimating}
+            aria-label="Next projects"
             className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
               canGoNext ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
             }`}

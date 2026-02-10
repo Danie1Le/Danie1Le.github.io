@@ -149,6 +149,7 @@ export default function Portfolio() {
       />
       
       <ContactSection 
+        visibleSections={visibleSections}
         handleEmailClick={handleEmailClick} 
       />
 

@@ -53,14 +53,14 @@ export default function HeroSection({ isLoaded, handleEmailClick, handleResumeCl
                 <FileText className="w-5 h-5 mr-2" />
                 Resume
               </Button>
-              <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+              <a href="https://www.linkedin.com/in/danie1-le/" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-gray-600 hover:bg-gray-800">
                   <Linkedin className="w-5 h-5 mr-2" />
                   LinkedIn
                 </Button>
               </a>
-              <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="lg" className="bg-transparent border-gray-600 hover:bg-gray-800">
+              <a href="https://github.com/Danie1Le" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto bg-transparent border-gray-600 hover:bg-gray-800">
                   <Github className="w-5 h-5 mr-2" />
                   GitHub
                 </Button>

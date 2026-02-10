@@ -4,21 +4,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Github, Linkedin, Mail } from "lucide-react";
 
 interface ContactSectionProps {
+  visibleSections: Set<string>;
   handleEmailClick: (e: React.MouseEvent) => void;
 }
 
-export default function ContactSection({ handleEmailClick }: ContactSectionProps) {
+export default function ContactSection({ visibleSections, handleEmailClick }: ContactSectionProps) {
   return (
-    <section id="contact" className="py-20 px-6">
+    <section id="contact" className={`py-20 px-6 transition-all duration-1000 ${
+      visibleSections.has('contact') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+    }`}>
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-8">
+        <h2 className={`text-4xl font-bold mb-8 transition-all duration-1000 delay-200 ${
+          visibleSections.has('contact') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
           Let's Work Together
         </h2>
-        <p className="text-xl text-gray-400 max-w-2x2 mx-auto mb-12">
-          feel free to reach out! I'm always interested in new opportunities and exciting projects.
+        <p className={`text-xl text-gray-400 max-w-2xl mx-auto mb-12 transition-all duration-1000 delay-400 ${
+          visibleSections.has('contact') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          Feel free to reach out! I'm always interested in new opportunities and exciting projects.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
+        <div className={`grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12 transition-all duration-1000 delay-600 ${
+          visibleSections.has('contact') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
           <Card 
             className="bg-gray-900 border-gray-800 cursor-pointer hover:border-gray-600 transition-colors"
             onClick={handleEmailClick}

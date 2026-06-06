@@ -49,7 +49,7 @@ export const jobs: Job[] = [
     current: false,
   },
   {
-    title: "Software Developer Intern",
+    title: "Software Engineer Intern",
     company: "ResVR",
     period: "May 2025 - Aug 2025",
     location: "Canada (Remote)",

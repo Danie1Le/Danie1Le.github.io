@@ -23,6 +23,17 @@ export interface Project {
 
 export const jobs: Job[] = [
   {
+    title: "Software Engineer Intern",
+    company: "Framatome",
+    period: "June 2026 - Present",
+    location: "Lynchburg, VA",
+    description: "AI and Automations Team",
+    details: [""],
+    skills: [],
+    side: "left",
+    current: true,
+  },
+  {
     title: "Computer Science Grader",
     company: "University of Portland",
     period: "Sept 2025 - Dec 2025",

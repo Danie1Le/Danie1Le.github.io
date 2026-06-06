@@ -89,7 +89,7 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                                 {job.period}
                               </Badge>
                               {job.current && (
-                                <Badge className="bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
+                                <Badge className="border-0 bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
                                   Current
                                 </Badge>
                               )}

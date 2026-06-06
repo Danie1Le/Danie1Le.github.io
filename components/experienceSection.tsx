@@ -58,11 +58,17 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                           ? 'opacity-0 -translate-x-10' 
                           : 'opacity-0 translate-x-10')
                   }`} style={{ transitionDelay: `${index * 200}ms` }}>
-                    <div className={`w-full md:w-5/12 ${job.side === "left" ? "md:pr-8" : "md:pl-8"}`}>
+                    <div className={`w-full transition-all duration-300 ${
+                      expandedJob === index
+                        ? (job.side === "left"
+                            ? "md:w-[50vw] md:ml-[calc(50%_-_50vw)] md:pr-8 md:pl-4"
+                            : "md:w-[50vw] md:mr-[calc(50%_-_50vw)] md:pl-8 md:pr-4")
+                        : (job.side === "left" ? "md:w-5/12 md:pr-8" : "md:w-5/12 md:pl-8")
+                    }`}>
                       <Card
                         className={`bg-gray-900 border-gray-800 relative cursor-pointer hover:border-gray-600 transition-all duration-300 ${
                           job.current ? "ring-2 ring-blue-500/50 shadow-lg shadow-blue-500/20" : ""
-                        } ${expandedJob === index ? "scale-105 shadow-2xl" : ""}`}
+                        } ${expandedJob === index ? "shadow-2xl" : ""}`}
                         onClick={() => handleCardClick(index)}
                         data-job-index={index}
                       >
@@ -89,7 +95,7 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                                 {job.period}
                               </Badge>
                               {job.current && (
-                                <Badge className="bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
+                                <Badge className="border-0 bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
                                   Current
                                 </Badge>
                               )}
@@ -110,7 +116,7 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                             <div className="space-y-4 pt-4 border-t border-gray-700">
                               <div>
                                 <h4 className="text-sm font-semibold text-white mb-2">Key Responsibilities</h4>
-                                <ul className="list-disc list-inside text-gray-400 space-y-1 text-sm">
+                                <ul className="list-disc list-outside pl-5 text-gray-400 space-y-1 text-sm">
                                   {job.details.map((point, i) => (
                                     <li key={i}>{point}</li>
                                   ))}

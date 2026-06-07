@@ -52,12 +52,12 @@ export default function ImagePreviewModal({ src, onClose, download }: ImagePrevi
     <div className="fixed inset-0 z-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-label="Preview">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-md"
+        className="absolute inset-0 bg-black/70 backdrop-blur-md animate-in fade-in duration-200"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      <div className="relative flex flex-col items-center gap-3">
+      <div className="relative flex flex-col items-center gap-3 animate-in fade-in zoom-in-95 duration-200 ease-out">
         <Button
           variant="ghost"
           size="sm"

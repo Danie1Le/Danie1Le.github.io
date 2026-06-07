@@ -7,7 +7,7 @@ import ExperienceSection from "./experienceSection"
 import HeroSection from "./heroSection"
 import Navigation from "./navBar"
 import ProjectsSection from "./projectsSection"
-import ResumeModal from "./resumeModal"
+import ImagePreviewModal from "./imagePreviewModal"
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
@@ -153,9 +153,10 @@ export default function Portfolio() {
         handleEmailClick={handleEmailClick} 
       />
 
-      <ResumeModal 
-        isOpen={isResumeModalOpen}
+      <ImagePreviewModal
+        src={isResumeModalOpen ? "/Daniel_Le_Resume.png" : null}
         onClose={closeResumeModal}
+        download={{ href: "/Daniel_Le_Resume.pdf", filename: "Daniel_Le_Resume.pdf" }}
       />
     </div>
   )

@@ -2,8 +2,10 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import ImagePreviewModal from "@/components/imagePreviewModal"
 import { jobs } from "@/lib/data"
-import { MapPin } from "lucide-react"
+import { Eye, MapPin } from "lucide-react"
+import { useState } from "react"
 
 interface ExperienceSectionProps {
   visibleSections: Set<string>;
@@ -12,6 +14,7 @@ interface ExperienceSectionProps {
 }
 
 export default function ExperienceSection({ visibleSections, expandedJob, handleCardClick }: ExperienceSectionProps) {
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   return (
     <section id="experience" className={`min-h-screen py-20 px-6 flex items-center transition-all duration-1000 ${
@@ -84,16 +87,31 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                         <CardHeader>
                           <div className="flex flex-col">
                             <div className="flex items-center justify-between mb-2">
-                              <Badge
-                                variant="outline"
-                                className={`${
-                                  job.current
-                                    ? "border-blue-500 text-blue-400 bg-blue-500/10"
-                                    : "border-gray-600 text-gray-400"
-                                }`}
-                              >
-                                {job.period}
-                              </Badge>
+                              <div className="flex items-center gap-2">
+                                <Badge
+                                  variant="outline"
+                                  className={`${
+                                    job.current
+                                      ? "border-blue-500 text-blue-400 bg-blue-500/10"
+                                      : "border-gray-600 text-gray-400"
+                                  }`}
+                                >
+                                  {job.period}
+                                </Badge>
+                                {job.previewImage && (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setPreviewImage(job.previewImage!);
+                                    }}
+                                    className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400 transition-colors"
+                                    aria-label="Preview research poster"
+                                  >
+                                    <Eye className="w-4 h-4" />
+                                  </button>
+                                )}
+                              </div>
                               {job.current && (
                                 <Badge className="border-0 bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
                                   Current
@@ -154,6 +172,8 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
           </div>
         </div>
       </div>
+
+      <ImagePreviewModal src={previewImage} onClose={() => setPreviewImage(null)} />
     </section>
   );
 }

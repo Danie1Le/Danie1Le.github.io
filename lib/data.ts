@@ -28,7 +28,7 @@ export const jobs: Job[] = [
     company: "Framatome",
     period: "June 2026 - Present",
     location: "Lynchburg, VA",
-    description: "AI and Automations Team",
+    description: "AI & Automations Team",
     details: ["To be updated"],
     skills: [],
     side: "left",
@@ -39,7 +39,7 @@ export const jobs: Job[] = [
     company: "University of Portland",
     period: "Sept 2025 - Dec 2025",
     location: "Portland, OR",
-    description: "Graded assignments in data structures course",
+    description: "Graded assignments in Data Structures course",
     details: [
       "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
       "Improved programming skills for 25 students by providing targeted code review and debugging support"

@@ -29,7 +29,7 @@ export const jobs: Job[] = [
     period: "June 2026 - Present",
     location: "Lynchburg, VA",
     description: "AI & Automations Team",
-    details: ["To be updated"],
+    details: ["Supporting the AI and Automations team in the design and execution of machine learning algorithms and data processing solutions to improve operational efficiency for the Installed Base Business Unit"],
     skills: [],
     side: "left",
     current: true,

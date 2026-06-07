@@ -10,6 +10,7 @@ export interface Job {
   skills: string[];
   side: "left" | "right";
   current: boolean;
+  previewImage?: string;
 }
 
 export interface Project {
@@ -79,6 +80,7 @@ export const jobs: Job[] = [
     skills: ["C#", ".NET", "Python", "Machine Learning", "Algorithm Optimization"],
     side: "right",
     current: false,
+    previewImage: getImagePath("/ML_Research.png"),
   },
 ];
 

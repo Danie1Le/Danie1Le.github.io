@@ -28,7 +28,7 @@ export const jobs: Job[] = [
     period: "June 2026 - Present",
     location: "Lynchburg, VA",
     description: "AI and Automations Team",
-    details: [""],
+    details: ["To be updated"],
     skills: [],
     side: "left",
     current: true,
@@ -69,7 +69,7 @@ export const jobs: Job[] = [
     company: "University of Portland",
     period: "Jan 2024 - May 2025",
     location: "Portland, OR",
-    description: "Cognitive AI & Agent Simulation Systems",
+    description: "Cognitive AI & Agent Simulation",
     details: [
       "Optimized AI agent behavioral fitness scores by 30% using advanced algorithms in C#/.NET to replicate behavioral patterns of living organisms",
       "Identified 3 behavioral patterns, boosting stability across 4 newly built environments over 100+ generations",

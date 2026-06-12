@@ -1,356 +1,126 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { projects } from "@/lib/data"
 import { getImagePath } from "@/lib/utils"
-import { ChevronDown } from "lucide-react"
-import { useState } from "react"
+import { ExternalLink, Github } from "lucide-react"
 
 interface ProjectsSectionProps {
   visibleSections: Set<string>;
 }
 
 export default function ProjectsSection({ visibleSections }: ProjectsSectionProps) {
+  const isVisible = visibleSections.has("projects");
+
   return (
-    <section id="projects" className={`min-h-screen py-20 px-6 bg-gray-900 flex items-center transition-all duration-1000 ${
-      visibleSections.has('projects') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-    }`}>
-      <div className="container mx-auto w-full">
-        <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
-          visibleSections.has('projects') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          Projects
-        </h2>
-        <div className={`transition-all duration-1000 delay-400 ${
-          visibleSections.has('projects') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          <ProjectCarousel />
+    <section
+      id="projects"
+      className="min-h-screen py-24 px-6 bg-gray-900 flex items-center
+        bg-[radial-gradient(1100px_520px_at_80%_-8%,rgba(129,140,248,0.10),transparent_60%),radial-gradient(900px_480px_at_0%_108%,rgba(56,189,248,0.07),transparent_55%)]"
+    >
+      <div className="container mx-auto w-full max-w-6xl">
+        {/* Header */}
+        <div
+          className={`mb-14 text-center transition-all duration-1000 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
+            Projects
+          </h2>
+        </div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project, index) => {
+            const hasLinks = Boolean(project.live || project.github);
+            return (
+              <div
+                key={index}
+                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
+                className={`group relative flex flex-col rounded-2xl border border-white/[0.07] bg-[#10131a] overflow-hidden
+                  transition-all duration-700 ease-out
+                  hover:-translate-y-1.5 hover:border-indigo-400/50
+                  hover:shadow-[0_22px_50px_-22px_rgba(0,0,0,0.8),0_0_60px_-30px_rgba(129,140,248,0.55)]
+                  ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+              >
+                {/* top accent bar */}
+                <span className="absolute top-0 left-0 right-0 h-0.5 z-[3] origin-left scale-x-0 bg-gradient-to-r from-indigo-400 to-sky-400 transition-transform duration-500 group-hover:scale-x-100" />
+
+                {/* media */}
+                <div className="relative aspect-[16/10] overflow-hidden bg-[#0c0f15]">
+                  {project.image === "turbine" ? (
+                    <div className="flex w-full h-full">
+                      <img
+                        src={getImagePath("/turbine1.jpg")}
+                        alt="Wind turbine"
+                        className="w-1/2 h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.55]"
+                      />
+                      <img
+                        src={getImagePath("/turbine2.jpg")}
+                        alt="Wind turbine"
+                        className="w-1/2 h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.55]"
+                      />
+                    </div>
+                  ) : (
+                    <img
+                      src={project.image || "/placeholder.svg"}
+                      alt={project.title}
+                      className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.55] ${
+                        project.title === "Dr. Mole" ? "object-[50%_28%]" : "object-center"
+                      }`}
+                    />
+                  )}
+
+                  {hasLinks && (
+                    <div className="absolute inset-x-0 bottom-0 z-[2] flex gap-2.5 p-4 opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      {project.live && (
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 px-3.5 py-2 text-[13px] font-semibold text-gray-950 transition-transform duration-200 hover:-translate-y-0.5"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                        </a>
+                      )}
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-gray-950/70 px-3.5 py-2 text-[13px] font-semibold text-gray-100 backdrop-blur transition-transform duration-200 hover:-translate-y-0.5"
+                        >
+                          <Github className="w-3.5 h-3.5" /> Code
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* body */}
+                <div className="flex flex-1 flex-col gap-2.5 p-5">
+                  <h3 className="text-lg font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-indigo-200">
+                    {project.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-400 line-clamp-3">
+                    {project.description}
+                  </p>
+                  <div className="mt-auto flex flex-wrap gap-1.5 pt-1.5">
+                    {project.tech.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11.5px] font-medium text-gray-300 transition-colors duration-300 group-hover:border-indigo-400/30"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
-}
-
-function ProjectCarousel() {
-  const [startIndex, setStartIndex] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
-
-  const canGoNext = startIndex + 3 < projects.length
-  const canGoPrev = startIndex > 0
-
-  const handlePrevious = () => {
-    if (canGoPrev && !isAnimating) {
-      setIsAnimating(true)
-      setStartIndex(Math.max(0, startIndex - 1))
-      setTimeout(() => {
-        setIsAnimating(false)
-      }, 300)
-    }
-  }
-
-  const handleNext = () => {
-    if (canGoNext && !isAnimating) {
-      setIsAnimating(true)
-      setStartIndex(Math.min(projects.length - 3, startIndex + 1))
-      setTimeout(() => {
-        setIsAnimating(false)
-      }, 300)
-    }
-  }
-
-  // Mobile vertical carousel with 3 complete cards
-  const MobileVerticalCarousel = () => {
-    const mobileCanGoNext = startIndex + 1 < projects.length - 2
-    const mobileCanGoPrev = startIndex > 0
-
-    const handleMobilePrevious = () => {
-      if (mobileCanGoPrev && !isAnimating) {
-        setIsAnimating(true)
-        setStartIndex(Math.max(0, startIndex - 1))
-        setTimeout(() => {
-          setIsAnimating(false)
-        }, 300)
-      }
-    }
-
-    const handleMobileNext = () => {
-      if (mobileCanGoNext && !isAnimating) {
-        setIsAnimating(true)
-        setStartIndex(Math.min(projects.length - 3, startIndex + 1))
-        setTimeout(() => {
-          setIsAnimating(false)
-        }, 300)
-      }
-    }
-
-    return (
-      <div className="relative max-w-md mx-auto md:hidden">
-        {/* Mobile Navigation */}
-        <div className="absolute left-1/2 top-0 -translate-x-1/2 z-10 -translate-y-16">
-          <button
-            onClick={handleMobilePrevious}
-            disabled={!mobileCanGoPrev || isAnimating}
-            aria-label="Previous projects"
-            className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
-              mobileCanGoPrev ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
-            }`}
-          >
-            <ChevronDown className="w-5 h-5 rotate-180" />
-          </button>
-        </div>
-
-        <div className="absolute left-1/2 bottom-0 -translate-x-1/2 z-10 translate-y-16">
-          <button
-            onClick={handleMobileNext}
-            disabled={!mobileCanGoNext || isAnimating}
-            aria-label="Next projects"
-            className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
-              mobileCanGoNext ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
-            }`}
-          >
-            <ChevronDown className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Mobile Projects Vertical Carousel */}
-        <div className="relative overflow-hidden h-[1300px]">
-          <div className={`flex flex-col gap-6 transition-all duration-300 ease-out ${
-            isAnimating ? 'transform scale-98 opacity-95' : 'transform scale-100 opacity-100'
-          }`} style={{ 
-            transform: `translateY(-${startIndex * 450}px)`,
-            transition: 'transform 300ms ease-out, opacity 300ms ease-out, transform 300ms ease-out'
-          }}>
-            {projects.map((project, index) => {
-              const link = project.live || project.github || null;
-              const cardContent = (
-                <>
-                  <div className="aspect-video bg-gray-800 relative overflow-hidden">
-                    {project.image === "turbine" ? (
-                      <div className="w-full h-full flex">
-                        <img
-                          src={getImagePath("/turbine1.jpg")}
-                          alt="Turbine 1"
-                          className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <img
-                          src={getImagePath("/turbine2.jpg")}
-                          alt="Turbine 2"
-                          className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    ) : (
-                      <img
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    )}
-                  </div>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-white text-lg">{project.title}</CardTitle>
-                    <CardDescription className="text-gray-400 text-sm">{project.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex flex-wrap gap-1">
-                      {project.tech.map((tech) => (
-                        <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </>
-              );
-
-              if (link) {
-                return (
-                  <a
-                    key={index}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block group flex-shrink-0 w-full h-[420px]"
-                  >
-                    <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-full">
-                      {cardContent}
-                    </Card>
-                  </a>
-                );
-              } else {
-                return (
-                  <Card
-                    key={index}
-                    className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px] flex-shrink-0 w-full"
-                  >
-                    {cardContent}
-                  </Card>
-                );
-              }
-            })}
-          </div>
-        </div>
-
-        {/* Mobile Progress Dots */}
-        <div className="flex justify-center mt-8">
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-400 text-sm">
-              {startIndex === 0 ? "1-3" : 
-               startIndex === 1 ? "2-4" : 
-               startIndex === 2 ? "3-5" : 
-               startIndex === 3 ? "4-6" : "5-7"}
-            </span>
-            <div className="flex space-x-2">
-              {Array.from({ length: projects.length - 2 }).map((_, i) => {
-                const isActive = startIndex === i;
-                return (
-                  <div
-                    key={i}
-                    className={`h-1 rounded-full transition-all duration-300 ${
-                      isActive ? "bg-white w-8" : "bg-gray-700 w-2"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <>
-      <MobileVerticalCarousel />
-      <div className="relative max-w-6xl mx-auto hidden md:block">
-        {/* Navigation */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -translate-x-16">
-          <button
-            onClick={handlePrevious}
-            disabled={!canGoPrev || isAnimating}
-            aria-label="Previous projects"
-            className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
-              canGoPrev ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
-            }`}
-          >
-            <ChevronDown className="w-5 h-5 rotate-90" />
-          </button>
-        </div>
-
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 translate-x-16">
-          <button
-            onClick={handleNext}
-            disabled={!canGoNext || isAnimating}
-            aria-label="Next projects"
-            className={`w-12 h-12 rounded-full border border-gray-800 bg-gray-950/80 flex items-center justify-center ${
-              canGoNext ? "text-gray-400 hover:text-white" : "text-gray-700 opacity-50"
-            }`}
-          >
-            <ChevronDown className="w-5 h-5 -rotate-90" />
-          </button>
-        </div>
-
-        {/* Projects Grid */}
-        <div className="relative overflow-hidden w-full">
-          <div className={`flex gap-6 transition-all duration-300 ease-out ${
-            isAnimating ? 'transform scale-98 opacity-95' : 'transform scale-100 opacity-100'
-          }`} style={{ transform: `translateX(calc(-${startIndex} * (calc((100% - 3rem) / 3) + 1.5rem)))` }}>
-            {projects.map((project, index) => {
-              const link = project.live || project.github || null;
-              const cardContent = (
-                <>
-                  <div className="aspect-video bg-gray-800 relative overflow-hidden">
-                    {project.image === "turbine" ? (
-                      <div className="w-full h-full flex">
-                        <img
-                          src={getImagePath("/turbine1.jpg")}
-                          alt="Turbine 1"
-                          className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <img
-                          src={getImagePath("/turbine2.jpg")}
-                          alt="Turbine 2"
-                          className="w-1/2 h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    ) : (
-                      <img
-                        src={project.image || "/placeholder.svg"}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    )}
-                  </div>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-white text-lg">{project.title}</CardTitle>
-                    <CardDescription className="text-gray-400 text-sm line-clamp-3">{project.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex flex-wrap gap-1">
-                      {project.tech.map((tech) => (
-                        <Badge key={tech} variant="outline" className="border-gray-600 text-gray-300 text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </>
-              );
-
-              if (link) {
-                return (
-                  <a
-                    key={index}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block group flex-shrink-0 w-full md:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-3rem)/3)]"
-                  >
-                    <Card className="bg-gray-950 border-gray-800 overflow-hidden hover:border-gray-600 transition-colors cursor-pointer h-[420px]">
-                      {cardContent}
-                    </Card>
-                  </a>
-                );
-              } else {
-                return (
-                  <Card
-                    key={index}
-                    className="bg-gray-950 border-gray-800 overflow-hidden group hover:border-gray-600 transition-colors h-[420px] flex-shrink-0 w-full md:w-[calc((100%-3rem)/3)] lg:w-[calc((100%-3rem)/3)]"
-                  >
-                    {cardContent}
-                  </Card>
-                );
-              }
-            })}
-          </div>
-        </div>
-
-        {/* Progress Dots */}
-        <div className="flex justify-center mt-8">
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-400 text-sm">
-              {startIndex === 0 ? "1-3" : 
-               startIndex === 1 ? "2-4" : 
-               startIndex === 2 ? "3-5" :
-               startIndex === 3 ? "4-6" :
-               startIndex === 4 ? "5-7" : "6-8"}
-            </span>
-            <div className="flex space-x-2">
-              {Array.from({ length: projects.length - 3 + 1 }).map((_, i) => {
-                const isActive = startIndex === i;
-                return (
-                  <div
-                    key={i}
-                    className={`h-1 rounded-full transition-all duration-300 ${
-                      isActive ? "bg-white w-8" : "bg-gray-700 w-2"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  )
 }

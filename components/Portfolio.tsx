@@ -87,8 +87,8 @@ export default function Portfolio() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
-      const offset = 10
-      const elementPosition = element.offsetTop - offset
+      const offset = 2
+      const elementPosition = element.offsetTop + offset
       window.scrollTo({
         top: elementPosition,
         behavior: "smooth"

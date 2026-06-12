@@ -33,15 +33,23 @@ export default function ProjectsSection({ visibleSections }: ProjectsSectionProp
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, index) => {
             const hasLinks = Boolean(project.live || project.github);
+            const row = Math.floor(index / 3);
             return (
               <div
                 key={index}
-                style={{ transitionDelay: `${Math.min(index, 6) * 80}ms` }}
-                className={`group relative flex flex-col rounded-2xl border border-white/[0.07] bg-[#10131a] overflow-hidden
-                  transition-all duration-700 ease-out
+                style={{
+                  transitionDelay: `${row * 180}ms`,
+                  transitionDuration: `${700 + row * 350}ms`,
+                }}
+                className={`transition-all ease-out ${
+                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
+              >
+              <div
+                className="group relative flex h-full flex-col rounded-2xl border border-white/[0.07] bg-[#10131a] overflow-hidden
+                  transition-all duration-300 ease-out
                   hover:-translate-y-1.5 hover:border-indigo-400/50
-                  hover:shadow-[0_22px_50px_-22px_rgba(0,0,0,0.8),0_0_60px_-30px_rgba(129,140,248,0.55)]
-                  ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                  hover:shadow-[0_22px_50px_-22px_rgba(0,0,0,0.8),0_0_60px_-30px_rgba(129,140,248,0.55)]"
               >
                 {/* top accent bar */}
                 <span className="absolute top-0 left-0 right-0 h-0.5 z-[3] origin-left scale-x-0 bg-gradient-to-r from-indigo-400 to-sky-400 transition-transform duration-500 group-hover:scale-x-100" />
@@ -116,6 +124,7 @@ export default function ProjectsSection({ visibleSections }: ProjectsSectionProp
                     ))}
                   </div>
                 </div>
+              </div>
               </div>
             );
           })}

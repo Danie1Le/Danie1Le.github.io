@@ -87,7 +87,7 @@ export const jobs: Job[] = [
 export const projects: Project[] = [
   {
     title: "Dr. Mole",
-    description: "AI-powered mobile app for skin lesion tracking and risk assessment, featuring mole monitoring, body mapping, and scan comparisons over time. Built at HackUP 2026, placing 3rd in Health & Wellness track and 6th overall.",
+    description: "AI-powered mobile app for detecting skin cancer over time. Placed 3rd in Health & Wellness track and 6th overall at HackUP.",
     image: getImagePath("/Dr_Mole.png"),
     tech: ["React Native", "FastAPI", "Python", "PyTorch", "Groq", "Hugging Face"],
     github: "https://github.com/chengenli9/HackUP/tree/main",

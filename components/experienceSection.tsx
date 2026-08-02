@@ -24,7 +24,7 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
         <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
           visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          Career Roadmap
+          Experience
         </h2>
         <div className={`max-w-4xl mx-auto transition-all duration-1000 delay-400 ${
           visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'

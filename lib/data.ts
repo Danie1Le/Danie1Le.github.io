@@ -111,7 +111,7 @@ export const projects: Project[] = [
   },
   {
     title: "NBA Game Predictor",
-    description: "Machine learning model that analyzes over 1000 games to predicts NBA game results.",
+    description: "Machine-learning application that analyzes more than 1,000 NBA games to predict game outcomes.",
     image: getImagePath("/NBA_predict.png"),
     tech: ["Python", "XGBoost", "PyTorch", "TensorFlow", "React", "Docker"],
     github: "https://github.com/Danie1Le/NBA-Predict",
@@ -119,7 +119,7 @@ export const projects: Project[] = [
   },
   {
     title: "AI ChatBot",
-    description: "Medical training chatbot nurses practice their diagnostic skill through retrieval augmented generation (RAG).",
+    description: "Medical training chatbot that helps nursing students practice diagnostic skills using retrieval-augmented generation.",
     image: getImagePath("/Ai chatBot.png"),
     tech: ["Flask", "JavaScript", "HTML", "CSS", "LangChain", "GitHub Actions", "Jest"],
     github: "",

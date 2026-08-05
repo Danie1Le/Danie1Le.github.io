@@ -29,7 +29,13 @@ export const jobs: Job[] = [
     period: "June 2026 - Present",
     location: "Lynchburg, VA",
     description: "AI & Automations Team",
-    details: ["Supporting the AI and Automations team in the design and execution of machine learning algorithms and data processing solutions to improve operational efficiency for the Installed Base Business Unit"],
+    details: [
+      "Built a Python document precheck system using Docling, parsing PDFs to validate page-number formatting against internal compliance standards and flagging errors at 94% accuracy",
+      "Implemented RapidOCR fallback when Docling extraction returned sparse text, recovering rotated scanned pages",
+      "Automated Docker deployments to UAT and production via Azure DevOps, reducing setup time by 55%",
+      "Redesigned Vue.js AI checker controls and workflows, improving usability for document reviewers",
+      "Resolved authentication and routing defects in C# middleware, eliminating unauthorized redirects"
+    ],
     skills: [],
     side: "left",
     current: true,
@@ -56,10 +62,10 @@ export const jobs: Job[] = [
     location: "Canada (Remote)",
     description: "Conversational AI & Avatar Systems",
     details: [
-      "Improved 3D avatar rendering system by 62% by integrating HeyGen API with Python and Gemma 3B LLM, enhancing user engagement by allowing natural conversations with AI avatars",
+      "Reduced 3D avatar render and upload time by 62%, integrating the HeyGen API with Python and Gemma 3 to enable natural spoken conversations with AI avatars",
       "Achieved 100% script-to-video conversion through a dual-model backend pipeline and frontend integration",
-      "Increased video completion rate to 95% by optimizing backend stability and error handling mechanisms",
-      "Enhanced user experience through real-time status updates using WebSocket polling for video rendering progress"
+      "Increased video completion rate to 95% by optimizing backend stability and error-handling mechanisms",
+      "Enhanced user experience through real-time status updates using WebSocket polling for video-rendering progress"
     ],
     skills: ["AI", "LLM", "Python", "API Integration", "WebSocket", "3D Rendering", "Backend Development", "HeyGen"],
     side: "left",
@@ -72,10 +78,10 @@ export const jobs: Job[] = [
     location: "Portland, OR",
     description: "Cognitive AI & Agent Simulation",
     details: [
-      "Optimized AI agent behavioral fitness scores by 30% using advanced algorithms in C#/.NET to replicate behavioral patterns of living organisms",
+      "Optimized AI agent behavioral fitness scores by 30% using genetic algorithms and perceptron-based decision models in C#/.NET to replicate behavioral patterns of living organisms",
       "Identified 3 behavioral patterns, boosting stability across 4 newly built environments over 100+ generations",
       "Accelerated analysis workflows by 40% by creating a Python-based classification system with real-time analytics",
-      "Designed a metrics framework elevating reward discovery by 12% while reducing computational overhead"
+      "Designed a metrics framework that increased Q-learning reward discovery by 12% while reducing computational overhead"
     ],
     skills: ["C#", ".NET", "Python", "Machine Learning", "Algorithm Optimization"],
     side: "right",

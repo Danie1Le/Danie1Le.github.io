@@ -130,7 +130,7 @@ export default function ExperienceSection({ visibleSections, expandedJob, handle
                           <p className="text-gray-300 mb-4">
                             {job.description}
                           </p>
-                          <div className={`overflow-hidden transition-all duration-300 ${expandedJob === index ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                          <div className={`overflow-hidden transition-all duration-300 ${expandedJob === index ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                             <div className="space-y-4 pt-4 border-t border-gray-700">
                               <div>
                                 <h4 className="text-sm font-semibold text-white mb-2">Key Responsibilities</h4>

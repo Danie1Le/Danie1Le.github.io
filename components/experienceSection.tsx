@@ -1,177 +1,120 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import ImagePreviewModal from "@/components/imagePreviewModal"
 import { jobs } from "@/lib/data"
-import { Eye, MapPin } from "lucide-react"
-import { useState } from "react"
+import { Eye, Plus } from "lucide-react"
+import { useRef, useState } from "react"
 
-interface ExperienceSectionProps {
-  visibleSections: Set<string>;
-  expandedJob: number | null;
-  handleCardClick: (index: number) => void;
-}
+const NAV = 80; // keep rows clear of the fixed nav bar
 
-export default function ExperienceSection({ visibleSections, expandedJob, handleCardClick }: ExperienceSectionProps) {
+export default function ExperienceSection() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const rows = useRef<(HTMLLIElement | null)[]>([]);
+
+  // Scroll so a row of the given final height sits dead centre (or just under the nav if it is taller than the screen).
+  // `lift` is how far the row will rise because a role above it is closing at the same time.
+  const centre = (li: HTMLElement, height: number, lift = 0) => {
+    const target = Math.max(NAV, (window.innerHeight - height) / 2);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollBy({ top: li.getBoundingClientRect().top - lift - target, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  const toggle = (index: number) => {
+    const li = rows.current[index]!;
+    const head = li.firstElementChild as HTMLElement;
+    if (openIdx === index) {
+      setOpenIdx(null);
+      if (li.getBoundingClientRect().top < NAV) centre(li, head.offsetHeight); // closed from far down: bring the title back
+      return;
+    }
+    const content = li.querySelector<HTMLElement>("[data-details] > div > div")!; // natural height, even while collapsed
+    const lift = openIdx !== null && openIdx < index
+      ? rows.current[openIdx]!.querySelector<HTMLElement>("[data-details]")!.offsetHeight
+      : 0;
+    setOpenIdx(index);
+    centre(li, head.offsetHeight + content.offsetHeight, lift);
+  };
 
   return (
-    <section id="experience" className={`min-h-screen py-20 px-6 flex items-center transition-all duration-1000 ${
-      visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-    }`}>
-      <div className="container mx-auto w-full">
-        <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
-          visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          Experience
-        </h2>
-        <div className={`max-w-4xl mx-auto transition-all duration-1000 delay-400 ${
-          visibleSections.has('experience') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          <div className="relative">
-            {/* Vertical Timeline Line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-blue-500 via-yellow-500 to-blue-500 rounded-full"></div>
+    <section id="experience" className="frame pt-24 md:pt-32">
+      <h2 data-reveal className="t-head font-semibold mb-10">Experience</h2>
 
-            <div className="space-y-12">
-              {jobs.map((job, index) => (
-                <div key={index} className="relative">
-                  {/* Timeline Node */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-8">
-                    <div
-                      className={`w-6 h-6 rounded-full border-4 ${
-                        job.current
-                          ? "bg-gradient-to-r from-blue-500 to-yellow-500 border-white shadow-lg shadow-blue-500/50"
-                          : "bg-gray-900 border-gray-600"
-                      } z-10 relative`}
-                    >
-                      {job.current && (
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-yellow-500 animate-ping opacity-75"></div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Job Card */}
-                  <div className={`flex ${job.side === "left" ? "justify-start" : "justify-end"} transition-all duration-1000 ${
-                    visibleSections.has('experience') 
-                      ? (job.side === "left" 
-                          ? 'opacity-100 translate-x-0' 
-                          : 'opacity-100 translate-x-0')
-                      : (job.side === "left" 
-                          ? 'opacity-0 -translate-x-10' 
-                          : 'opacity-0 translate-x-10')
-                  }`} style={{ transitionDelay: `${index * 200}ms` }}>
-                    <div className={`w-full transition-all duration-300 ${
-                      expandedJob === index
-                        ? (job.side === "left"
-                            ? "md:w-[50vw] md:ml-[calc(50%_-_50vw)] md:pr-8 md:pl-4"
-                            : "md:w-[50vw] md:mr-[calc(50%_-_50vw)] md:pl-8 md:pr-4")
-                        : (job.side === "left" ? "md:w-5/12 md:pr-8" : "md:w-5/12 md:pl-8")
-                    }`}>
-                      <Card
-                        className={`bg-gray-900 border-gray-800 relative cursor-pointer hover:border-gray-600 transition-all duration-300 ${
-                          job.current ? "ring-2 ring-blue-500/50 shadow-lg shadow-blue-500/20" : ""
-                        } ${expandedJob === index ? "shadow-2xl" : ""}`}
-                        onClick={() => handleCardClick(index)}
-                        data-job-index={index}
+      {/* overflow-anchor off: we place the scroll ourselves while rows open and close. */}
+      <ol className="[overflow-anchor:none]">
+        {jobs.map((job, index) => {
+          const open = openIdx === index;
+          return (
+            <li
+              key={index}
+              ref={(el) => { rows.current[index] = el; }}
+              data-reveal
+              style={{ "--i": index % 3 } as React.CSSProperties}
+              className={`group transition-colors duration-500 ${open ? "bg-[var(--surface)]" : "hover:bg-[var(--surface)]"}`}
+            >
+              <div className="relative grid md:grid-cols-12 gap-x-8 gap-y-1 px-4 md:px-6 py-5">
+                {/* The whole row is the toggle; the poster button sits above it. */}
+                <button
+                  type="button"
+                  onClick={() => toggle(index)}
+                  aria-expanded={open}
+                  aria-controls={`job-${index}`}
+                  aria-label={`${job.title}, ${job.company}`}
+                  className="absolute inset-0 w-full"
+                />
+                <span className="md:col-span-3 t-small text-[var(--dim)]">
+                  {job.period}
+                  {job.current && <span className="ml-3 text-[var(--brand)]">Current</span>}
+                  <span className="block">{job.location}</span>
+                </span>
+                <span className="md:col-span-8">
+                  <span className="block t-lead font-medium">
+                    {job.title}
+                    {job.previewImage && (
+                      <button
+                        type="button"
+                        onClick={() => setPreviewImage(job.previewImage!)}
+                        aria-label="View the research poster"
+                        title="View the research poster"
+                        className="relative z-10 p-3.5 -my-3.5 -ml-1.5 align-middle text-[var(--dim)] hover:text-[var(--brand)] transition-colors active:scale-90"
                       >
-                        {/* Arrow pointing to timeline */}
-                        <div
-                          className={`absolute top-8 ${
-                            job.side === "left" ? "right-0 translate-x-1/2" : "left-0 -translate-x-1/2"
-                          } w-0 h-0 border-t-8 border-b-8 border-transparent ${
-                            job.side === "left" ? "border-l-8 border-l-gray-800" : "border-r-8 border-r-gray-800"
-                          } hidden md:block`}
-                        ></div>
+                        <Eye className="w-5 h-5" aria-hidden="true" />
+                      </button>
+                    )}
+                  </span>
+                  <span className="block mt-1 text-[var(--dim)]">{job.company} · {job.description}</span>
+                </span>
+                <Plus
+                  aria-hidden="true"
+                  className={`hidden md:block md:col-span-1 justify-self-end w-5 h-5 transition-transform duration-500 ease-expo ${open ? "rotate-45" : "group-hover:rotate-90"}`}
+                />
+              </div>
 
-                        <CardHeader>
-                          <div className="flex flex-col">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-2">
-                                <Badge
-                                  variant="outline"
-                                  className={`${
-                                    job.current
-                                      ? "border-blue-500 text-blue-400 bg-blue-500/10"
-                                      : "border-gray-600 text-gray-400"
-                                  }`}
-                                >
-                                  {job.period}
-                                </Badge>
-                                {job.previewImage && (
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setPreviewImage(job.previewImage!);
-                                    }}
-                                    className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-gray-600 text-gray-300 hover:border-blue-500 hover:text-blue-400 transition-colors"
-                                    aria-label="Preview research poster"
-                                  >
-                                    <Eye className="w-4 h-4" />
-                                  </button>
-                                )}
-                              </div>
-                              {job.current && (
-                                <Badge className="border-0 bg-gradient-to-r from-blue-500 to-yellow-500 text-white">
-                                  Current
-                                </Badge>
-                              )}
-                            </div>
-                            <CardTitle className="text-xl text-white">{job.title}</CardTitle>
-                            <CardDescription className="text-lg text-gray-300">{job.company}</CardDescription>
-                            <div className="flex items-center text-gray-400 mt-1">
-                              <MapPin className="w-4 h-4 mr-2" />
-                              {job.location}
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-gray-300 mb-4">
-                            {job.description}
-                          </p>
-                          <div className={`overflow-hidden transition-all duration-300 ${expandedJob === index ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                            <div className="space-y-4 pt-4 border-t border-gray-700">
-                              <div>
-                                <h4 className="text-sm font-semibold text-white mb-2">Key Responsibilities</h4>
-                                <ul className="list-disc list-outside pl-5 text-gray-400 space-y-1 text-sm">
-                                  {job.details.map((point, i) => (
-                                    <li key={i}>{point}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
-                            {job.skills.map((skill) => (
-                              <Badge
-                                key={skill}
-                                variant="secondary"
-                                className="bg-gray-800 text-gray-300 hover:bg-gray-700"
-                              >
-                                {skill}
-                              </Badge>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
+              <div id={`job-${index}`} data-details className={`grid transition-[grid-template-rows,opacity] duration-700 ease-expo ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                <div className="overflow-hidden" {...(!open && { inert: "" as any })}>
+                  {/* Clicking anywhere in the details closes them (unless the reader is selecting text). */}
+                  <div
+                    className="grid md:grid-cols-12 gap-x-8 px-4 md:px-6 pb-6 cursor-pointer"
+                    onClick={(e) => {
+                      if ((e.target as HTMLElement).closest("a, button") || window.getSelection()?.toString()) return;
+                      toggle(index);
+                    }}
+                  >
+                    <div className="md:col-span-9 md:col-start-4 md:pr-11">
+                      <ul className="space-y-3 list-disc pl-5 marker:text-[var(--brand)]">
+                        {job.details.map((point, i) => (
+                          <li key={i}>{point}</li>
+                        ))}
+                      </ul>
+                      <p className="mt-6 t-small text-[var(--dim)]">{job.skills.join(" · ")}</p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            {/* Starting Point */}
-            <div className="relative mt-12">
-              <div className="absolute left-1/2 transform -translate-x-1/2">
-                <div className="w-4 h-4 bg-gray-600 rounded-full border-2 border-gray-800"></div>
               </div>
-              <div className="text-center pt-8">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </li>
+          );
+        })}
+      </ol>
 
       <ImagePreviewModal src={previewImage} onClose={() => setPreviewImage(null)} />
     </section>

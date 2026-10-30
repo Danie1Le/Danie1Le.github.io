@@ -1,36 +1,54 @@
 "use client"
 
 import { contact } from "@/lib/data";
-import { Github, Linkedin } from "lucide-react";
+import { Check, Copy, Github, Linkedin, Mail } from "lucide-react";
+import { useState } from "react";
 
-// The page ends here, on a raised shade of the ground rather than a light band.
+// The page ends on a panel shaped like Skills: the heading on the left, the ways to reach me on the right.
 export default function ContactSection() {
-  const [user, domain] = contact.email.split("@");
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(contact.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {} // clipboard blocked: the address is still on screen to select
+  };
+
   return (
-    <section id="contact" className="mt-24 md:mt-32 bg-[var(--surface)] transition-colors duration-500">
-      <div className="frame py-20 md:py-28">
-        <h2 data-reveal className="t-head font-semibold">Let’s work together</h2>
+    <section id="contact" className="frame pt-24 md:pt-32 pb-16 md:pb-24">
+      <div className="bg-[var(--surface)] transition-colors duration-500 grid md:grid-cols-12 gap-x-8 gap-y-10 p-6 md:p-12">
+        <h2 data-reveal className="md:col-span-5 t-head font-semibold max-w-[12ch]">Let’s work together</h2>
 
-        <a
-          data-reveal
-          style={{ "--i": 1 } as React.CSSProperties}
-          href={contact.gmail}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-block mt-10 md:mt-14 font-medium leading-tight tracking-tight text-[clamp(1.75rem,1rem+3.4vw,4rem)] hover:text-[var(--brand)] transition-colors duration-300"
-        >
-          <span className="block sm:inline">{user}@</span>
-          <span className="block sm:inline">{domain}</span>
-          <span className="block h-[3px] mt-2 bg-current origin-left scale-x-0 transition-transform duration-700 ease-expo group-hover:scale-x-100" aria-hidden="true" />
-        </a>
+        <div className="md:col-span-6 md:col-start-7 flex flex-col gap-8">
+          <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+            <p className="t-small text-[var(--dim)]">Email</p>
+            <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-1">
+              <a href={contact.gmail} target="_blank" rel="noopener noreferrer" className="link t-lead font-medium">
+                {contact.email}
+              </a>
+              <button
+                onClick={copy}
+                className="inline-flex items-center gap-1.5 min-h-11 t-small text-[var(--dim)] hover:text-[var(--brand)] transition-colors active:scale-95"
+              >
+                {copied ? <Check className="w-4 h-4" aria-hidden="true" /> : <Copy className="w-4 h-4" aria-hidden="true" />}
+                <span aria-live="polite">{copied ? "Copied" : "Copy"}</span>
+              </button>
+            </div>
+          </div>
 
-        <div data-reveal style={{ "--i": 2 } as React.CSSProperties} className="mt-10 md:mt-14 flex gap-3 t-small font-medium">
-          <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none">
-            <Linkedin className="w-4 h-4" aria-hidden="true" /> LinkedIn
-          </a>
-          <a href={contact.github} target="_blank" rel="noopener noreferrer" className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none">
-            <Github className="w-4 h-4" aria-hidden="true" /> GitHub
-          </a>
+          <div data-reveal style={{ "--i": 2 } as React.CSSProperties} className="flex flex-wrap gap-3 t-small font-medium">
+            <a href={contact.gmail} target="_blank" rel="noopener noreferrer" className="btn-brand min-h-11 px-5 w-full sm:w-auto">
+              <Mail className="w-4 h-4" aria-hidden="true" /> Email me
+            </a>
+            <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none">
+              <Linkedin className="w-4 h-4" aria-hidden="true" /> LinkedIn
+            </a>
+            <a href={contact.github} target="_blank" rel="noopener noreferrer" className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none">
+              <Github className="w-4 h-4" aria-hidden="true" /> GitHub
+            </a>
+          </div>
         </div>
       </div>
     </section>

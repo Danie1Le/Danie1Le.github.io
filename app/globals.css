@@ -205,25 +205,10 @@
   }
 }
 
-/* Highlights: slow drift on the active photograph. */
-@keyframes drift {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
-}
-
-/* Highlights art: a scan bar sweeps the pages, the EEG traces stream, the fitness curve draws itself. */
-@keyframes scan { from { transform: translateX(0); } to { transform: translateX(1600px); } }
-@keyframes stream { to { transform: translateX(-1600px); } }
-@keyframes draw { to { stroke-dashoffset: 0; } }
+/* Highlights: metric bars grow in turn; the loader fills over one role, then hands on to the next. */
 @keyframes grow { from { transform: scaleX(0); } }
-.art-scan { animation: scan 6s linear both; }
-[data-offscreen] .art-scan, [data-offscreen] .art-flag { animation-play-state: paused; }
-@keyframes flag { from { opacity: 0; } to { opacity: 0.5; } }
-.art-flag { opacity: 0; animation: flag 0.35s ease-out var(--d, 0s) both; }
-.art-stream { animation: stream 16s linear infinite; }
+@keyframes load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .bar-grow { transform-origin: left; animation: grow 1.1s var(--ease) both; animation-delay: var(--d, 0s); }
-.art-grow { transform-box: fill-box; transform-origin: left; animation: grow 1.4s var(--ease) both; }
-.art-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 2.4s var(--ease) forwards; }
 
 /* Theme switch: the new theme opens as a circle from the toggle (see navBar). */
 ::view-transition-old(root),

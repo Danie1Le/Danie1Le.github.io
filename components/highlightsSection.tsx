@@ -1,6 +1,6 @@
 "use client"
 
-import { highlights } from "@/lib/data";
+import { highlights } from "@/lib/content";
 import { useEffect, useRef, useState } from "react";
 
 const ROLE_MS = 7000; // each role holds this long before the loader hands on to the next

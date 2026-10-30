@@ -1,6 +1,6 @@
 "use client"
 
-import { contact } from "@/lib/data";
+import { contact } from "@/lib/content";
 import { getImagePath } from "@/lib/utils";
 import { FileText, Github, Linkedin, Mail } from "lucide-react";
 import { useEffect, useRef } from "react";

@@ -1,7 +1,6 @@
 "use client"
 
-import { projects } from "@/lib/data"
-import { getImagePath } from "@/lib/utils"
+import { projects } from "@/lib/content"
 import { ArrowUpRight } from "lucide-react"
 import { useState } from "react"
 
@@ -68,23 +67,17 @@ export default function ProjectsSection() {
               >
                 <div className="overflow-hidden">
                   <article data-reveal className="group grid sm:grid-cols-9 gap-x-6 gap-y-3 pb-8">
-                    <div className="sm:col-span-3 aspect-[16/10] overflow-hidden bg-[var(--surface)]">
-                      {project.image === "turbine" ? (
-                        <div className="flex h-full">
-                          {["/turbine1.jpg", "/turbine2.jpg"].map((src) => (
-                            <img key={src} src={getImagePath(src)} alt="Arduino wind turbine model" loading="lazy" className="w-1/2 h-full object-cover exhibit group-hover:scale-105" />
-                          ))}
-                        </div>
-                      ) : (
+                    <div className="sm:col-span-3 aspect-[16/10] overflow-hidden bg-[var(--surface)] flex">
+                      {project.images.map((src) => (
                         <img
-                          src={project.image}
-                          alt={`Screenshot of ${project.title}`}
+                          key={src}
+                          src={src}
+                          alt={project.alt ?? `Screenshot of ${project.title}`}
                           loading="lazy"
-                          className={`w-full h-full object-cover exhibit group-hover:scale-105 ${
-                            project.title === "Dr. Mole" ? "object-[50%_28%]" : "object-top"
-                          }`}
+                          className="h-full object-cover exhibit group-hover:scale-105"
+                          style={{ width: `${100 / project.images.length}%`, objectPosition: project.focus ?? "top" }}
                         />
-                      )}
+                      ))}
                     </div>
 
                     <div className="sm:col-span-6 flex flex-col">

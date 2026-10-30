@@ -25,7 +25,7 @@ export default function HeroSection({ handleResumeClick }: HeroSectionProps) {
           <h1 aria-label="Daniel Le" className="font-semibold tracking-[-0.035em] leading-[1.05] text-[clamp(3rem,2rem+3.6vw,5.5rem)] overflow-hidden pb-[0.08em]">
             {Array.from("Daniel Le").map((ch, i) => (
               <span key={i} aria-hidden="true" className="letter" style={animDelay(0.25 + i * 0.045)}>
-                {ch === " " ? " " : ch}
+                {ch === " " ? "\u00a0" : ch}
               </span>
             ))}
           </h1>

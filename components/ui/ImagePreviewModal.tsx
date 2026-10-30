@@ -37,7 +37,7 @@ export default function ImagePreviewModal({ src, onClose, download }: ImagePrevi
         <button
           onClick={onClose}
           aria-label="Close preview"
-          className="absolute top-2 right-2 z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors"
+          className="absolute top-2 right-2 z-10 inline-flex items-center justify-center h-9 px-2 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors"
         >
           <X className="w-4 h-4" />
         </button>

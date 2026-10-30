@@ -5,157 +5,71 @@ import AboutSection from "./aboutSection"
 import ContactSection from "./contactSection"
 import ExperienceSection from "./experienceSection"
 import HeroSection from "./heroSection"
+import HighlightsSection from "./highlightsSection"
 import Navigation from "./navBar"
 import ProjectsSection from "./projectsSection"
 import ImagePreviewModal from "./imagePreviewModal"
 
+const SECTIONS = ["hero", "highlights", "experience", "projects", "about", "contact"]
+
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
-  const [expandedJob, setExpandedJob] = useState<number | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set())
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
 
-  const handleEmailClick = (e: React.MouseEvent) => {
-    // Open Gmail compose with pre-filled email
-    const gmailUrl = 'https://mail.google.com/mail/?view=cm&to=le.daniel412@gmail.com'
-    window.open(gmailUrl, '_blank')
-  }
-
-  const handleResumeClick = () => {
-    setIsResumeModalOpen(true)
-  }
-
-  const closeResumeModal = () => {
-    setIsResumeModalOpen(false)
-  }
+  const handleResumeClick = () => setIsResumeModalOpen(true)
 
   useEffect(() => {
-    // Trigger initial load animation
-    setIsLoaded(true)
-    
-    const handleScroll = () => {
-      const sections = ["hero", "about", "experience", "projects", "contact"]
-      const scrollPosition = window.scrollY + 100
+    ;(window as any).__revealed = true
 
-      // Check if user has scrolled to the bottom of the page
-      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50
-      if (isAtBottom) {
-        setActiveSection("contact")
-        return
-      }
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i])
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i])
-          break
+    // Reveal each [data-reveal] once as it enters the viewport.
+    const reveal = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.setAttribute("data-in", "") // an attribute React never rewrites, unlike className
+          reveal.unobserve(entry.target)
         }
-      }
-    }
-
-    // Intersection Observer for scroll animations
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleSections(prev => {
-              const newSet = new Set(prev)
-              newSet.add(entry.target.id)
-              return newSet
-            })
-          }
-        })
-      },
-      { threshold: 0.1, rootMargin: "-50px" }
+      }),
+      { rootMargin: "0px 0px -8% 0px" }
     )
+    document.querySelectorAll("[data-reveal]").forEach((el) => reveal.observe(el))
 
-    // Observe all sections
-    const sections = ["hero", "about", "experience", "projects", "contact"]
-    sections.forEach((sectionId) => {
-      const element = document.getElementById(sectionId)
-      if (element) observer.observe(element)
+    // The section crossing the upper third of the screen is the active one.
+    const spy = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.isIntersecting && setActiveSection(entry.target.id)),
+      { rootMargin: "-35% 0px -60% 0px" }
+    )
+    SECTIONS.forEach((id) => {
+      const el = document.getElementById(id)
+      if (el) spy.observe(el)
     })
 
-    window.addEventListener("scroll", handleScroll)
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-      observer.disconnect()
+      reveal.disconnect()
+      spy.disconnect()
     }
   }, [])
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      const offset = 2
-      const elementPosition = element.offsetTop + offset
-      window.scrollTo({
-        top: elementPosition,
-        behavior: "smooth"
-      })
-    }
-  }
-
-  const handleCardClick = (index: number) => {
-    if (expandedJob === index) {
-      // Hide the card
-      setExpandedJob(null);
-    } else {
-      // Show the card
-      setExpandedJob(index);
-      
-      // Scroll to the expanded card after a short delay to allow animation to start
-      setTimeout(() => {
-        const cardElement = document.querySelector(`[data-job-index="${index}"]`);
-        if (cardElement) {
-          const cardRect = cardElement.getBoundingClientRect();
-          const navHeight = 80;
-          const offset = 20;
-          
-          window.scrollTo({
-            top: window.pageYOffset + cardRect.top - navHeight - offset,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
-    }
-  }
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <Navigation 
-        activeSection={activeSection} 
-        scrollToSection={scrollToSection} 
-      />
-      
-      <HeroSection 
-        isLoaded={isLoaded} 
-        handleEmailClick={handleEmailClick}
-        handleResumeClick={handleResumeClick}
-      />
-      
-      <AboutSection 
-        visibleSections={visibleSections} 
-      />
-      
-      <ExperienceSection 
-        visibleSections={visibleSections}
-        expandedJob={expandedJob}
-        handleCardClick={handleCardClick}
-      />
-      
-      <ProjectsSection 
-        visibleSections={visibleSections} 
-      />
-      
-      <ContactSection 
-        visibleSections={visibleSections}
-        handleEmailClick={handleEmailClick} 
-      />
+    <div className="min-h-[100svh]">
+      <div className="read-progress" aria-hidden="true" />
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[var(--brand-fill)] focus:text-[var(--brand-ink)]">
+        Skip to content
+      </a>
+      <Navigation activeSection={activeSection} handleResumeClick={handleResumeClick} />
+
+      <main id="main">
+        <HeroSection handleResumeClick={handleResumeClick} />
+        <HighlightsSection />
+        <ExperienceSection />
+        <ProjectsSection />
+        <AboutSection handleResumeClick={handleResumeClick} />
+        <ContactSection />
+      </main>
 
       <ImagePreviewModal
         src={isResumeModalOpen ? "/Daniel_Le_Resume.png" : null}
-        onClose={closeResumeModal}
+        onClose={() => setIsResumeModalOpen(false)}
         download={{ href: "/Daniel_Le_Resume.pdf", filename: "Daniel_Le_Resume.pdf" }}
       />
     </div>

@@ -2,133 +2,114 @@
 
 import { projects } from "@/lib/data"
 import { getImagePath } from "@/lib/utils"
-import { ExternalLink, Github } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
+import { useState } from "react"
 
-interface ProjectsSectionProps {
-  visibleSections: Set<string>;
-}
+// The tools used most across projects become the filters, with how many projects use each.
+const counts = new Map<string, number>()
+projects.forEach((p) => p.tech.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)))
+const filters = Array.from(counts).filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]).slice(0, 6)
 
-export default function ProjectsSection({ visibleSections }: ProjectsSectionProps) {
-  const isVisible = visibleSections.has("projects");
+export default function ProjectsSection() {
+  const [tool, setTool] = useState<string | null>(null);
+
+  // Picking a tool brings the start of the list back under the nav, so the results are what you see.
+  const pick = (value: string | null) => {
+    setTool(value);
+    const top = document.querySelector("#projects > div")!.getBoundingClientRect().top; // not the heading: it is sticky
+    if (Math.abs(top - 96) > 8) { // 96 = nav bar + breathing room
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollBy({ top: top - 96, behavior: reduce ? "auto" : "smooth" });
+    }
+  };
+
+  const filterButton = (label: string, n: number, value: string | null) => (
+    <button
+      key={label}
+      onClick={() => pick(value)}
+      aria-pressed={tool === value}
+      className={`flex items-baseline gap-2 whitespace-nowrap transition-colors duration-300 active:scale-95 ${
+        tool === value ? "text-[var(--ink)]" : "text-[var(--dim)] hover:text-[var(--ink)]"
+      }`}
+    >
+      <span className={`inline-block w-2 h-2 self-center transition-[transform,opacity] duration-500 ${tool === value ? "bg-[var(--brand)] scale-100 opacity-100" : "scale-50 opacity-0"}`} aria-hidden="true" />
+      {label}
+      <span className="t-small tabular-nums">{n}</span>
+    </button>
+  );
 
   return (
-    <section
-      id="projects"
-      className="min-h-screen py-24 px-6 bg-gray-900 flex items-center
-        bg-[radial-gradient(1100px_520px_at_80%_-8%,rgba(129,140,248,0.10),transparent_60%),radial-gradient(900px_480px_at_0%_108%,rgba(56,189,248,0.07),transparent_55%)]"
-    >
-      <div className="container mx-auto w-full max-w-6xl">
-        {/* Header */}
-        <div
-          className={`mb-14 text-center transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
-            Projects
-          </h2>
+    <section id="projects" className="frame pt-24 md:pt-32">
+      <div className="md:grid md:grid-cols-12 md:gap-x-8">
+        {/* Rail: section name and the tool filters (a scrolling line on phones). */}
+        <div className="md:col-span-3">
+          <div className="md:sticky md:top-24">
+            <h2 data-reveal className="t-head font-semibold">Projects</h2>
+            <div
+              data-reveal
+              style={{ "--i": 2 } as React.CSSProperties}
+              className="mt-6 flex flex-wrap md:flex-col gap-x-6 gap-y-3"
+              aria-label="Filter projects by tool"
+            >
+              {filterButton("All", projects.length, null)}
+              {filters.map(([t, n]) => filterButton(t, n, t))}
+            </div>
+          </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <ul className="mt-10 md:mt-0 md:col-span-9 dim-others [overflow-anchor:none]">
           {projects.map((project, index) => {
-            const hasLinks = Boolean(project.live || project.github);
-            const row = Math.floor(index / 3);
+            const on = !tool || project.tech.includes(tool);
             return (
-              <div
-                key={index}
-                style={{
-                  transitionDelay: `${row * 180}ms`,
-                  transitionDuration: `${700 + row * 350}ms`,
-                }}
-                className={`transition-all ease-out ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+              <li
+                key={project.title}
+                aria-hidden={!on}
+                className={`grid transition-[grid-template-rows,opacity] duration-700 ease-expo ${on ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
               >
-              <div
-                className="group relative flex h-full flex-col rounded-2xl border border-white/[0.07] bg-[#10131a] overflow-hidden
-                  transition-all duration-300 ease-out
-                  hover:-translate-y-1.5 hover:border-indigo-400/50
-                  hover:shadow-[0_22px_50px_-22px_rgba(0,0,0,0.8),0_0_60px_-30px_rgba(129,140,248,0.55)]"
-              >
-                {/* top accent bar */}
-                <span className="absolute top-0 left-0 right-0 h-0.5 z-[3] origin-left scale-x-0 bg-gradient-to-r from-indigo-400 to-sky-400 transition-transform duration-500 group-hover:scale-x-100" />
-
-                {/* media */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-[#0c0f15]">
-                  {project.image === "turbine" ? (
-                    <div className="flex w-full h-full">
-                      <img
-                        src={getImagePath("/turbine1.jpg")}
-                        alt="Wind turbine"
-                        className="w-1/2 h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.55]"
-                      />
-                      <img
-                        src={getImagePath("/turbine2.jpg")}
-                        alt="Wind turbine"
-                        className="w-1/2 h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.55]"
-                      />
-                    </div>
-                  ) : (
-                    <img
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.55] ${
-                        project.title === "Dr. Mole" ? "object-[50%_28%]" : "object-center"
-                      }`}
-                    />
-                  )}
-
-                  {hasLinks && (
-                    <div className="absolute inset-x-0 bottom-0 z-[2] flex gap-2.5 p-4 opacity-0 translate-y-3 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                      {project.live && (
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-400 to-indigo-500 px-3.5 py-2 text-[13px] font-semibold text-gray-950 transition-transform duration-200 hover:-translate-y-0.5"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" /> Live Demo
-                        </a>
-                      )}
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-gray-950/70 px-3.5 py-2 text-[13px] font-semibold text-gray-100 backdrop-blur transition-transform duration-200 hover:-translate-y-0.5"
-                        >
-                          <Github className="w-3.5 h-3.5" /> Code
-                        </a>
+                <div className="overflow-hidden">
+                  <article data-reveal className="group grid sm:grid-cols-9 gap-x-6 gap-y-3 pb-8">
+                    <div className="sm:col-span-3 aspect-[16/10] overflow-hidden bg-[var(--surface)]">
+                      {project.image === "turbine" ? (
+                        <div className="flex h-full">
+                          {["/turbine1.jpg", "/turbine2.jpg"].map((src) => (
+                            <img key={src} src={getImagePath(src)} alt="Arduino wind turbine model" loading="lazy" className="w-1/2 h-full object-cover exhibit group-hover:scale-105" />
+                          ))}
+                        </div>
+                      ) : (
+                        <img
+                          src={project.image}
+                          alt={`Screenshot of ${project.title}`}
+                          loading="lazy"
+                          className={`w-full h-full object-cover exhibit group-hover:scale-105 ${
+                            project.title === "Dr. Mole" ? "object-[50%_28%]" : "object-top"
+                          }`}
+                        />
                       )}
                     </div>
-                  )}
-                </div>
 
-                {/* body */}
-                <div className="flex flex-1 flex-col gap-2.5 p-5">
-                  <h3 className="text-lg font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-indigo-200">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-gray-400 line-clamp-3">
-                    {project.description}
-                  </p>
-                  <div className="mt-auto flex flex-wrap gap-1.5 pt-1.5">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-md border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11.5px] font-medium text-gray-300 transition-colors duration-300 group-hover:border-indigo-400/30"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                    <div className="sm:col-span-6 flex flex-col">
+                      <h3 className="t-lead font-medium">{project.title}</h3>
+                      <p className="mt-1.5 text-[var(--dim)]">{project.description}</p>
+                      <p className="mt-2 t-small text-[var(--dim)]">{project.tech.join(" · ")}</p>
+                      <div className="mt-3 flex gap-6 t-small">
+                        {project.live && (
+                          <a href={project.live} target="_blank" rel="noopener noreferrer" tabIndex={on ? 0 : -1} className="link inline-flex items-center gap-1 text-[var(--brand)]">
+                            {project.live.endsWith(".mp4") ? "Watch video" : "Live demo"} <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                          </a>
+                        )}
+                        {project.github && (
+                          <a href={project.github} target="_blank" rel="noopener noreferrer" tabIndex={on ? 0 : -1} className="link inline-flex items-center gap-1">
+                            Code <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </article>
                 </div>
-              </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-// "Numbers from the work": each role's figures, shown over a pixel picture of that work (see components/pixel-art).
+// "Numbers from the work": each role's figures, shown over a pixel picture of that work (see components/highlights/pixel-art).
 
 /** Which pixel picture a role is drawn as: Framatome's pages, the EEG signal, the ResVR render, the ABM fitness landscape. */
 export type Art = "pages" | "signal" | "render" | "fitness";

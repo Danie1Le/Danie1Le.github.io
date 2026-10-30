@@ -23,9 +23,8 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
   let yaw = 0, tilt = 0, scale = 0, glow = 0, ink = "#eeece8", red = "#ef4444", darkGround = true;
   let tick = 0, t = 0;
 
-  /** Read the theme's ink and accent from CSS (every 30 frames is plenty to catch a theme switch). */
+  /** Read the theme's ink and accent from CSS. */
   const readColors = () => {
-    if (tick++ % 30) return;
     const cs = getComputedStyle(canvas);
     ink = cs.getPropertyValue("--ink").trim() || ink;
     red = cs.getPropertyValue("--brand").trim() || red;
@@ -36,7 +35,7 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
   const frame = (dt: number) => {
     const sh = SHAPES[art];
     t = reduce ? ROLE_MS : t + dt;
-    readColors();
+    if (tick++ % 30 === 0) readColors(); // every 30th frame is plenty to catch a theme switch
     const k = reduce ? 1 : 1 - Math.pow(0.925, dt / 16.7); // frame-rate independent ease toward the target
     yaw += wrap(sh.yaw(t) - yaw) * k;
     tilt += ((typeof sh.tilt === "function" ? sh.tilt(t) : sh.tilt) - tilt) * k;

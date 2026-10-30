@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export function useCountUp(ms = 900) {
   const [t, setT] = useState(1);
   useEffect(() => {
-    if (prefersReducedMotion()) return setT(1);
+    if (prefersReducedMotion()) return;
     let frame = 0;
     const start = performance.now();
     const tick = (now: number) => {

@@ -1,5 +1,8 @@
 // Shapes are described in model units: y up, z away from the viewer, about ±1 tall.
 
+/** The moving parts of the EEG scene. */
+export type Part = "brain" | "wave" | "arrow" | "car" | "wheel" | "tip";
+
 /** Where one pixel rests, and how it is drawn. */
 export type Pt = {
   x: number; y: number; z: number;
@@ -8,7 +11,7 @@ export type Pt = {
   flag?: boolean; // shape-specific mark (Framatome: a page with a numbering error)
   a?: number; // brightness; above 1 is a contour, drawn a little larger
   n?: number[]; // outward surface direction, so the pixel is lit live as the shape turns
-  g?: string; // part name, for shapes that move their parts separately
+  g?: Part; // part name, for shapes that move their parts separately
   w?: number; // index within that part (a wheel, a channel)
 };
 

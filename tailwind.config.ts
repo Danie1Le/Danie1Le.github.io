@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss"
 
 // Colours, type and spacing come from the CSS tokens in app/globals.css; this only adds the house easing curve.
 const config: Config = {
-  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./hooks/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
   theme: {
     extend: {
       transitionTimingFunction: {

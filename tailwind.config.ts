@@ -70,6 +70,12 @@ const config: Config = {
           to: { height: "0" },
         },
       },
+      transitionTimingFunction: {
+        expo: "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      transitionDuration: {
+        1600: "1600ms",
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",

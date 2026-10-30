@@ -9,8 +9,7 @@ import HighlightsSection from "./highlightsSection"
 import Navigation from "./navBar"
 import ProjectsSection from "./projectsSection"
 import ImagePreviewModal from "./imagePreviewModal"
-
-const SECTIONS = ["hero", "highlights", "experience", "projects", "about", "contact"]
+import { SECTION_IDS } from "@/lib/sections"
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("hero")
@@ -38,7 +37,7 @@ export default function Portfolio() {
       (entries) => entries.forEach((entry) => entry.isIntersecting && setActiveSection(entry.target.id)),
       { rootMargin: "-35% 0px -60% 0px" }
     )
-    SECTIONS.forEach((id) => {
+    SECTION_IDS.forEach((id) => {
       const el = document.getElementById(id)
       if (el) spy.observe(el)
     })

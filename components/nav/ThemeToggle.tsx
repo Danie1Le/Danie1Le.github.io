@@ -8,17 +8,18 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
   const Icon = isLight ? Moon : Sun;
   const ariaLabel = `${label}: switch to ${isLight ? "dark" : "light"} theme`;
 
-  if (compact) {
-    return (
-      <button onClick={toggle} aria-label={ariaLabel} className="p-2.5 -m-2.5 text-[var(--dim)] hover:text-[var(--ink)] transition-colors active:scale-90">
-        <Icon className="w-5 h-5" />
-      </button>
-    );
-  }
   return (
-    <button onClick={toggle} aria-label={ariaLabel} className="inline-flex items-center gap-2 text-[var(--dim)] hover:text-[var(--ink)] transition-colors active:scale-95">
-      <Icon className="w-4 h-4" />
-      {label}
+    <button
+      onClick={toggle}
+      aria-label={ariaLabel}
+      className={
+        compact
+          ? "p-2.5 -m-2.5 text-[var(--dim)] hover:text-[var(--ink)] transition-colors active:scale-90"
+          : "inline-flex items-center gap-2 text-[var(--dim)] hover:text-[var(--ink)] transition-colors active:scale-95"
+      }
+    >
+      <Icon className={compact ? "w-5 h-5" : "w-4 h-4"} />
+      {!compact && label}
     </button>
   );
 }

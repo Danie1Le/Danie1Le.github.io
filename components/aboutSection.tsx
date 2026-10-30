@@ -1,6 +1,6 @@
 "use client"
 
-import { skills } from "@/lib/data";
+import { skills } from "@/lib/content";
 
 interface AboutSectionProps {
   handleResumeClick: () => void;

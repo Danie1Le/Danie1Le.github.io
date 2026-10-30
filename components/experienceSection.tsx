@@ -1,7 +1,7 @@
 "use client"
 
 import ImagePreviewModal from "@/components/imagePreviewModal"
-import { jobs } from "@/lib/data"
+import { jobs } from "@/lib/content"
 import { Eye, Plus } from "lucide-react"
 import { useRef, useState } from "react"
 

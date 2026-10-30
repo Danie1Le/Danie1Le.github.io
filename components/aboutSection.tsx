@@ -1,92 +1,57 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge";
 import { skills } from "@/lib/data";
 
 interface AboutSectionProps {
-  visibleSections: Set<string>;
+  handleResumeClick: () => void;
 }
 
-export default function AboutSection({ visibleSections }: AboutSectionProps) {
+const toolbox = [
+  { title: "Languages", items: skills.programmingLanguages },
+  { title: "Frameworks", items: skills.technologies },
+  { title: "Tools", items: skills.developmentTools },
+];
+
+export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
   return (
-    <section id="about" className={`min-h-screen py-12 px-6 flex items-center transition-all duration-1000 ${
-      visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-    }`}>
-      <div className="container mx-auto w-full">
-        <h2 className={`text-4xl font-bold text-center mb-16 transition-all duration-1000 delay-200 ${
-          visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          About Me
-        </h2>
-        <div className="max-w-4xl mx-auto">
-          <div className={`text-center space-y-6 transition-all duration-1000 delay-500 ${
-            visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            <h3 className="text-2xl font-semibold text-white mb-4">Computer Science Student & Developer</h3>
-            <p className="text-gray-300 leading-relaxed">
-              I'm a passionate Computer Science student with a love for creating innovative solutions and learning new technologies. 
-              My journey in tech started with curiosity and an uncertainty of a career that I wanted to pursue.
-              <br />
-              Since then, I've been put into intriguing projects that have incorporated technologies such as AI, Machine Learning, and Web Development that's given me a passion for 
-              the field and has evolved into a drive to build meaningful applications that could solve real-world problems.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-            When I'm not coding, you can find me exploring new technologies, going to the gym, playing videos games, or picking up new hobbies. 
-            I want to be a continuous learner and be able to be a part of interesting projects that could help not only myself but others as well.
-            </p>
-            
-            {/* Technical Skills */}
-            <div className={`pt-6 transition-all duration-1000 delay-400 ${
-              visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              <h4 className="text-lg font-semibold text-white mb-4">Technical Skills:</h4>
-              <div className="space-y-4">
-                <div>
-                  <h5 className="text-sm font-medium text-gray-300 mb-2">Programming Languages</h5>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {skills.programmingLanguages.map((skill) => (
-                      <Badge key={skill} variant="outline" className="border-green-500 text-green-400 bg-green-500/10">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h5 className="text-sm font-medium text-gray-300 mb-2">Technologies & Frameworks</h5>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {skills.technologies.map((skill) => (
-                      <Badge key={skill} variant="outline" className="border-purple-500 text-purple-400 bg-purple-500/10">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h5 className="text-sm font-medium text-gray-300 mb-2">Development Tools</h5>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {skills.developmentTools.map((skill) => (
-                      <Badge key={skill} variant="outline" className="border-orange-500 text-orange-400 bg-orange-500/10">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
+    <section id="about" className="frame pt-24 md:pt-32">
+      <div className="bg-[var(--surface)] transition-colors duration-500 grid md:grid-cols-12 gap-x-8 gap-y-12 p-6 md:p-12">
+        <div className="md:col-span-7">
+          <h2 data-reveal className="t-head font-semibold max-w-[14ch]">Skills</h2>
+
+          <div className="mt-10 md:mt-14 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-8">
+            {toolbox.map((group, i) => (
+              <div key={group.title} data-reveal style={{ "--i": i + 1 } as React.CSSProperties}>
+                <h3 className="font-medium">{group.title}</h3>
+                <ul className="mt-3 space-y-1 text-[var(--dim)]">
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            
-            {/* Skills/Interests */}
-            <div className={`pt-6 transition-all duration-1000 delay-600 ${
-              visibleSections.has('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              <h4 className="text-lg font-semibold text-white mb-3">What I'm passionate about:</h4>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {skills.interests.map((interest) => (
-                  <Badge key={interest} variant="outline" className="border-blue-500 text-blue-400 bg-blue-500/10">
-                    {interest}
-                  </Badge>
-                ))}
-              </div>
-            </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="md:col-span-4 md:col-start-9 flex flex-col gap-12 md:pt-2">
+          <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+            <h3 className="t-lead">How I got here</h3>
+            <p className="mt-4">
+              I’m a Computer Science student at the University of Portland. I started out curious and unsure which career
+              I wanted. Projects in AI, machine learning and web development turned that curiosity into a drive to build
+              applications that solve real problems.
+            </p>
+          </div>
+          <div data-reveal style={{ "--i": 2 } as React.CSSProperties}>
+            <h3 className="t-lead">Off the clock</h3>
+            <p className="mt-4">
+              You’ll find me exploring new technologies, at the gym, playing video games or picking up a new hobby.
+              I want to keep learning and work on projects that help other people as well as me.
+            </p>
+          </div>
+          <div data-reveal style={{ "--i": 3 } as React.CSSProperties}>
+            <p className="text-[var(--dim)]">Interested in {skills.interests.join(", ").replace(/, ([^,]*)$/, " and $1")}.</p>
+            <button onClick={handleResumeClick} className="btn-brand mt-6">View my resume</button>
           </div>
         </div>
       </div>

@@ -2,55 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-
-  }
-}
-
 /* The dark room: one warm near-black ground, light ink, one red accent. Light theme = lights on.
    --brand is for red text and marks; --brand-fill is the button red, deep enough for white text. */
 :root {
@@ -67,7 +18,6 @@
   --step-body: clamp(1rem, 0.96rem + 0.15vw, 1.0625rem);
   --step-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   --step-head: clamp(1.75rem, 1.4rem + 1.4vw, 2.625rem);
-  --step-display: clamp(4.5rem, 3rem + 6vw, 8.5rem);
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -83,9 +33,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   html {
     scroll-behavior: smooth;
   }
@@ -113,10 +60,8 @@
 
 @layer components {
   .t-small { font-size: var(--step-small); line-height: 1.45; }
-  .t-body { font-size: var(--step-body); line-height: 1.55; }
   .t-lead { font-size: var(--step-lead); line-height: 1.3; letter-spacing: -0.02em; }
   .t-head { font-size: var(--step-head); line-height: 1.05; letter-spacing: -0.03em; }
-  .t-display { font-size: var(--step-display); line-height: 0.8; letter-spacing: -0.05em; }
   .frame { padding-inline: clamp(1.25rem, 3vw, 2.5rem); }
 
   /* Arched alcove: a semicircle top on a 4:5 frame (50% of width = 40% of height), soft bottom corners.
@@ -210,7 +155,7 @@
 @keyframes load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .bar-grow { transform-origin: left; animation: grow 1.1s var(--ease) both; animation-delay: var(--d, 0s); }
 
-/* Theme switch: the new theme opens as a circle from the toggle (see navBar). */
+/* Theme switch: the new theme opens as a circle from the toggle (see lib/theme.ts). */
 ::view-transition-old(root),
 ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 

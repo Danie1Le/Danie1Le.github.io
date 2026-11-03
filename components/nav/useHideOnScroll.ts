@@ -1,3 +1,4 @@
+import { NAV_HEIGHT } from "@/lib/sections";
 import { useEffect, useRef, useState } from "react";
 
 const isDesktop = () => window.matchMedia("(min-width: 768px)").matches;
@@ -27,7 +28,7 @@ export function useHideOnScroll() {
       }
     };
     const onMouseMove = (e: MouseEvent) => {
-      if (isDesktop() && e.clientY < 80) setHidden(false);
+      if (isDesktop() && e.clientY < NAV_HEIGHT) setHidden(false);
     };
 
     lastY.current = window.scrollY;

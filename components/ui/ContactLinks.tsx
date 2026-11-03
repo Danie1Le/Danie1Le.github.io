@@ -12,14 +12,15 @@ export function EmailButton({ children }: { children: ReactNode }) {
   );
 }
 
-/** LinkedIn then GitHub, as a pair of buttons styled by `className`. */
-export function SocialLinks({ className }: { className: string }) {
+/** LinkedIn then GitHub, as a pair of quiet buttons; `className` adds to their shared style (e.g. a background). */
+export function SocialLinks({ className = "" }: { className?: string }) {
+  const style = `btn-quiet flex-1 sm:flex-none ${className}`.trim();
   return (
     <>
-      <ExternalLink href={contact.linkedin} className={className}>
+      <ExternalLink href={contact.linkedin} className={style}>
         <Linkedin className="w-4 h-4" aria-hidden="true" /> LinkedIn
       </ExternalLink>
-      <ExternalLink href={contact.github} className={className}>
+      <ExternalLink href={contact.github} className={style}>
         <Github className="w-4 h-4" aria-hidden="true" /> GitHub
       </ExternalLink>
     </>

@@ -43,7 +43,7 @@ export default function ContactSection() {
 
           <div data-reveal style={revealOrder(2)} className="flex flex-wrap gap-3 t-small font-medium">
             <EmailButton>Email me</EmailButton>
-            <SocialLinks className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none" />
+            <SocialLinks className="bg-[var(--raised)]" />
           </div>
         </div>
       </div>

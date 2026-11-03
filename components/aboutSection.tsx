@@ -5,7 +5,7 @@ import { revealOrder } from "@/lib/motion";
 import { joinAnd } from "@/lib/text";
 
 interface AboutSectionProps {
-  handleResumeClick: () => void;
+  onResume: () => void;
 }
 
 const toolbox = [
@@ -15,7 +15,7 @@ const toolbox = [
 ];
 
 // "Skills" (the About section): the toolbox on the left, the story and the resume button on the right.
-export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
+export default function AboutSection({ onResume }: AboutSectionProps) {
   return (
     <section id="about" className="frame pt-24 md:pt-32">
       <div className="bg-[var(--surface)] transition-colors duration-500 grid md:grid-cols-12 gap-x-8 gap-y-12 p-6 md:p-12">
@@ -54,7 +54,7 @@ export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
           </div>
           <div data-reveal style={revealOrder(3)}>
             <p className="text-[var(--dim)]">Interested in {joinAnd(skills.interests)}.</p>
-            <button onClick={handleResumeClick} className="btn-brand mt-6">View my resume</button>
+            <button onClick={onResume} className="btn-brand mt-6">View my resume</button>
           </div>
         </div>
       </div>

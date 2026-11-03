@@ -9,3 +9,6 @@ export const NAV_SECTIONS = [
 
 /** Every section id, the hero (above the nav links) included. */
 export const SECTION_IDS = ["hero", ...NAV_SECTIONS.map((s) => s.id)];
+
+/** Height of the fixed nav bar: content we scroll into place lands below it. */
+export const NAV_HEIGHT = 80;

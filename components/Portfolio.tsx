@@ -18,7 +18,7 @@ import ImagePreviewModal from "./ui/ImagePreviewModal"
 export default function Portfolio() {
   const activeSection = useActiveSection(SECTION_IDS)
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
-  const handleResumeClick = () => setIsResumeModalOpen(true)
+  const openResume = () => setIsResumeModalOpen(true)
   useRevealOnScroll()
 
   return (
@@ -27,14 +27,14 @@ export default function Portfolio() {
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[var(--brand-fill)] focus:text-[var(--brand-ink)]">
         Skip to content
       </a>
-      <Navigation activeSection={activeSection} handleResumeClick={handleResumeClick} />
+      <Navigation activeSection={activeSection} onResume={openResume} />
 
       <main id="main">
-        <HeroSection handleResumeClick={handleResumeClick} />
+        <HeroSection onResume={openResume} />
         <HighlightsSection />
         <ExperienceSection />
         <ProjectsSection />
-        <AboutSection handleResumeClick={handleResumeClick} />
+        <AboutSection onResume={openResume} />
         <ContactSection />
       </main>
 

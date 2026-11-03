@@ -8,12 +8,12 @@ import { useHideOnScroll } from "./nav/useHideOnScroll";
 
 interface NavigationProps {
   activeSection: string;
-  handleResumeClick: () => void;
+  onResume: () => void;
 }
 
 // The fixed bar: wordmark on the left; section links, Resume and the theme toggle on desktop; a menu on phones.
 // Links are real #anchors: CSS smooth-scrolls them (scroll-margin clears the bar) and the URL shows the section.
-export default function Navigation({ activeSection, handleResumeClick }: NavigationProps) {
+export default function Navigation({ activeSection, onResume }: NavigationProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const hidden = useHideOnScroll() && !menuOpen; // never hide the bar while the menu is open
   const closeMenu = () => setMenuOpen(false);
@@ -28,13 +28,13 @@ export default function Navigation({ activeSection, handleResumeClick }: Navigat
         <a href="#hero" onClick={closeMenu} className="font-bold tracking-tight whitespace-nowrap">
           Daniel Le
         </a>
-        <DesktopLinks active={activeSection} onResume={handleResumeClick} />
+        <DesktopLinks active={activeSection} onResume={onResume} />
         <div className="flex md:hidden items-center gap-5">
           <ThemeToggle compact />
           <MenuButton open={menuOpen} onToggle={() => setMenuOpen(!menuOpen)} />
         </div>
       </div>
-      <MobileMenu open={menuOpen} active={activeSection} onClose={closeMenu} onResume={handleResumeClick} />
+      <MobileMenu open={menuOpen} active={activeSection} onClose={closeMenu} onResume={onResume} />
     </nav>
   );
 }

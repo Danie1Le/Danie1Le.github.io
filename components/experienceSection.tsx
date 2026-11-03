@@ -2,7 +2,7 @@
 
 import { jobs } from "@/lib/content"
 import { useRef, useState } from "react"
-import { centreRow, keepTitleOnScreen } from "./experience/centre"
+import { centreRow, keepTitleOnScreen, type RowHandle } from "./experience/centre"
 import JobRow from "./experience/JobRow"
 import ImagePreviewModal from "./ui/ImagePreviewModal"
 
@@ -10,22 +10,20 @@ import ImagePreviewModal from "./ui/ImagePreviewModal"
 export default function ExperienceSection() {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const rows = useRef<(HTMLLIElement | null)[]>([]);
+  const rows = useRef<(RowHandle | null)[]>([]);
 
   const toggle = (index: number) => {
-    const li = rows.current[index]!;
-    const head = li.firstElementChild as HTMLElement;
+    const row = rows.current[index]!;
     if (openIdx === index) {
       setOpenIdx(null);
-      keepTitleOnScreen(li, head.offsetHeight);
+      keepTitleOnScreen(row.el, row.headHeight());
       return;
     }
-    const content = li.querySelector<HTMLElement>("[data-details] > div > div")!; // natural height, even while collapsed
     const lift = openIdx !== null && openIdx < index // a role above is closing, so this one will rise
-      ? rows.current[openIdx]!.querySelector<HTMLElement>("[data-details]")!.offsetHeight
+      ? rows.current[openIdx]!.detailsHeight()
       : 0;
     setOpenIdx(index);
-    centreRow(li, head.offsetHeight + content.offsetHeight, lift);
+    centreRow(row.el, row.headHeight() + row.contentHeight(), lift);
   };
 
   return (
@@ -42,7 +40,7 @@ export default function ExperienceSection() {
             open={openIdx === index}
             onToggle={() => toggle(index)}
             onPreview={setPreviewImage}
-            rowRef={(el) => { rows.current[index] = el; }}
+            rowRef={(row) => { rows.current[index] = row; }}
           />
         ))}
       </ol>

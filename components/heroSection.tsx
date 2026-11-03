@@ -6,13 +6,13 @@ import Portrait from "./hero/Portrait";
 import { EmailButton, SocialLinks } from "./ui/ContactLinks";
 
 interface HeroSectionProps {
-  handleResumeClick: () => void;
+  onResume: () => void;
 }
 
 const quiet = "btn-quiet flex-1 sm:flex-none";
 
 // The first screen: name and role, the four ways in (Resume, LinkedIn, GitHub, Get in touch), and the portrait.
-export default function HeroSection({ handleResumeClick }: HeroSectionProps) {
+export default function HeroSection({ onResume }: HeroSectionProps) {
   return (
     <section id="hero" className="frame min-h-[100svh] flex flex-col justify-center pt-28 pb-16">
       <div className="grid md:grid-cols-12 gap-x-8 gap-y-10 items-center">
@@ -33,10 +33,10 @@ export default function HeroSection({ handleResumeClick }: HeroSectionProps) {
             Software Engineer
           </p>
           <div className="rise mt-10 flex flex-wrap justify-center md:justify-start gap-3 t-small font-medium" style={animDelay(0.6)}>
-            <button onClick={handleResumeClick} className={quiet}>
+            <button onClick={onResume} className={quiet}>
               <FileText className="w-4 h-4" aria-hidden="true" /> Resume
             </button>
-            <SocialLinks className={quiet} />
+            <SocialLinks />
             <EmailButton>Get in touch</EmailButton>
           </div>
         </div>

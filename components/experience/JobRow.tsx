@@ -1,8 +1,9 @@
 import type { Job } from "@/lib/content";
 import { revealOrder } from "@/lib/motion";
 import { Eye, Plus } from "lucide-react";
-import type { Ref } from "react";
+import { useImperativeHandle, useRef, type Ref } from "react";
 import Collapse from "../ui/Collapse";
+import type { RowHandle } from "./centre";
 
 interface JobRowProps {
   job: Job;
@@ -10,7 +11,7 @@ interface JobRowProps {
   open: boolean;
   onToggle: () => void;
   onPreview: (src: string) => void;
-  rowRef: Ref<HTMLLIElement>;
+  rowRef: Ref<RowHandle>;
 }
 
 /**
@@ -18,14 +19,25 @@ interface JobRowProps {
  * clicking anywhere in the open bullets closes them again (unless the reader is selecting text).
  */
 export default function JobRow({ job, index, open, onToggle, onPreview, rowRef }: JobRowProps) {
+  const li = useRef<HTMLLIElement>(null);
+  const head = useRef<HTMLDivElement>(null);
+  const details = useRef<HTMLElement | null>(null);
+  const content = useRef<HTMLDivElement>(null);
+  useImperativeHandle(rowRef, () => ({
+    el: li.current!,
+    headHeight: () => head.current!.offsetHeight,
+    contentHeight: () => content.current!.offsetHeight,
+    detailsHeight: () => details.current!.offsetHeight,
+  }), []);
+
   return (
     <li
-      ref={rowRef}
+      ref={li}
       data-reveal
       style={revealOrder(index % 3)}
       className={`group transition-colors duration-500 ${open ? "bg-[var(--surface)]" : "hover:bg-[var(--surface)]"}`}
     >
-      <div className="relative grid md:grid-cols-12 gap-x-8 gap-y-1 px-4 md:px-6 py-5">
+      <div ref={head} className="relative grid md:grid-cols-12 gap-x-8 gap-y-1 px-4 md:px-6 py-5">
         {/* The whole row is the toggle; the poster button sits above it. */}
         <button
           type="button"
@@ -63,8 +75,9 @@ export default function JobRow({ job, index, open, onToggle, onPreview, rowRef }
         />
       </div>
 
-      <Collapse id={`job-${index}`} data-details="" open={open} className="duration-700 ease-expo">
+      <Collapse id={`job-${index}`} boxRef={(el) => { details.current = el; }} open={open} className="duration-700 ease-expo">
         <div
+          ref={content}
           className="grid md:grid-cols-12 gap-x-8 px-4 md:px-6 pb-6 cursor-pointer"
           onClick={(e) => {
             if ((e.target as HTMLElement).closest("a, button") || window.getSelection()?.toString()) return;

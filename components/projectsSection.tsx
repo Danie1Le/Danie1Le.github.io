@@ -2,11 +2,12 @@
 
 import { projects } from "@/lib/content"
 import { scrollPageBy } from "@/lib/motion"
+import { NAV_HEIGHT } from "@/lib/sections"
 import { useState } from "react"
 import ProjectRow from "./projects/ProjectRow"
 import ToolFilters from "./projects/ToolFilters"
 
-const LIST_TOP = 96; // where the list's start lands after a filter is picked: under the nav, with breathing room
+const LIST_TOP = NAV_HEIGHT + 16; // where the list's start lands after a filter is picked: under the nav, with breathing room
 
 // A sticky rail (the heading and the tool filters) beside the list of projects.
 export default function ProjectsSection() {

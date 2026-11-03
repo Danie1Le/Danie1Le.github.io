@@ -1,11 +1,11 @@
 "use client"
 
 import { projects } from "@/lib/content"
-import { topTools } from "@/lib/tools"
+import { sharedTools } from "@/lib/tools"
 import { ArrowUpRight } from "lucide-react"
 import { useState } from "react"
 
-const filters = topTools(projects)
+const filters = sharedTools(projects)
 
 export default function ProjectsSection() {
   const [tool, setTool] = useState<string | null>(null);

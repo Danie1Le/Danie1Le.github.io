@@ -11,10 +11,10 @@ test("joinAnd reads like a sentence", () => {
   assert.equal(joinAnd(["a", "b", "c"]), "a, b and c");
 });
 
-test("topTools counts, drops one-offs, sorts and limits", () => {
-  const list = [{ tech: ["A", "B", "C"] }, { tech: ["A", "B"] }, { tech: ["A"] }];
-  assert.deepEqual(topTools(list), [["A", 3], ["B", 2]]);
-  assert.deepEqual(topTools(list, 1), [["A", 3]]);
+test("topTools counts, drops one-offs, keeps the most used and lists them A to Z", () => {
+  const list = [{ tech: ["Z", "B", "C"] }, { tech: ["Z", "B"] }, { tech: ["Z"] }];
+  assert.deepEqual(topTools(list), [["B", 2], ["Z", 3]]);
+  assert.deepEqual(topTools(list, 1), [["Z", 3]]);
 });
 
 test("the real projects give filters that each match more than one project", () => {

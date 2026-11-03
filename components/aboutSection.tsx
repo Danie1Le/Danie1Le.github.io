@@ -1,6 +1,8 @@
 "use client"
 
 import { skills } from "@/lib/content";
+import { revealOrder } from "@/lib/motion";
+import { joinAnd } from "@/lib/text";
 
 interface AboutSectionProps {
   handleResumeClick: () => void;
@@ -12,6 +14,7 @@ const toolbox = [
   { title: "Tools", items: skills.developmentTools },
 ];
 
+// "Skills" (the About section): the toolbox on the left, the story and the resume button on the right.
 export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
   return (
     <section id="about" className="frame pt-24 md:pt-32">
@@ -21,7 +24,7 @@ export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
 
           <div className="mt-10 md:mt-14 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-8">
             {toolbox.map((group, i) => (
-              <div key={group.title} data-reveal style={{ "--i": i + 1 } as React.CSSProperties}>
+              <div key={group.title} data-reveal style={revealOrder(i + 1)}>
                 <h3 className="font-medium">{group.title}</h3>
                 <ul className="mt-3 space-y-1 text-[var(--dim)]">
                   {group.items.map((item) => (
@@ -34,7 +37,7 @@ export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
         </div>
 
         <div className="md:col-span-4 md:col-start-9 flex flex-col gap-12 md:pt-2">
-          <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+          <div data-reveal style={revealOrder(1)}>
             <h3 className="t-lead">How I got here</h3>
             <p className="mt-4">
               I’m a Computer Science student at the University of Portland. I started out curious and unsure which career
@@ -42,15 +45,15 @@ export default function AboutSection({ handleResumeClick }: AboutSectionProps) {
               applications that solve real problems.
             </p>
           </div>
-          <div data-reveal style={{ "--i": 2 } as React.CSSProperties}>
+          <div data-reveal style={revealOrder(2)}>
             <h3 className="t-lead">Off the clock</h3>
             <p className="mt-4">
               You’ll find me exploring new technologies, at the gym, playing video games or picking up a new hobby.
               I want to keep learning and work on projects that help other people as well as me.
             </p>
           </div>
-          <div data-reveal style={{ "--i": 3 } as React.CSSProperties}>
-            <p className="text-[var(--dim)]">Interested in {skills.interests.join(", ").replace(/, ([^,]*)$/, " and $1")}.</p>
+          <div data-reveal style={revealOrder(3)}>
+            <p className="text-[var(--dim)]">Interested in {joinAnd(skills.interests)}.</p>
             <button onClick={handleResumeClick} className="btn-brand mt-6">View my resume</button>
           </div>
         </div>

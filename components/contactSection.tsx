@@ -1,8 +1,11 @@
 "use client"
 
 import { contact } from "@/lib/content";
-import { Check, Copy, Github, Linkedin, Mail } from "lucide-react";
+import { revealOrder } from "@/lib/motion";
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+import { EmailButton, SocialLinks } from "./ui/ContactLinks";
+import ExternalLink from "./ui/ExternalLink";
 
 // The page ends on a panel shaped like Skills: the heading on the left, the ways to reach me on the right.
 export default function ContactSection() {
@@ -22,12 +25,12 @@ export default function ContactSection() {
         <h2 data-reveal className="md:col-span-5 t-head font-semibold max-w-[12ch]">Let’s work together</h2>
 
         <div className="md:col-span-6 md:col-start-7 flex flex-col gap-8">
-          <div data-reveal style={{ "--i": 1 } as React.CSSProperties}>
+          <div data-reveal style={revealOrder(1)}>
             <p className="t-small text-[var(--dim)]">Email</p>
             <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-1">
-              <a href={contact.gmail} target="_blank" rel="noopener noreferrer" className="link t-lead font-medium">
+              <ExternalLink href={contact.gmail} className="link t-lead font-medium">
                 {contact.email}
-              </a>
+              </ExternalLink>
               <button
                 onClick={copy}
                 className="inline-flex items-center gap-1.5 min-h-11 t-small text-[var(--dim)] hover:text-[var(--brand)] transition-colors active:scale-95"
@@ -38,16 +41,9 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div data-reveal style={{ "--i": 2 } as React.CSSProperties} className="flex flex-wrap gap-3 t-small font-medium">
-            <a href={contact.gmail} target="_blank" rel="noopener noreferrer" className="btn-brand min-h-11 px-5 w-full sm:w-auto">
-              <Mail className="w-4 h-4" aria-hidden="true" /> Email me
-            </a>
-            <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none">
-              <Linkedin className="w-4 h-4" aria-hidden="true" /> LinkedIn
-            </a>
-            <a href={contact.github} target="_blank" rel="noopener noreferrer" className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none">
-              <Github className="w-4 h-4" aria-hidden="true" /> GitHub
-            </a>
+          <div data-reveal style={revealOrder(2)} className="flex flex-wrap gap-3 t-small font-medium">
+            <EmailButton>Email me</EmailButton>
+            <SocialLinks className="btn-quiet bg-[var(--raised)] flex-1 sm:flex-none" />
           </div>
         </div>
       </div>

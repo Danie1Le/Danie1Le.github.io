@@ -16,6 +16,18 @@ export default function ImagePreviewModal({ src, onClose, download }: ImagePrevi
 
   useEffect(() => setMounted(true), []);
 
+  // On close, hand focus back to whatever opened the preview, but only for keyboard users. A mouse user's button
+  // keeps focus behind the preview, so closing with Escape would otherwise leave a focus ring on it.
+  useEffect(() => {
+    if (!src) return;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const byKeyboard = opener?.matches(":focus-visible") ?? false;
+    return () => {
+      if (byKeyboard) opener?.focus();
+      else opener?.blur();
+    };
+  }, [src]);
+
   useEffect(() => {
     if (!src) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();

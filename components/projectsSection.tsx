@@ -1,13 +1,11 @@
 "use client"
 
 import { projects } from "@/lib/content"
+import { sharedTools } from "@/lib/tools"
 import { ArrowUpRight } from "lucide-react"
 import { useState } from "react"
 
-// The tools used most across projects become the filters, with how many projects use each.
-const counts = new Map<string, number>()
-projects.forEach((p) => p.tech.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)))
-const filters = Array.from(counts).filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]).slice(0, 6)
+const filters = sharedTools(projects)
 
 export default function ProjectsSection() {
   const [tool, setTool] = useState<string | null>(null);

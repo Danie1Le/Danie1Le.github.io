@@ -45,20 +45,20 @@ export const projects: Project[] = [
     title: "AI ChatBot",
     description: "Medical training chatbot that helps nursing students practice diagnostic skills using retrieval-augmented generation.",
     images: ["/Ai chatBot.png"],
-    tech: ["Flask", "JavaScript", "HTML", "CSS", "LangChain", "GitHub Actions", "Jest"],
+    tech: ["Flask", "HTML/CSS/JS", "LangChain", "GitHub Actions", "Jest"],
   },
   {
     title: "Expense Tracker",
     description: "Web app to manage and visualize expenses, with real-time sync and interactive charts.",
     images: ["/Expense budget.png"],
-    tech: ["JavaScript", "HTML", "CSS", "Firebase"],
+    tech: ["HTML/CSS/JS", "Firebase"],
     live: "https://danie1le.github.io/Expense-Budget/",
   },
   {
     title: "Type Racer",
     description: "Typing speed game with real-time feedback and customizable word lists.",
     images: ["/Type Racer.png"],
-    tech: ["JavaScript", "HTML", "CSS"],
+    tech: ["HTML/CSS/JS"],
     live: "https://danie1le.github.io/Type-Racer/",
   },
   {

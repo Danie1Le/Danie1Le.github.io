@@ -29,6 +29,7 @@ export const jobs: Job[] = [
     ],
     skills: ["Python", "Docling", "RapidOCR", "pytest", "Docker", "Azure DevOps", "Vue.js", "TypeScript", "C#"],
     current: true,
+    previewImage: "/Intern_Project.png",
   },
   {
     title: "Undergraduate Machine Learning Researcher",
@@ -44,6 +45,7 @@ export const jobs: Job[] = [
     ],
     skills: ["Python", "Keras", "NumPy", "Deep Learning", "EEG"],
     current: true,
+    previewImage: "/ML_EEG_Research.png",
   },
   {
     title: "Computer Science Grader",

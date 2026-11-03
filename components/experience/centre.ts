@@ -1,6 +1,8 @@
 import { scrollPageBy } from "@/lib/motion";
 import { NAV_HEIGHT } from "@/lib/sections";
 
+const CLEAR = NAV_HEIGHT + 16; // the bar plus some breathing room
+
 /** What the centring needs from a role row. JobRow provides it, so only JobRow knows its own markup. */
 export interface RowHandle {
   el: HTMLElement;
@@ -17,11 +19,11 @@ export interface RowHandle {
  * `lift` is how far the row will rise because a role above it is closing at the same time.
  */
 export function centreRow(li: HTMLElement, height: number, lift = 0) {
-  const target = Math.max(NAV_HEIGHT, (window.innerHeight - height) / 2);
+  const target = Math.max(CLEAR, (window.innerHeight - height) / 2);
   scrollPageBy(li.getBoundingClientRect().top - lift - target);
 }
 
 /** Closing a row from far down the page: bring its title back on screen. */
 export function keepTitleOnScreen(li: HTMLElement, titleHeight: number) {
-  if (li.getBoundingClientRect().top < NAV_HEIGHT) centreRow(li, titleHeight);
+  if (li.getBoundingClientRect().top < CLEAR) centreRow(li, titleHeight);
 }

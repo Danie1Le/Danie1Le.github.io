@@ -3,13 +3,11 @@
 import { animDelay } from "@/lib/motion";
 import { FileText } from "lucide-react";
 import Portrait from "./hero/Portrait";
-import { EmailButton, SocialLinks } from "./ui/ContactLinks";
+import { EmailButton, QUIET_BUTTON, SocialLinks } from "./ui/ContactLinks";
 
 interface HeroSectionProps {
   onResume: () => void;
 }
-
-const quiet = "btn-quiet flex-1 sm:flex-none";
 
 // The first screen: name and role, the four ways in (Resume, LinkedIn, GitHub, Get in touch), and the portrait.
 export default function HeroSection({ onResume }: HeroSectionProps) {
@@ -33,7 +31,7 @@ export default function HeroSection({ onResume }: HeroSectionProps) {
             Software Engineer
           </p>
           <div className="rise mt-10 flex flex-wrap justify-center md:justify-start gap-3 t-small font-medium" style={animDelay(0.6)}>
-            <button onClick={onResume} className={quiet}>
+            <button onClick={onResume} className={QUIET_BUTTON}>
               <FileText className="w-4 h-4" aria-hidden="true" /> Resume
             </button>
             <SocialLinks />

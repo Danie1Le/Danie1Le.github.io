@@ -21,13 +21,13 @@ interface JobRowProps {
 export default function JobRow({ job, index, open, onToggle, onPreview, rowRef }: JobRowProps) {
   const li = useRef<HTMLLIElement>(null);
   const head = useRef<HTMLDivElement>(null);
-  const details = useRef<HTMLElement | null>(null);
   const content = useRef<HTMLDivElement>(null);
   useImperativeHandle(rowRef, () => ({
     el: li.current!,
     headHeight: () => head.current!.offsetHeight,
     contentHeight: () => content.current!.offsetHeight,
-    detailsHeight: () => details.current!.offsetHeight,
+    // The Collapse is the li's last child. Read its own height: subtracting two rounded heights can be 1px off.
+    detailsHeight: () => (li.current!.lastElementChild as HTMLElement).offsetHeight,
   }), []);
 
   return (
@@ -75,7 +75,7 @@ export default function JobRow({ job, index, open, onToggle, onPreview, rowRef }
         />
       </div>
 
-      <Collapse id={`job-${index}`} boxRef={(el) => { details.current = el; }} open={open} className="duration-700 ease-expo">
+      <Collapse id={`job-${index}`} open={open} className="duration-700 ease-expo">
         <div
           ref={content}
           className="grid md:grid-cols-12 gap-x-8 px-4 md:px-6 pb-6 cursor-pointer"

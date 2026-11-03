@@ -28,7 +28,8 @@ export function useHideOnScroll() {
       }
     };
     const onMouseMove = (e: MouseEvent) => {
-      if (isDesktop() && e.clientY < NAV_HEIGHT) setHidden(false);
+      // Reveal a little before the cursor reaches where the bar would be.
+      if (isDesktop() && e.clientY < NAV_HEIGHT + 16) setHidden(false);
     };
 
     lastY.current = window.scrollY;

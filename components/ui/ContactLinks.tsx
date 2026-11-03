@@ -12,9 +12,12 @@ export function EmailButton({ children }: { children: ReactNode }) {
   );
 }
 
+/** The quiet button style: shares a row on phones, sizes to its label from sm up. */
+export const QUIET_BUTTON = "btn-quiet flex-1 sm:flex-none";
+
 /** LinkedIn then GitHub, as a pair of quiet buttons; `className` adds to their shared style (e.g. a background). */
 export function SocialLinks({ className = "" }: { className?: string }) {
-  const style = `btn-quiet flex-1 sm:flex-none ${className}`.trim();
+  const style = `${QUIET_BUTTON} ${className}`.trim();
   return (
     <>
       <ExternalLink href={contact.linkedin} className={style}>

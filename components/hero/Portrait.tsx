@@ -1,30 +1,22 @@
 "use client"
 
-import { prefersReducedMotion } from "@/lib/motion";
-import { useEffect, useRef } from "react";
+import { site } from "@/lib/site";
+import { useRef } from "react";
+import { useParallax } from "./useParallax";
+
+const DRIFT_RATE = 0.12;
+const DRIFT_UNTIL_SCROLLED = 900;
 
 export default function Portrait() {
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (prefersReducedMotion()) return;
-    let frame = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        if (ref.current) ref.current.style.transform = `translateY(${Math.min(window.scrollY, 900) * 0.12}px)`;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); };
-  }, []);
+  useParallax(ref, DRIFT_RATE, DRIFT_UNTIL_SCROLLED);
 
   return (
     <div ref={ref} className="w-[min(64vw,300px)] md:w-[min(30vw,380px)] arch ring-up bg-[var(--brand)] p-[var(--portrait-border)]">
       <div className="arch arch-inner aspect-[4/5] overflow-hidden">
         <img
           src="/Profile_Picture.png"
-          alt="Portrait of Daniel Le"
+          alt={`Portrait of ${site.name}`}
           width={1024}
           height={1024}
           fetchPriority="high"

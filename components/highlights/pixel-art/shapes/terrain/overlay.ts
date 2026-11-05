@@ -3,7 +3,7 @@ import { TAU } from "../../math";
 import { spread, times } from "../../sequence";
 import type { Draw } from "../../types";
 import type { Agent } from "./agents";
-import { COLS, ROWS, SUMMIT, type Cell, columnX, heightAt, rowZ } from "./heightMap";
+import { COLS, ROWS, SUMMIT, type Cell, groundAt } from "./heightMap";
 
 const ABOVE_GROUND = 0.03;
 const FLAG_POLE_HEIGHT = 0.9;
@@ -13,7 +13,10 @@ const RIPPLE_SPREAD = 0.5;
 const RING_SEGMENTS = 32;
 const TRAIL_FADE = [0.15, 0.3, 0.5, 0.8];
 
-const projectCell = ({ project }: Draw, [column, row]: Cell) => project(columnX(column), heightAt(column, row) + ABOVE_GROUND, rowZ(row));
+const projectCell = ({ project }: Draw, cell: Cell) => {
+  const { x, y, z } = groundAt(cell);
+  return project(x, y + ABOVE_GROUND, z);
+};
 
 export function drawMesh({ ctx, screenX, screenY, formed, ink, pixelSize }: Draw) {
   ctx.strokeStyle = ink;
@@ -26,9 +29,8 @@ export function drawMesh({ ctx, screenX, screenY, formed, ink, pixelSize }: Draw
 
 export function drawBeacon(d: Draw) {
   const { ctx, t, formed, project, red, pixelSize } = d;
-  const [summitColumn, summitRow] = SUMMIT;
-  const summitX = columnX(summitColumn), summitY = heightAt(summitColumn, summitRow), summitZ = rowZ(summitRow);
-  const base = projectCell(d, SUMMIT), top = project(summitX, summitY + FLAG_POLE_HEIGHT, summitZ);
+  const summit = groundAt(SUMMIT);
+  const base = projectCell(d, SUMMIT), top = project(summit.x, summit.y + FLAG_POLE_HEIGHT, summit.z);
   const ripple = (t % RIPPLE_MS) / RIPPLE_MS;
 
   const ring = (radius: number, alpha: number) => {
@@ -36,7 +38,7 @@ export function drawBeacon(d: Draw) {
     ctx.beginPath();
     tracePath(ctx, spread(RING_SEGMENTS + 1, (fraction) => {
       const angle = fraction * TAU;
-      return project(summitX + Math.cos(angle) * radius, summitY, summitZ + Math.sin(angle) * radius);
+      return project(summit.x + Math.cos(angle) * radius, summit.y, summit.z + Math.sin(angle) * radius);
     }));
     ctx.stroke();
   };

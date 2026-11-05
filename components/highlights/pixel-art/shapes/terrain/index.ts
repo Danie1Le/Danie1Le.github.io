@@ -1,11 +1,11 @@
 import { grid } from "../../sequence";
 import type { Pt, Shape } from "../../types";
 import { createSwarm } from "./agents";
-import { COLS, ROWS, columnX, heightAt, hillshade, rowZ } from "./heightMap";
+import { COLS, ROWS, groundAt, hillshade } from "./heightMap";
 import { drawBeacon, drawMesh, drawPaths } from "./overlay";
 
 const mapPoints = (): Pt[] =>
-  grid(COLS, ROWS, (i, j) => ({ x: columnX(i), y: heightAt(i, j), z: rowZ(j), brightness: hillshade(i, j) }));
+  grid(COLS, ROWS, (i, j) => ({ ...groundAt([i, j]), brightness: hillshade(i, j) }));
 
 export function terrain(): Shape {
   const swarm = createSwarm();

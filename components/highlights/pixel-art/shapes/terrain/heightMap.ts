@@ -24,6 +24,7 @@ const sharpenPeaks = (raw: number) => -0.8 + 1.6 * ((raw - LOWEST) / (HIGHEST - 
 const HEIGHTS = RAW.map(sharpenPeaks);
 
 export const heightAt = (i: number, j: number) => HEIGHTS[j * COLS + i];
+export const groundAt = ([column, row]: Cell) => ({ x: columnX(column), y: heightAt(column, row), z: rowZ(row) });
 
 export const SUMMIT = ((): Cell => {
   const k = HEIGHTS.indexOf(Math.max(...HEIGHTS));

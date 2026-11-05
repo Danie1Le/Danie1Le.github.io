@@ -1,10 +1,11 @@
 import { flushSync } from "react-dom";
-import { prefersReducedMotion } from "./motion";
-
-// The theme lives on <html data-theme> (restored before paint by the boot script in app/layout.tsx).
-// This module is its one writer, and tells subscribers when it changes, so every toggle stays in step.
+import { THEME_STORAGE_KEY } from "./boot";
+import { prefersReducedMotion } from "./media";
 
 export type Theme = "light" | "dark";
+
+const SWITCH_MS = 800;
+const SWITCH_EASING = "cubic-bezier(0.7, 0, 0.2, 1)";
 
 const listeners = new Set<() => void>();
 
@@ -15,23 +16,36 @@ export const subscribeTheme = (onChange: () => void) => {
   return () => { listeners.delete(onChange); };
 };
 
-function setTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
-  try { localStorage.setItem("theme", theme); } catch {} // private mode: the choice just isn't remembered
-  listeners.forEach((fn) => fn());
+function rememberTheme(theme: Theme) {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {}
 }
 
-/** Switch theme. The new one opens as a circle from (x, y), like a light switched on in the room. */
+function setTheme(theme: Theme) {
+  document.documentElement.dataset.theme = theme;
+  rememberTheme(theme);
+  listeners.forEach((notify) => notify());
+}
+
+const distanceToFarthestCorner = (x: number, y: number) =>
+  Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+function growCircleFrom(x: number, y: number) {
+  const radius = distanceToFarthestCorner(x, y);
+  document.documentElement.animate(
+    { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+    { duration: SWITCH_MS, easing: SWITCH_EASING, pseudoElement: "::view-transition-new(root)" }
+  );
+}
+
+type DocumentWithViewTransitions = Document & {
+  startViewTransition?: (update: () => void) => { ready: Promise<void> };
+};
+
 export function switchTheme(theme: Theme, x: number, y: number) {
   const apply = () => setTheme(theme);
-  const doc = document as Document & { startViewTransition?: (update: () => void) => { ready: Promise<void> } };
+  const doc = document as DocumentWithViewTransitions;
   if (!doc.startViewTransition || prefersReducedMotion()) return apply();
-
-  const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-  doc.startViewTransition(() => flushSync(apply)).ready.then(() => {
-    document.documentElement.animate(
-      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
-      { duration: 800, easing: "cubic-bezier(0.7, 0, 0.2, 1)", pseudoElement: "::view-transition-new(root)" }
-    );
-  });
+  doc.startViewTransition(() => flushSync(apply)).ready.then(() => growCircleFrom(x, y));
 }

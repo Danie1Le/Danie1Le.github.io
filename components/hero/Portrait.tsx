@@ -3,7 +3,6 @@
 import { prefersReducedMotion } from "@/lib/motion";
 import { useEffect, useRef } from "react";
 
-/** The portrait in its arched alcove with the red border, drifting a little slower than the page as you scroll away. */
 export default function Portrait() {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -21,7 +20,7 @@ export default function Portrait() {
   }, []);
 
   return (
-    <div ref={ref} className="w-[min(64vw,300px)] md:w-[min(30vw,380px)] arch ring-up bg-[var(--brand)] p-[3px]">
+    <div ref={ref} className="w-[min(64vw,300px)] md:w-[min(30vw,380px)] arch ring-up bg-[var(--brand)] p-[var(--portrait-border)]">
       <div className="arch arch-inner aspect-[4/5] overflow-hidden">
         <img
           src="/Profile_Picture.png"

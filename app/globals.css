@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* The dark room: one warm near-black ground, light ink, one red accent. Light theme = lights on.
-   --brand is for red text and marks; --brand-fill is the button red, deep enough for white text. */
 :root {
   --bg: #0c0a08;
   --surface: #181512;
@@ -18,6 +16,8 @@
   --step-body: clamp(1rem, 0.96rem + 0.15vw, 1.0625rem);
   --step-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
   --step-head: clamp(1.75rem, 1.4rem + 1.4vw, 2.625rem);
+  --arch-corner: 1.5rem;
+  --portrait-border: 3px;
   color-scheme: dark;
 }
 :root[data-theme="light"] {
@@ -64,31 +64,30 @@
   .t-head { font-size: var(--step-head); line-height: 1.05; letter-spacing: -0.03em; }
   .frame { padding-inline: clamp(1.25rem, 3vw, 2.5rem); }
 
-  /* Arched alcove: a semicircle top on a 4:5 frame (50% of width = 40% of height), soft bottom corners.
-     The inner arch's bottom radius is the outer one minus the 3px red border, so the two stay concentric. */
-  .arch { border-radius: 50% 50% 1.5rem 1.5rem / 40% 40% 1.5rem 1.5rem; }
-  .arch-inner { border-bottom-left-radius: calc(1.5rem - 3px); border-bottom-right-radius: calc(1.5rem - 3px); }
+  .arch { border-radius: 50% 50% var(--arch-corner) var(--arch-corner) / 40% 40% var(--arch-corner) var(--arch-corner); }
+  .arch-inner {
+    border-bottom-left-radius: calc(var(--arch-corner) - var(--portrait-border));
+    border-bottom-right-radius: calc(var(--arch-corner) - var(--portrait-border));
+  }
 
-  /* The one solid light thing on a screen: the primary action. */
-  .btn-brand {
+  .btn-brand, .btn-quiet {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .btn-brand {
     min-height: 3rem; padding: 0 1.5rem; border-radius: 0;
     background: var(--brand-fill); color: var(--brand-ink); font-weight: 500;
     transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
   }
-  /* The secondary buttons (Resume, LinkedIn, GitHub): a filled tone step, red on hover. */
+  .btn-brand:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .btn-brand:active { transform: translateY(0) scale(0.97); }
+
   .btn-quiet {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
     min-height: 2.75rem; padding: 0 1rem; background: var(--surface);
     transition: color 0.3s, transform 0.3s var(--ease), background-color 0.5s;
   }
   .btn-quiet:hover { color: var(--brand); transform: translateY(-2px); }
   .btn-quiet:active { transform: scale(0.97); }
 
-  .btn-brand:hover { transform: translateY(-2px); filter: brightness(1.08); }
-  .btn-brand:active { transform: translateY(0) scale(0.97); }
-
-  /* Text link whose underline fades in on hover. */
   .link {
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -99,7 +98,6 @@
   .link:hover, .link:focus-visible { text-decoration-color: currentColor; }
 }
 
-/* Entrances: parts of each section rise in turn as it enters. --i staggers them. */
 .js [data-reveal] {
   opacity: 0;
   transform: translateY(24px);
@@ -108,7 +106,6 @@
 }
 .js [data-reveal][data-in] { opacity: 1; transform: none; }
 
-/* Hero: the lights come up on the portrait; the name's letters slide up from behind a mask. */
 @keyframes letter-up { from { transform: translateY(105%); } }
 .letter { display: inline-block; animation: letter-up 0.9s var(--ease) both; animation-delay: var(--d, 0s); }
 @keyframes lights-up {
@@ -120,42 +117,31 @@
   to { opacity: 1; transform: none; }
 }
 .lights-up { animation: lights-up 2.4s var(--ease) both; }
-/* Once the light is up, the red border around the portrait comes on. */
 @keyframes ring-up { from { background-color: var(--surface); } }
 .ring-up { animation: ring-up 1.2s var(--ease) 1s both; }
 .rise { animation: rise 1.1s var(--ease) both; animation-delay: var(--d, 0s); }
 
-/* Projects: hovering one dims the pictures of the others. */
 @media (hover: hover) {
   .dim-others:hover article:not(:hover) img { opacity: 0.5; }
-}
-/* In the dark, screenshots rest dimmed and light up when you point at them. */
-@media (hover: hover) {
   :root:not([data-theme="light"]) .exhibit { filter: brightness(0.72); }
   :root:not([data-theme="light"]) article:hover .exhibit { filter: none; }
 }
 .exhibit { transition: transform 0.7s var(--ease), opacity 0.7s var(--ease), filter 0.7s var(--ease), scale 1.4s var(--ease); }
-/* Screenshots settle from a slight zoom as their row enters (`scale` composes with the hover transform). */
 .js [data-reveal] .exhibit { scale: 1.12; }
 .js [data-reveal][data-in] .exhibit { scale: 1; }
 
-/* Reading progress along the top edge, driven by scroll alone where the browser supports it. */
-@keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fill-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .read-progress { display: none; }
 @supports (animation-timeline: scroll()) {
   .read-progress {
     display: block; position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 60;
     background: var(--brand); transform-origin: left;
-    animation: progress linear both; animation-timeline: scroll(root);
+    animation: fill-x linear both; animation-timeline: scroll(root);
   }
 }
 
-/* Highlights: metric bars grow in turn; the loader fills over one role, then hands on to the next. */
-@keyframes grow { from { transform: scaleX(0); } }
-@keyframes load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.bar-grow { transform-origin: left; animation: grow 1.1s var(--ease) both; animation-delay: var(--d, 0s); }
+.bar-grow { transform-origin: left; animation: fill-x 1.1s var(--ease) both; animation-delay: var(--d, 0s); }
 
-/* Theme switch: the new theme opens as a circle from the toggle (see lib/theme.ts). */
 ::view-transition-old(root),
 ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 

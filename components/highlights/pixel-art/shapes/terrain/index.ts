@@ -10,16 +10,16 @@ import { drawBeacon, drawMesh, drawPaths } from "./overlay";
 export function terrain(): Shape {
   const pts: Pt[] = [];
   for (let j = 0; j < ROWS; j++)
-    for (let i = 0; i < COLS; i++) pts.push({ x: gx(i), y: gy(i, j), z: gz(j), spin: true, a: hillshade(i, j) }); // slopes facing the light are bright
+    for (let i = 0; i < COLS; i++) pts.push({ x: gx(i), y: gy(i, j), z: gz(j), brightness: hillshade(i, j) }); // slopes facing the light are bright
   const swarm = createSwarm();
   return {
     points: pts,
     yaw: () => 0, // a map doesn't turn; turning a flat map only throws its corners out of the frame
-    tilt: 1.2, // a high view from above: reads as a map, with the peaks still rising out of it
-    span: 4.3,
-    half: 1.45,
-    hill: true,
-    over: (d) => {
+    tilt: () => 1.2, // a high view from above: reads as a map, with the peaks still rising out of it
+    halfWidth: 4.3,
+    halfHeight: 1.45,
+    hillshaded: true,
+    drawInFront: (d) => {
       drawMesh(d);
       const agents = swarm(d.t);
       drawBeacon(d);

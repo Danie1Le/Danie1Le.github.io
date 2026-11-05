@@ -1,36 +1,65 @@
 import { ROLE_MS } from "../constants";
-import { fit } from "../surfaces";
+import { grid, times } from "../sequence";
+import { toPixelCount } from "../surfaces";
 import type { Pt, Shape } from "../types";
+import { onScanLine } from "./scanLine";
 
-// Framatome: five engineering documents; a scan runs down them and the pages with page-number errors flag red.
+const PAGE_COUNT = 5;
+const MIDDLE_PAGE = (PAGE_COUNT - 1) / 2;
+const PAGE_WIDTH = 1.1;
+const PAGE_HEIGHT = 1.44;
+const PAGE_SPACING = 1.55;
+const PAGES_WITH_ERRORS = [1, 3];
+const OUTLINE_PIXELS = 90;
+const TEXT_COLUMNS = 20;
+const TEXT_LINES = 8;
+const SCAN_TOP = 0.8;
+const SCAN_TRAVEL = 1.75;
+const SCAN_MS = ROLE_MS * 0.75;
+const PAGE_NUMBER_Y = -0.55;
+const SCAN_LINE_THICKNESS = 0.035;
+
+function pointOnOutline(distance: number) {
+  const w = PAGE_WIDTH, h = PAGE_HEIGHT;
+  let d = distance;
+  if (d < w) return [-w / 2 + d, h / 2];
+  if ((d -= w) < h) return [w / 2, h / 2 - d];
+  if ((d -= h) < w) return [w / 2 - d, -h / 2];
+  return [-w / 2, -h / 2 + d - w];
+}
+
+const pageOutline = (centerX: number): Pt[] =>
+  times(OUTLINE_PIXELS, (j) => {
+    const [x, y] = pointOnOutline((j / OUTLINE_PIXELS) * 2 * (PAGE_WIDTH + PAGE_HEIGHT));
+    return { x: centerX + x, y, z: 0 };
+  });
+
+const textLines = (centerX: number): Pt[] =>
+  grid(TEXT_COLUMNS, TEXT_LINES, (column, line) => {
+    const length = 0.8 - (line % 3) * 0.16;
+    return { x: centerX - 0.4 + (column / (TEXT_COLUMNS - 1)) * length, y: 0.5 - line * 0.13, z: 0 };
+  });
+
+const pageNumber = (centerX: number, flagged: boolean): Pt[] =>
+  grid(10, 3, (column, row) => ({ x: centerX - 0.1 + column * 0.022, y: -0.6 + row * 0.03, z: 0, flagged }));
+
+function page(index: number): Pt[] {
+  const centerX = (index - MIDDLE_PAGE) * PAGE_SPACING;
+  return [...pageOutline(centerX), ...textLines(centerX), ...pageNumber(centerX, PAGES_WITH_ERRORS.includes(index))];
+}
+
+const scanLineY = (t: number) => SCAN_TOP - SCAN_TRAVEL * Math.min(1, t / SCAN_MS);
+
 export function pages(): Shape {
-  const pts: Pt[] = [], w = 1.1, h = 1.44;
-  for (let p = 0; p < 5; p++) {
-    const cx = (p - 2) * 1.55, flagged = p === 1 || p === 3;
-    for (let j = 0; j < 90; j++) { // page outline
-      let d = (j / 90) * 2 * (w + h), x, y;
-      if (d < w) [x, y] = [-w / 2 + d, h / 2];
-      else if ((d -= w) < h) [x, y] = [w / 2, h / 2 - d];
-      else if ((d -= h) < w) [x, y] = [w / 2 - d, -h / 2];
-      else [x, y] = [-w / 2, -h / 2 + d - w];
-      pts.push({ x: cx + x, y, z: 0, spin: true });
-    }
-    for (let j = 0; j < 160; j++) { // eight lines of text
-      const l = Math.floor(j / 20), len = 0.8 - (l % 3) * 0.16;
-      pts.push({ x: cx - 0.4 + ((j % 20) / 19) * len, y: 0.5 - l * 0.13, z: 0, spin: true });
-    }
-    for (let j = 0; j < 30; j++) // the page number
-      pts.push({ x: cx - 0.1 + (j % 10) * 0.022, y: -0.6 + Math.floor(j / 10) * 0.03, z: 0, spin: true, flag: flagged });
-  }
   return {
-    points: fit(pts),
+    points: toPixelCount(times(PAGE_COUNT, page).flat()),
     yaw: (t) => 0.24 * Math.sin(t / 1800),
-    tilt: 0.1,
-    span: 4.7, // room for the nearest page, which grows in perspective as the stack turns toward the viewer
-    // The scan line passes the page numbers about two-thirds of the way through the role, then runs off the page.
-    live: (p, _i, t) => {
-      const scan = 0.8 - 1.75 * Math.min(1, t / (ROLE_MS * 0.75));
-      return { ...p, red: (p.flag && scan < -0.55) || Math.abs(p.y - scan) < 0.035 };
+    tilt: () => 0.1,
+    halfWidth: 4.7,
+    move: (p, t) => {
+      const scan = scanLineY(t);
+      const errorFound = p.flagged && scan < PAGE_NUMBER_Y;
+      return { ...p, red: errorFound || onScanLine(p, scan, SCAN_LINE_THICKNESS) };
     },
   };
 }

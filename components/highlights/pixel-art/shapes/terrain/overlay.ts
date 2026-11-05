@@ -8,7 +8,7 @@ import { COLS, ROWS, SUMMIT, gx, gy, gz } from "./grid";
 const cell = ({ project }: Draw, i: number, j: number) => project(gx(i), gy(i, j) + 0.03, gz(j));
 
 /** The surface mesh, through the pixels themselves (every other row). */
-export function drawMesh({ ctx, sx, sy, settle, ink, size }: Draw) {
+export function drawMesh({ ctx, screenX: sx, screenY: sy, formed: settle, ink, pixelSize: size }: Draw) {
   ctx.strokeStyle = ink;
   ctx.lineWidth = Math.max(1, size * 0.3);
   ctx.globalAlpha = 0.08 * settle;
@@ -19,15 +19,15 @@ export function drawMesh({ ctx, sx, sy, settle, ink, size }: Draw) {
 
 /** The goal: a red flag on the summit, with a ring rippling out from it. */
 export function drawBeacon(d: Draw) {
-  const { ctx, t, settle, project, red, size } = d;
-  const [bx, by] = cell(d, SUMMIT[0], SUMMIT[1]), [, topY] = project(gx(SUMMIT[0]), gy(SUMMIT[0], SUMMIT[1]) + 0.9, gz(SUMMIT[1]));
+  const { ctx, t, formed: settle, project, red, pixelSize: size } = d;
+  const { x: bx, y: by } = cell(d, SUMMIT[0], SUMMIT[1]), { y: topY } = project(gx(SUMMIT[0]), gy(SUMMIT[0], SUMMIT[1]) + 0.9, gz(SUMMIT[1]));
   const ripple = (t % 1400) / 1400;
   const ring = (rr: number, alpha: number) => {
     ctx.globalAlpha = settle * alpha;
     ctx.beginPath();
     for (let k = 0; k <= 32; k++) {
       const u = (k / 32) * Math.PI * 2;
-      const [x, y] = project(gx(SUMMIT[0]) + Math.cos(u) * rr, gy(SUMMIT[0], SUMMIT[1]), gz(SUMMIT[1]) + Math.sin(u) * rr);
+      const { x, y } = project(gx(SUMMIT[0]) + Math.cos(u) * rr, gy(SUMMIT[0], SUMMIT[1]), gz(SUMMIT[1]) + Math.sin(u) * rr);
       k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
     }
     ctx.stroke();
@@ -45,7 +45,7 @@ export function drawBeacon(d: Draw) {
 
 /** The agents' paths, fading toward their oldest steps, and each agent's current square. */
 export function drawPaths(d: Draw, agents: Agent[]) {
-  const { ctx, settle, red, size } = d;
+  const { ctx, formed: settle, red, pixelSize: size } = d;
   ctx.strokeStyle = red;
   ctx.fillStyle = red;
   ctx.lineWidth = Math.max(1.5, size * 0.7);
@@ -55,10 +55,10 @@ export function drawPaths(d: Draw, agents: Agent[]) {
     ctx.beginPath();
     for (const { trail } of agents) {
       const from = Math.floor((q * trail.length) / 4), to = Math.min(trail.length - 1, Math.floor(((q + 1) * trail.length) / 4));
-      for (let n = from; n <= to; n++) { const [x, y] = cell(d, trail[n][0], trail[n][1]); n > from ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      for (let n = from; n <= to; n++) { const { x, y } = cell(d, trail[n][0], trail[n][1]); n > from ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
     }
     ctx.stroke();
   });
   ctx.globalAlpha = settle;
-  for (const ag of agents) { const [x, y] = cell(d, ag.i, ag.j), s = size * 2.6; ctx.fillRect(x - s / 2, y - s / 2, s, s); }
+  for (const ag of agents) { const { x, y } = cell(d, ag.i, ag.j), s = size * 2.6; ctx.fillRect(x - s / 2, y - s / 2, s, s); }
 }

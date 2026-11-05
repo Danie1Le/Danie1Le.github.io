@@ -1,4 +1,4 @@
-import { unit } from "../../math";
+import { normalize } from "../../math";
 import type { Pt } from "../../types";
 import { relief } from "./face";
 
@@ -40,7 +40,7 @@ export const inHead = (x: number, y: number, z: number) => {
 // The surface as rows of pixels, spaced evenly along the head's outline (so the crown and under the jaw are as full
 // as the face), denser on the face than the back of the head. `k` scales every spacing.
 export const headSurface = (k: number): Pt[] => {
-  const pts: Pt[] = [{ x: 0, y: TOP, z: 0.3, spin: true, n: [0, 1, 0] }];
+  const pts: Pt[] = [{ x: 0, y: TOP, z: 0.3, normal: [0, 1, 0] }];
   const rows: number[] = [];
   let acc = 0, prev = [HW(TOP), HF(TOP), HB(TOP)];
   for (let y = TOP; y >= CHIN; y -= 0.002) {
@@ -58,7 +58,7 @@ export const headSurface = (k: number): Pt[] => {
       if (run < 1) continue;
       run -= 1;
       const e = 0.003, du = slice(y, u + e).map((v, i) => v - slice(y, u - e)[i]), dy = slice(y + e, u).map((v, i) => v - slice(y - e, u)[i]);
-      pts.push({ x: p[0], y: p[1], z: p[2], spin: true, a: 1, n: unit([dy[1] * du[2] - dy[2] * du[1], dy[2] * du[0] - dy[0] * du[2], dy[0] * du[1] - dy[1] * du[0]]) });
+      pts.push({ x: p[0], y: p[1], z: p[2], brightness: 1, normal: normalize([dy[1] * du[2] - dy[2] * du[1], dy[2] * du[0] - dy[0] * du[2], dy[0] * du[1] - dy[1] * du[0]]) });
     }
   });
   return pts;

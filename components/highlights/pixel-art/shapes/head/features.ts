@@ -1,15 +1,15 @@
-import { ease, unit } from "../../math";
+import { smoothstep, normalize } from "../../math";
 import type { Pt } from "../../types";
 import { HW, frontZ, inHead } from "./profile";
 
 // What the head's surface doesn't give on its own: the drawn features of the face, the ears and the neck.
 
 /** A contour pixel lying on the face, lit by the face's own surface direction there. */
-const onFace = (x: number, y: number, a: number): Pt | null => {
+const onFace = (x: number, y: number, brightness: number): Pt | null => {
   const z = frontZ(x, y);
   if (!isFinite(z)) return null;
   const e = 0.004, zx = (frontZ(x + e, y) - frontZ(x - e, y)) / (2 * e), zy = (frontZ(x, y + e) - frontZ(x, y - e)) / (2 * e);
-  return { x, y, z, spin: true, a, n: unit([zx, zy, -1]) }; // outward normal of the surface z = frontZ(x, y)
+  return { x, y, z, brightness, normal: normalize([zx, zy, -1]) }; // outward normal of the surface z = frontZ(x, y)
 };
 
 /** Almond eyes with their irises, then the line of the mouth. */
@@ -34,11 +34,11 @@ export function ears(): Pt[] {
     const ex = s * (HW(0.12) + 0.015);
     for (let j = 0; j < 48; j++) {
       const u = -Math.PI * 0.6 + (j / 47) * Math.PI * 1.8, lobe = Math.sin(u) < 0 ? 0.75 : 1;
-      pts.push({ x: ex, y: 0.12 + Math.sin(u) * 0.26, z: 0.36 + Math.cos(u) * 0.13 * lobe, spin: true, a: 1.3, n: unit([s, 0.1, 0.35]) });
+      pts.push({ x: ex, y: 0.12 + Math.sin(u) * 0.26, z: 0.36 + Math.cos(u) * 0.13 * lobe, brightness: 1.3, normal: normalize([s, 0.1, 0.35]) });
     }
     for (let j = 0; j < 30; j++) {
       const u = -Math.PI * 0.3 + (j / 29) * Math.PI * 1.4;
-      pts.push({ x: ex - s * 0.01, y: 0.14 + Math.sin(u) * 0.14, z: 0.34 + Math.cos(u) * 0.07, spin: true, a: 0.9, n: unit([s, 0, 0.3]) });
+      pts.push({ x: ex - s * 0.01, y: 0.14 + Math.sin(u) * 0.14, z: 0.34 + Math.cos(u) * 0.07, brightness: 0.9, normal: normalize([s, 0, 0.3]) });
     }
   }
   return pts;
@@ -48,9 +48,9 @@ export function ears(): Pt[] {
 export function neck(): Pt[] {
   const pts: Pt[] = [];
   for (let j = 0; j < 320; j++) {
-    const u = j * 2.399963, k = j / 320, y = -0.45 - k * 1.18, flare = ease(Math.max(0, (k - 0.65) / 0.35));
+    const u = j * 2.399963, k = j / 320, y = -0.45 - k * 1.18, flare = smoothstep(Math.max(0, (k - 0.65) / 0.35));
     const r = 0.37 + 0.4 * flare, x = Math.cos(u) * r, z = 0.38 - 0.08 * k + Math.sin(u) * r * 0.85;
-    if (!inHead(x, y, z)) pts.push({ x, y, z, spin: true, a: 1, n: unit([Math.cos(u), 0.5 * flare, Math.sin(u)]) });
+    if (!inHead(x, y, z)) pts.push({ x, y, z, brightness: 1, normal: normalize([Math.cos(u), 0.5 * flare, Math.sin(u)]) });
   }
   return pts;
 }

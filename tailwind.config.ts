@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss"
 
-// Colours, type and spacing come from the CSS tokens in app/globals.css; this only adds the house easing curve.
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./hooks/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
   theme: {
@@ -10,7 +9,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")], // animate-in / fade-in / zoom-in for the image preview
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config
 
 export default config

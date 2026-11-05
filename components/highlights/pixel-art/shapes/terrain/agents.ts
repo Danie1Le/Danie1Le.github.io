@@ -1,5 +1,5 @@
 import { ROLE_MS } from "../../constants";
-import { rnd } from "../../math";
+import { seededRandom } from "../../math";
 import { COLS, ROWS, SUMMIT, gy } from "./grid";
 
 // The agents: they wander, climb, and head more and more for the summit, as later generations do in the research.
@@ -15,7 +15,7 @@ const spawn = (): Agent[] =>
   Array.from({ length: 18 }, (_, a) => {
     let i = 0, j = 0;
     for (let tries = 0; tries < 20; tries++) {
-      [i, j] = [Math.floor(rnd(a + tries * 7.1 + 0.5) * COLS), Math.floor(rnd(a * 3 + tries * 3.3 + 0.7) * ROWS)];
+      [i, j] = [Math.floor(seededRandom(a + tries * 7.1 + 0.5) * COLS), Math.floor(seededRandom(a * 3 + tries * 3.3 + 0.7) * ROWS)];
       if (Math.max(Math.abs(i - SUMMIT[0]), Math.abs(j - SUMMIT[1])) >= 18) break;
     }
     return { i, j, trail: [[i, j]] };

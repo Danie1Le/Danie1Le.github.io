@@ -1,21 +1,22 @@
 "use client"
 
+import { sectionHref } from "@/lib/sections";
+import { site } from "@/lib/site";
 import { useState } from "react";
-import DesktopLinks from "./nav/DesktopLinks";
-import MobileMenu, { MenuButton } from "./nav/MobileMenu";
-import ThemeToggle from "./nav/ThemeToggle";
-import { useHideOnScroll } from "./nav/useHideOnScroll";
+import DesktopLinks from "./DesktopLinks";
+import MobileMenu, { MenuButton } from "./MobileMenu";
+import ThemeToggle from "./ThemeToggle";
+import { useHideOnScroll } from "./useHideOnScroll";
 
-interface NavigationProps {
+interface NavBarProps {
   activeSection: string;
   onResume: () => void;
 }
 
-// The fixed bar: wordmark on the left; section links, Resume and the theme toggle on desktop; a menu on phones.
-// Links are real #anchors: CSS smooth-scrolls them (scroll-margin clears the bar) and the URL shows the section.
-export default function Navigation({ activeSection, onResume }: NavigationProps) {
+export default function NavBar({ activeSection, onResume }: NavBarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const hidden = useHideOnScroll() && !menuOpen; // never hide the bar while the menu is open
+  const scrolledAway = useHideOnScroll();
+  const hidden = scrolledAway && !menuOpen;
   const closeMenu = () => setMenuOpen(false);
 
   return (
@@ -25,8 +26,8 @@ export default function Navigation({ activeSection, onResume }: NavigationProps)
       }`}
     >
       <div className="frame flex h-16 items-center justify-between gap-6">
-        <a href="#hero" onClick={closeMenu} className="font-bold tracking-tight whitespace-nowrap">
-          Daniel Le
+        <a href={sectionHref("hero")} onClick={closeMenu} className="font-bold tracking-tight whitespace-nowrap">
+          {site.name}
         </a>
         <DesktopLinks active={activeSection} onResume={onResume} />
         <div className="flex md:hidden items-center gap-5">

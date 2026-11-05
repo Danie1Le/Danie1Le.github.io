@@ -1,43 +1,34 @@
+import { isDesktop } from "@/lib/media";
+import { onScrollFrame } from "@/lib/scroll";
 import { NAV_HEIGHT } from "@/lib/sections";
 import { useEffect, useRef, useState } from "react";
 
-const isDesktop = () => window.matchMedia("(min-width: 768px)").matches;
+const ALWAYS_SHOWN_ABOVE_Y = 100;
+const SCROLL_JITTER = 4;
+const REVEAL_ZONE = NAV_HEIGHT + 16;
 
-/**
- * On desktop the bar slides away as you scroll down and comes back as you scroll up, near the top of the page,
- * or when the cursor nears the top edge. On phones it always stays.
- */
 export function useHideOnScroll() {
   const [hidden, setHidden] = useState(false);
   const lastY = useRef(0);
-  const ticking = useRef(false);
 
   useEffect(() => {
-    const update = () => {
+    const followScroll = () => {
       const y = window.scrollY;
-      if (!isDesktop() || y < 100) setHidden(false);
-      else if (y > lastY.current + 4) setHidden(true);
-      else if (y < lastY.current - 4) setHidden(false);
+      if (!isDesktop() || y < ALWAYS_SHOWN_ABOVE_Y) setHidden(false);
+      else if (y > lastY.current + SCROLL_JITTER) setHidden(true);
+      else if (y < lastY.current - SCROLL_JITTER) setHidden(false);
       lastY.current = y;
-      ticking.current = false;
     };
-    const onScroll = () => {
-      if (!ticking.current) {
-        ticking.current = true;
-        window.requestAnimationFrame(update);
-      }
-    };
-    const onMouseMove = (e: MouseEvent) => {
-      // Reveal a little before the cursor reaches where the bar would be.
-      if (isDesktop() && e.clientY < NAV_HEIGHT + 16) setHidden(false);
+    const revealNearTopEdge = (e: MouseEvent) => {
+      if (isDesktop() && e.clientY < REVEAL_ZONE) setHidden(false);
     };
 
     lastY.current = window.scrollY;
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("mousemove", onMouseMove);
+    const stopFollowingScroll = onScrollFrame(followScroll);
+    window.addEventListener("mousemove", revealNearTopEdge);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("mousemove", onMouseMove);
+      stopFollowingScroll();
+      window.removeEventListener("mousemove", revealNearTopEdge);
     };
   }, []);
 

@@ -1,20 +1,22 @@
 export interface Project {
   title: string;
   description: string;
-  images: string[]; // shown side by side in the thumbnail
-  alt?: string; // default: "Screenshot of {title}"
-  focus?: string; // CSS object-position of the crop; default "top"
+  images: string[];
+  alt?: string;
+  objectPosition?: string;
   tech: string[];
   github?: string;
-  live?: string; // a demo site, or an .mp4 to watch
+  live?: string;
 }
+
+export const isVideo = (url: string) => url.endsWith(".mp4");
 
 export const projects: Project[] = [
   {
     title: "Dr. Mole",
     description: "AI-powered mobile app for detecting skin cancer over time. Placed 3rd in Health & Wellness track and 6th overall at HackUP.",
     images: ["/Dr_Mole.png"],
-    focus: "50% 28%",
+    objectPosition: "50% 28%",
     tech: ["React Native", "FastAPI", "Python", "PyTorch", "Groq", "Hugging Face"],
     github: "https://github.com/chengenli9/HackUP/tree/main",
     live: "https://devpost.com/software/mr-mole#updates",
@@ -73,7 +75,7 @@ export const projects: Project[] = [
     description: "Arduino-powered wind turbine model with LED indicators for wind speed.",
     images: ["/turbine1.jpg", "/turbine2.jpg"],
     alt: "Arduino wind turbine model",
-    focus: "center",
+    objectPosition: "center",
     tech: ["C++", "Arduino"],
     live: "/Media1.mp4",
   },

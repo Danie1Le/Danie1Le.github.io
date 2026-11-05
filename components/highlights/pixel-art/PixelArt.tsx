@@ -1,7 +1,7 @@
 "use client"
 
 import type { Art } from "@/lib/content";
-import { prefersReducedMotion } from "@/lib/motion";
+import { prefersReducedMotion } from "@/lib/media";
 import { useEffect, useRef } from "react";
 import { createEngine, type Engine } from "./engine";
 

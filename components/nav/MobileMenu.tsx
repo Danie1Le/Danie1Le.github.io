@@ -1,37 +1,49 @@
-import { NAV_SECTIONS } from "@/lib/sections";
+import { NAV_SECTIONS, sectionHref } from "@/lib/sections";
+import { DIM_TEXT_HOVER_INK } from "@/lib/styles";
 import { Menu, X } from "lucide-react";
 import Collapse from "../ui/Collapse";
 
-/** The phone's menu button (hamburger, or X while open). */
 export function MenuButton({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  const Icon = open ? X : Menu;
   return (
     <button
-      className="p-2 -m-2 text-[var(--dim)] hover:text-[var(--ink)] transition-colors"
+      className={`p-2 -m-2 ${DIM_TEXT_HOVER_INK} transition-colors`}
       onClick={onToggle}
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}
     >
-      {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      <Icon className="w-6 h-6" />
     </button>
   );
 }
 
-/** The phone's menu: the section links and Resume, unfolding under the bar. Closed, it is inert (out of the tab order). */
-export default function MobileMenu({ open, active, onClose, onResume }: { open: boolean; active: string; onClose: () => void; onResume: () => void }) {
+interface MobileMenuProps {
+  open: boolean;
+  active: string;
+  onClose: () => void;
+  onResume: () => void;
+}
+
+export default function MobileMenu({ open, active, onClose, onResume }: MobileMenuProps) {
+  const openResume = () => {
+    onClose();
+    onResume();
+  };
+
   return (
     <Collapse open={open} className="md:hidden duration-500 ease-expo">
       <div className="frame pb-6 flex flex-col gap-1">
-        {NAV_SECTIONS.map((item) => (
+        {NAV_SECTIONS.map((section) => (
           <a
-            key={item.id}
-            href={`#${item.id}`}
+            key={section.id}
+            href={sectionHref(section.id)}
             onClick={onClose}
-            className={`py-2 t-lead ${active === item.id ? "text-[var(--ink)]" : "text-[var(--dim)]"}`}
+            className={`py-2 t-lead ${active === section.id ? "text-[var(--ink)]" : "text-[var(--dim)]"}`}
           >
-            {item.label}
+            {section.label}
           </a>
         ))}
-        <button onClick={() => { onClose(); onResume(); }} className="text-left py-2 t-lead text-[var(--brand)]">
+        <button onClick={openResume} className="text-left py-2 t-lead text-[var(--brand)]">
           Resume
         </button>
       </div>

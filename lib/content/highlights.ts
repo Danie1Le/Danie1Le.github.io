@@ -1,9 +1,8 @@
-// "Numbers from the work": each role's figures, shown over a pixel picture of that work (see components/highlights/pixel-art).
-
-/** Which pixel picture a role is drawn as: Framatome's pages, the EEG signal, the ResVR render, the ABM fitness landscape. */
 export type Art = "pages" | "signal" | "render" | "fitness";
 
-export interface Metric { value: number; unit: string; label: string } // value is a percentage, 0-100
+type Percent = number;
+
+export interface Metric { value: Percent; unit: string; label: string }
 export interface Highlight { where: string; art: Art; metrics: Metric[] }
 
 export const highlights: Highlight[] = [

@@ -5,20 +5,19 @@ import { useRevealOnScroll } from "@/hooks/useRevealOnScroll"
 import { resume } from "@/lib/content"
 import { SECTION_IDS } from "@/lib/sections"
 import { useState } from "react"
-import AboutSection from "./aboutSection"
-import ContactSection from "./contactSection"
-import ExperienceSection from "./experienceSection"
-import HeroSection from "./heroSection"
-import HighlightsSection from "./highlightsSection"
-import Navigation from "./navBar"
-import ProjectsSection from "./projectsSection"
+import AboutSection from "./about/AboutSection"
+import ContactSection from "./contact/ContactSection"
+import ExperienceSection from "./experience/ExperienceSection"
+import HeroSection from "./hero/HeroSection"
+import HighlightsSection from "./highlights/HighlightsSection"
+import NavBar from "./nav/NavBar"
+import ProjectsSection from "./projects/ProjectsSection"
 import ImagePreviewModal from "./ui/ImagePreviewModal"
 
-// The page: nav, the sections in order, and the resume preview any "Resume" button opens.
 export default function Portfolio() {
   const activeSection = useActiveSection(SECTION_IDS)
-  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false)
-  const openResume = () => setIsResumeModalOpen(true)
+  const [resumeOpen, setResumeOpen] = useState(false)
+  const openResume = () => setResumeOpen(true)
   useRevealOnScroll()
 
   return (
@@ -27,7 +26,7 @@ export default function Portfolio() {
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[var(--brand-fill)] focus:text-[var(--brand-ink)]">
         Skip to content
       </a>
-      <Navigation activeSection={activeSection} onResume={openResume} />
+      <NavBar activeSection={activeSection} onResume={openResume} />
 
       <main id="main">
         <HeroSection onResume={openResume} />
@@ -39,10 +38,10 @@ export default function Portfolio() {
       </main>
 
       <ImagePreviewModal
-        src={isResumeModalOpen ? resume.image : null}
-        onClose={() => setIsResumeModalOpen(false)}
+        src={resumeOpen ? resume.image : null}
+        onClose={() => setResumeOpen(false)}
         download={{ href: resume.pdf, filename: resume.filename }}
       />
     </div>
-  )
+  );
 }

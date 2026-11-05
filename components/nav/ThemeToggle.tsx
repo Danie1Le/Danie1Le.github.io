@@ -1,23 +1,18 @@
+import { DIM_TEXT_HOVER_INK } from "@/lib/styles";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "./useTheme";
 
-/** "Lights on" / "Lights off". `compact` is the phone version: the icon alone, with a 44px target. */
+const PHONE_STYLE = `p-2.5 -m-2.5 ${DIM_TEXT_HOVER_INK} transition-colors active:scale-90`;
+const DESKTOP_STYLE = `inline-flex items-center gap-2 ${DIM_TEXT_HOVER_INK} transition-colors active:scale-95`;
+
 export default function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const { isLight, toggle } = useTheme();
   const label = isLight ? "Lights off" : "Lights on";
   const Icon = isLight ? Moon : Sun;
-  const ariaLabel = `${label}: switch to ${isLight ? "dark" : "light"} theme`;
+  const nextTheme = isLight ? "dark" : "light";
 
   return (
-    <button
-      onClick={toggle}
-      aria-label={ariaLabel}
-      className={
-        compact
-          ? "p-2.5 -m-2.5 text-[var(--dim)] hover:text-[var(--ink)] transition-colors active:scale-90"
-          : "inline-flex items-center gap-2 text-[var(--dim)] hover:text-[var(--ink)] transition-colors active:scale-95"
-      }
-    >
+    <button onClick={toggle} aria-label={`${label}: switch to ${nextTheme} theme`} className={compact ? PHONE_STYLE : DESKTOP_STYLE}>
       <Icon className={compact ? "w-5 h-5" : "w-4 h-4"} />
       {!compact && label}
     </button>

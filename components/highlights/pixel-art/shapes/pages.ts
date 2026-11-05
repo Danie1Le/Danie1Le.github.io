@@ -1,7 +1,8 @@
 import { ROLE_MS } from "../constants";
-import { grid, times } from "../math";
+import { grid, times } from "../sequence";
 import { toPixelCount } from "../surfaces";
 import type { Pt, Shape } from "../types";
+import { onScanLine } from "./scanLine";
 
 const PAGE_COUNT = 5;
 const PAGE_WIDTH = 1.1;
@@ -55,7 +56,7 @@ export function pages(): Shape {
     move: (p, t) => {
       const scan = scanLineY(t);
       const errorFound = p.flagged && scan < PAGE_NUMBER_Y;
-      return { ...p, red: errorFound || Math.abs(p.y - scan) < SCAN_LINE_THICKNESS };
+      return { ...p, red: errorFound || onScanLine(p, scan, SCAN_LINE_THICKNESS) };
     },
   };
 }

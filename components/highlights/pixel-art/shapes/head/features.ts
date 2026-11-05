@@ -1,4 +1,5 @@
-import { GOLDEN_ANGLE, around, normalize, smoothstep, spread } from "../../math";
+import { GOLDEN_ANGLE, normalize, smoothstep } from "../../math";
+import { around, spread } from "../../sequence";
 import type { Pt } from "../../types";
 import { faceSurfaceZ, halfWidth, inHead } from "./profile";
 

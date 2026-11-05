@@ -1,7 +1,5 @@
 import { scrollPageBy } from "@/lib/scroll";
-import { NAV_HEIGHT } from "@/lib/sections";
-
-const NAV_CLEARANCE = NAV_HEIGHT + 16;
+import { NAV_CLEARANCE } from "@/lib/sections";
 
 export interface RowHandle {
   el: HTMLElement;

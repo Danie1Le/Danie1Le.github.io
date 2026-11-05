@@ -1,4 +1,4 @@
-import { TAU, clamp01, cross, normalize, signedPow, subtract } from "../../math";
+import { TAU, clamp01, cross, normalize, signedPow, subtract, type Vec3 } from "../../math";
 import type { Pt } from "../../types";
 import { relief } from "./face";
 
@@ -35,7 +35,7 @@ const sliceAt = (y: number) => {
 
 const reliefFadeIn = (towardFront: number) => Math.min(1, towardFront * 3);
 
-export const slicePoint = (y: number, angle: number) => {
+export const slicePoint = (y: number, angle: number): Vec3 => {
   const { halfWidth, centerZ, halfDepth } = sliceAt(y);
   const cos = Math.cos(angle), sin = Math.sin(angle), onFront = sin < 0;
   const exponent = 2 / (onFront ? frontSquareness(y) : backSquareness(y));
@@ -63,6 +63,7 @@ export const inHead = (x: number, y: number, z: number) => {
 const ROW_STEP = 0.002;
 const ROW_SPACING = 0.058;
 const JAW_UNDERSIDE_WEIGHT = 0.45;
+const OUTLINE_WEIGHTS = [1, 1, JAW_UNDERSIDE_WEIGHT];
 const SAMPLES_PER_ROW = 360;
 const FACE_SPACING = 0.05;
 const BACK_SPACING = 0.085;
@@ -75,7 +76,7 @@ function rowHeights(spacing: number) {
   let travelled = 0, previous = outline(CROWN_Y);
   for (let y = CROWN_Y; y >= CHIN_Y; y -= ROW_STEP) {
     const current = outline(y);
-    const change = Math.max(...current.map((v, i) => Math.abs(v - previous[i]) * (i === 2 ? JAW_UNDERSIDE_WEIGHT : 1)));
+    const change = Math.max(...current.map((v, i) => Math.abs(v - previous[i]) * OUTLINE_WEIGHTS[i]));
     travelled += Math.hypot(ROW_STEP, change);
     previous = current;
     if (travelled >= ROW_SPACING * spacing) {

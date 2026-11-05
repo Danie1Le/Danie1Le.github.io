@@ -3,6 +3,7 @@ import { PIXEL_COUNT, ROLE_MS } from "../../constants";
 import { TAU, smoothstep } from "../../math";
 import { toPixelCount } from "../../surfaces";
 import type { Draw, Pt, Shape } from "../../types";
+import { onScanLine } from "../scanLine";
 import { ears, faceLines, neck } from "./features";
 import { headSurface } from "./profile";
 
@@ -37,7 +38,7 @@ export function head(): Shape {
     halfWidth: 1.05,
     halfHeight: 1.62,
     glow: 1,
-    move: (p, t) => (Math.abs(p.y - scanLineY(t)) < SCAN_LINE_THICKNESS ? { ...p, red: true } : p),
+    move: (p, t) => (onScanLine(p, scanLineY(t), SCAN_LINE_THICKNESS) ? { ...p, red: true } : p),
     drawBehind: dottedWall,
   };
 }

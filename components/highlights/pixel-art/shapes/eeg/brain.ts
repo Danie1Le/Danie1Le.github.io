@@ -1,9 +1,10 @@
-import { GOLDEN_ANGLE, distanceToSegment, normalize, times, valueNoise, type Vec3 } from "../../math";
+import { GOLDEN_ANGLE, distanceToSegment, normalize, valueNoise, type Vec3 } from "../../math";
+import { times } from "../../sequence";
 import { inEllipsoid, placeAt, shell, turn } from "../../surfaces";
 import type { Ellipsoid, Pt } from "../../types";
 import { redSquare } from "../redSquare";
 
-const BRAIN_POSITION = [-3.05, 0.12, 0.35];
+const BRAIN_POSITION: Vec3 = [-3.05, 0.12, 0.35];
 const CEREBRUM: Ellipsoid = { center: [0, 0.1, 0], radii: [0.95, 0.62, 0.6] };
 const TEMPORAL_LOBE: Ellipsoid = { center: [0.22, -0.2, 0], radii: [0.56, 0.22, 0.54] };
 const CEREBELLUM: Ellipsoid = { center: [-0.6, -0.33, 0], radii: [0.36, 0.2, 0.46] };

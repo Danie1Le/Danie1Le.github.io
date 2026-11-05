@@ -1,4 +1,4 @@
-export type Vec3 = number[];
+export type Vec3 = [number, number, number];
 
 export const TAU = Math.PI * 2;
 
@@ -23,16 +23,16 @@ export const signedPow = (value: number, exponent: number) => Math.sign(value) *
 
 export const average = (values: number[]) => values.reduce((sum, value) => sum + value, 0) / values.length;
 
-export const normalize = (v: Vec3) => {
+export const normalize = (v: Vec3): Vec3 => {
   const length = Math.hypot(v[0], v[1], v[2]) || 1;
-  return v.map((component) => component / length);
+  return [v[0] / length, v[1] / length, v[2] / length];
 };
 
 export const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
-export const subtract = (a: Vec3, b: Vec3) => a.map((component, i) => component - b[i]);
+export const subtract = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 
-export const cross = (a: Vec3, b: Vec3) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+export const cross = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
 export const wrapAngle = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
 
@@ -49,14 +49,3 @@ export const valueNoise = (x: number, z: number) => {
   const a = latticeValue(i, j), b = latticeValue(i + 1, j), c = latticeValue(i, j + 1), d = latticeValue(i + 1, j + 1);
   return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
 };
-
-export const times = <T>(count: number, make: (index: number) => T) => Array.from({ length: count }, (_, i) => make(i));
-
-export const around = <T>(count: number, make: (angle: number, index: number) => T) =>
-  times(count, (i) => make((i / count) * TAU, i));
-
-export const spread = <T>(count: number, make: (fraction: number, index: number) => T) =>
-  times(count, (i) => make(i / (count - 1), i));
-
-export const grid = <T>(columns: number, rows: number, make: (column: number, row: number) => T) =>
-  times(columns * rows, (i) => make(i % columns, Math.floor(i / columns)));

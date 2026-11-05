@@ -1,4 +1,4 @@
-import { grid } from "../math";
+import { grid } from "../sequence";
 import type { Pt } from "../types";
 
 const RED_PIXEL_SPACING = 0.03;

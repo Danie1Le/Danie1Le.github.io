@@ -1,5 +1,7 @@
 import { smoothstep } from "../../math";
+import { grid, times } from "../../sequence";
 import type { Pt } from "../../types";
+import type { Decision } from "./decision";
 
 const CHANNELS = 8;
 const SAMPLES_PER_CHANNEL = 36;
@@ -9,20 +11,24 @@ const ARROW_START = -0.2;
 const ARROW_LENGTH = 1.2;
 const PULSE_HALF_WIDTH = 0.12;
 
-function channels(): Pt[] {
-  const pts: Pt[] = [];
-  for (let channel = 0; channel < CHANNELS; channel++)
-    for (let j = 0; j < SAMPLES_PER_CHANNEL; j++)
-      pts.push({ x: WAVE_LEFT + (j / (SAMPLES_PER_CHANNEL - 1)) * WAVE_LENGTH, y: 0.49 - channel * 0.14, z: 0, partIndex: channel, part: "wave" });
-  return pts;
-}
+const channels = (): Pt[] =>
+  grid(SAMPLES_PER_CHANNEL, CHANNELS, (j, channel) => ({
+    x: WAVE_LEFT + (j / (SAMPLES_PER_CHANNEL - 1)) * WAVE_LENGTH,
+    y: 0.49 - channel * 0.14,
+    z: 0,
+    partIndex: channel,
+    part: "wave",
+  }));
 
-function arrow(): Pt[] {
-  const pts: Pt[] = [];
-  for (let j = 0; j < 26; j++) pts.push({ x: -0.15 + j * 0.04, y: 0, z: 0, part: "arrow" });
-  for (const side of [1, -1]) for (let j = 1; j <= 8; j++) pts.push({ x: 0.85 - j * 0.03, y: side * j * 0.028, z: 0, part: "arrow" });
-  return pts;
-}
+const arrowShaft = (): Pt[] => times(26, (j) => ({ x: -0.15 + j * 0.04, y: 0, z: 0, part: "arrow" }));
+
+const arrowBarb = (side: number): Pt[] =>
+  times(8, (k) => {
+    const j = k + 1;
+    return { x: 0.85 - j * 0.03, y: side * j * 0.028, z: 0, part: "arrow" };
+  });
+
+const arrow = (): Pt[] => [...arrowShaft(), ...[1, -1].flatMap(arrowBarb)];
 
 export const signalPoints = (): Pt[] => [...channels(), ...arrow()];
 
@@ -32,8 +38,8 @@ function funnelIntoArrow(p: Pt, t: number): Pt {
   return { ...p, y: p.y * (1 - pull) + wave * (1 - 0.6 * pull) };
 }
 
-const pulseAlongArrow = (p: Pt, decisionProgress: number): Pt =>
-  ({ ...p, red: Math.abs(p.x - (ARROW_START + decisionProgress * ARROW_LENGTH)) < PULSE_HALF_WIDTH });
+const pulseAlongArrow = (p: Pt, { progress }: Decision): Pt =>
+  ({ ...p, red: Math.abs(p.x - (ARROW_START + progress * ARROW_LENGTH)) < PULSE_HALF_WIDTH });
 
-export const moveSignal = (p: Pt, t: number, decisionProgress: number): Pt =>
-  p.part === "wave" ? funnelIntoArrow(p, t) : pulseAlongArrow(p, decisionProgress);
+export const moveSignal = (p: Pt, t: number, decision: Decision): Pt =>
+  p.part === "wave" ? funnelIntoArrow(p, t) : pulseAlongArrow(p, decision);

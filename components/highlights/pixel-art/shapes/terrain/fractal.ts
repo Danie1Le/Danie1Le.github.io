@@ -1,4 +1,5 @@
 import { average, seededRandom } from "../../math";
+import { MAP_DEPTH, MAP_LEFT, MAP_NEAR, MAP_WIDTH } from "./extents";
 
 const SIZE = 129;
 const AMPLITUDE_BY_LEVEL = [0.08, 0.15, 0.9, 1, 0.6, 0.18, 0.06];
@@ -45,8 +46,17 @@ function diamondSquare() {
 const HEIGHTS = diamondSquare();
 const generatedHeight = (i: number, j: number) => HEIGHTS[j * SIZE + i];
 
+const BAND_TOP_ROW = 43;
+const BAND_ROWS = ((SIZE - 1) * MAP_DEPTH) / MAP_WIDTH;
+
+const bilinear = (i: number, j: number, fu: number, fv: number) =>
+  generatedHeight(i, j) * (1 - fu) * (1 - fv)
+  + generatedHeight(i + 1, j) * fu * (1 - fv)
+  + generatedHeight(i, j + 1) * (1 - fu) * fv
+  + generatedHeight(i + 1, j + 1) * fu * fv;
+
 export const fractal = (x: number, z: number) => {
-  const u = ((x + 4) / 8) * (SIZE - 1), v = 43 + ((z + 1.3) / 2.6) * 41.6;
-  const i = Math.min(SIZE - 2, Math.floor(u)), j = Math.min(SIZE - 2, Math.floor(v)), fu = u - i, fv = v - j;
-  return generatedHeight(i, j) * (1 - fu) * (1 - fv) + generatedHeight(i + 1, j) * fu * (1 - fv) + generatedHeight(i, j + 1) * (1 - fu) * fv + generatedHeight(i + 1, j + 1) * fu * fv;
+  const u = ((x - MAP_LEFT) / MAP_WIDTH) * (SIZE - 1), v = BAND_TOP_ROW + ((z - MAP_NEAR) / MAP_DEPTH) * BAND_ROWS;
+  const i = Math.min(SIZE - 2, Math.floor(u)), j = Math.min(SIZE - 2, Math.floor(v));
+  return bilinear(i, j, u - i, v - j);
 };

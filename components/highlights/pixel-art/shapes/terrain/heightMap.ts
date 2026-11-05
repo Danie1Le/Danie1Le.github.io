@@ -1,17 +1,19 @@
 import { clamp, dot, normalize } from "../../math";
+import { grid } from "../../sequence";
+import { MAP_DEPTH, MAP_LEFT, MAP_NEAR, MAP_WIDTH } from "./extents";
 import { fractal } from "./fractal";
 
 export const COLS = 80, ROWS = 30;
 
-export const columnX = (i: number) => -4 + (i / (COLS - 1)) * 8;
-export const rowZ = (j: number) => -1.3 + (j / (ROWS - 1)) * 2.6;
+export const columnX = (i: number) => MAP_LEFT + (i / (COLS - 1)) * MAP_WIDTH;
+export const rowZ = (j: number) => MAP_NEAR + (j / (ROWS - 1)) * MAP_DEPTH;
 export const clampColumn = (i: number) => clamp(i, 0, COLS - 1);
 export const clampRow = (j: number) => clamp(j, 0, ROWS - 1);
 
 const summitBump = (x: number, z: number) => 0.55 * Math.exp(-((x - 1.4) ** 2 + (z + 0.1) ** 2) / 0.18);
 
-const RAW = Array.from({ length: COLS * ROWS }, (_, k) => {
-  const x = columnX(k % COLS), z = rowZ(Math.floor(k / COLS));
+const RAW = grid(COLS, ROWS, (i, j) => {
+  const x = columnX(i), z = rowZ(j);
   return fractal(x, z) + summitBump(x, z);
 });
 const LOWEST = Math.min(...RAW), HIGHEST = Math.max(...RAW);

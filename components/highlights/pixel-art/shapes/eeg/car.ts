@@ -1,9 +1,11 @@
-import { around, grid, smoothstep, times, type Vec3 } from "../../math";
+import { smoothstep, type Vec3 } from "../../math";
+import { around, grid, times } from "../../sequence";
 import { inRoundBox, placeAt, roll, roundBox, turn } from "../../surfaces";
 import type { Pt } from "../../types";
 import { redSquare } from "../redSquare";
+import type { Decision } from "./decision";
 
-const CAR_POSITION = [2.7, -0.02, 0.75];
+const CAR_POSITION: Vec3 = [2.7, -0.02, 0.75];
 const CAR_SCALE = 1.3;
 const BODY_RADII: Vec3 = [0.8, 0.17, 0.44];
 const BODY_ROUNDNESS = 3.2;
@@ -75,26 +77,26 @@ function lights(): Pt[] {
 export const carPoints = (): Pt[] =>
   [...body(), ...cab(), ...WHEELS.flatMap(wheel), ...rearWing(), ...wingPosts(), ...antenna(), ...lights()];
 
-const steerFor = (decision: number) => (decision % 2 ? STEER_ANGLE : -STEER_ANGLE);
+const steerFor = (decisionCount: number) => (decisionCount % 2 ? STEER_ANGLE : -STEER_ANGLE);
 
-const steering = (decisionsSoFar: number, decisionProgress: number) => {
-  const from = steerFor(decisionsSoFar - 1), to = steerFor(decisionsSoFar);
-  return from + (to - from) * smoothstep(Math.min(1, decisionProgress / STEER_EASE_SHARE));
+const steering = ({ count, progress }: Decision) => {
+  const from = steerFor(count - 1), to = steerFor(count);
+  return from + (to - from) * smoothstep(Math.min(1, progress / STEER_EASE_SHARE));
 };
 
-function turnWheel(p: Pt, t: number, decisionsSoFar: number, decisionProgress: number): Pt {
+function turnWheel(p: Pt, t: number, decision: Decision): Pt {
   const { x: wheelX, side } = WHEELS[p.partIndex!];
   const rolled = roll(p, -t / 160, wheelX, AXLE_Y);
   const isFrontWheel = wheelX > 0;
-  return isFrontWheel ? turn(rolled, steering(decisionsSoFar, decisionProgress), wheelX, side * 0.6) : rolled;
+  return isFrontWheel ? turn(rolled, steering(decision), wheelX, side * 0.6) : rolled;
 }
 
-const flashAntenna = (p: Pt, decisionProgress: number): Pt => ({ ...p, brightness: decisionProgress < ANTENNA_FLASH_SHARE ? 2.4 : 1 });
+const flashAntenna = (p: Pt, { progress }: Decision): Pt => ({ ...p, brightness: progress < ANTENNA_FLASH_SHARE ? 2.4 : 1 });
 
-export function moveCar(p: Pt, t: number, decisionsSoFar: number, decisionProgress: number): Pt {
+export function moveCar(p: Pt, t: number, decision: Decision): Pt {
   let q = p;
-  if (p.part === "wheel") q = turnWheel(q, t, decisionsSoFar, decisionProgress);
-  if (p.part === "tip") q = flashAntenna(q, decisionProgress);
+  if (p.part === "wheel") q = turnWheel(q, t, decision);
+  if (p.part === "tip") q = flashAntenna(q, decision);
   const threeQuarterView = turn(q, 0.55 + 0.12 * Math.sin(t / 1600), 0, 0);
   return placeAt(threeQuarterView, CAR_POSITION, CAR_SCALE);
 }

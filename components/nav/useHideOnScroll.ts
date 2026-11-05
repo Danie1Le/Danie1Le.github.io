@@ -1,11 +1,10 @@
 import { isDesktop } from "@/lib/media";
 import { onScrollFrame } from "@/lib/scroll";
-import { NAV_HEIGHT } from "@/lib/sections";
+import { NAV_CLEARANCE } from "@/lib/sections";
 import { useEffect, useRef, useState } from "react";
 
 const ALWAYS_SHOWN_ABOVE_Y = 100;
 const SCROLL_JITTER = 4;
-const REVEAL_ZONE = NAV_HEIGHT + 16;
 
 export function useHideOnScroll() {
   const [hidden, setHidden] = useState(false);
@@ -20,7 +19,7 @@ export function useHideOnScroll() {
       lastY.current = y;
     };
     const revealNearTopEdge = (e: MouseEvent) => {
-      if (isDesktop() && e.clientY < REVEAL_ZONE) setHidden(false);
+      if (isDesktop() && e.clientY < NAV_CLEARANCE) setHidden(false);
     };
 
     lastY.current = window.scrollY;

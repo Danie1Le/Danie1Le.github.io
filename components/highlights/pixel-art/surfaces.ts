@@ -1,5 +1,6 @@
 import { PIXEL_COUNT } from "./constants";
-import { GOLDEN_ANGLE, normalize, times, type Vec3 } from "./math";
+import { GOLDEN_ANGLE, normalize, type Vec3 } from "./math";
+import { times } from "./sequence";
 import type { Ellipsoid, Pt } from "./types";
 
 const INSIDE = 0.97;
@@ -38,13 +39,13 @@ export const roundBox = (count: number, c: Vec3, r: Vec3, power: number, extra: 
 
 export const turn = (p: Pt, angle: number, cx: number, cz: number): Pt => {
   const c = Math.cos(angle), s = Math.sin(angle), x = p.x - cx, z = p.z - cz;
-  const normal = p.normal && [p.normal[0] * c + p.normal[2] * s, p.normal[1], -p.normal[0] * s + p.normal[2] * c];
+  const normal: Vec3 | undefined = p.normal && [p.normal[0] * c + p.normal[2] * s, p.normal[1], -p.normal[0] * s + p.normal[2] * c];
   return { ...p, x: cx + x * c + z * s, z: cz - x * s + z * c, normal };
 };
 
 export const roll = (p: Pt, angle: number, cx: number, cy: number): Pt => {
   const c = Math.cos(angle), s = Math.sin(angle), x = p.x - cx, y = p.y - cy;
-  const normal = p.normal && [p.normal[0] * c - p.normal[1] * s, p.normal[0] * s + p.normal[1] * c, p.normal[2]];
+  const normal: Vec3 | undefined = p.normal && [p.normal[0] * c - p.normal[1] * s, p.normal[0] * s + p.normal[1] * c, p.normal[2]];
   return { ...p, x: cx + x * c - y * s, y: cy + x * s + y * c, normal };
 };
 

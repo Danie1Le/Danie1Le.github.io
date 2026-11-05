@@ -1,6 +1,7 @@
 import { ROLE_MS } from "../../constants";
 import { seededRandom } from "../../math";
-import { COLS, ROWS, SUMMIT, clampColumn, clampRow, heightAt } from "./grid";
+import { times } from "../../sequence";
+import { COLS, ROWS, SUMMIT, clampColumn, clampRow, heightAt } from "./heightMap";
 
 export type Agent = { column: number; row: number; trail: number[][] };
 
@@ -24,7 +25,7 @@ function spawnAgent(a: number): Agent {
   return { column, row, trail: [[column, row]] };
 }
 
-const spawn = () => Array.from({ length: AGENT_COUNT }, (_, a) => spawnAgent(a));
+const spawn = () => times(AGENT_COUNT, spawnAgent);
 
 function towardSummit(agent: Agent) {
   const toColumn = SUMMIT[0] - agent.column, toRow = SUMMIT[1] - agent.row;

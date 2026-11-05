@@ -1,5 +1,5 @@
 import { NAV_SECTIONS, sectionHref } from "@/lib/sections";
-import { DIM_TEXT_HOVER_INK } from "@/lib/styles";
+import { activeTextNoHover, DIM_TEXT_HOVER_INK } from "@/lib/styles";
 import { Menu, X } from "lucide-react";
 import Collapse from "../ui/Collapse";
 
@@ -38,7 +38,7 @@ export default function MobileMenu({ open, active, onClose, onResume }: MobileMe
             key={section.id}
             href={sectionHref(section.id)}
             onClick={onClose}
-            className={`py-2 t-lead ${active === section.id ? "text-[var(--ink)]" : "text-[var(--dim)]"}`}
+            className={`py-2 t-lead ${activeTextNoHover(active === section.id)}`}
           >
             {section.label}
           </a>

@@ -1,8 +1,9 @@
 import { fillSquare, tracePath } from "../../canvas";
-import { TAU, spread, times } from "../../math";
+import { TAU } from "../../math";
+import { spread, times } from "../../sequence";
 import type { Draw } from "../../types";
 import type { Agent } from "./agents";
-import { COLS, ROWS, SUMMIT, columnX, heightAt, rowZ } from "./grid";
+import { COLS, ROWS, SUMMIT, columnX, heightAt, rowZ } from "./heightMap";
 
 const ABOVE_GROUND = 0.03;
 const FLAG_POLE_HEIGHT = 0.9;

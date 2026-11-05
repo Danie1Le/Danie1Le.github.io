@@ -19,14 +19,15 @@ const REVEAL_GROUP_SIZE = 3;
 export default function JobRow({ job, index, open, onToggle, onPoster, rowRef }: JobRowProps) {
   const row = useRef<HTMLLIElement>(null);
   const titleRow = useRef<HTMLDivElement>(null);
-  const details = useRef<HTMLDivElement>(null);
+  const detailsCollapse = useRef<HTMLElement>(null);
+  const detailsContent = useRef<HTMLDivElement>(null);
   const detailsId = `job-${index}`;
 
   useImperativeHandle(rowRef, () => ({
     el: row.current!,
     titleRowHeight: () => titleRow.current!.offsetHeight,
-    openDetailsHeight: () => details.current!.offsetHeight,
-    currentDetailsHeight: () => (row.current!.lastElementChild as HTMLElement).offsetHeight,
+    openDetailsHeight: () => detailsContent.current!.offsetHeight,
+    currentDetailsHeight: () => detailsCollapse.current!.offsetHeight,
   }), []);
 
   return (
@@ -37,7 +38,14 @@ export default function JobRow({ job, index, open, onToggle, onPoster, rowRef }:
       className={`group transition-colors duration-500 ${open ? "bg-[var(--surface)]" : "hover:bg-[var(--surface)]"}`}
     >
       <JobTitleRow ref={titleRow} job={job} open={open} detailsId={detailsId} onToggle={onToggle} onPoster={onPoster} />
-      <JobDetails ref={details} id={detailsId} job={job} open={open} onClose={onToggle} />
+      <JobDetails
+        id={detailsId}
+        job={job}
+        open={open}
+        onClose={onToggle}
+        collapseRef={detailsCollapse}
+        contentRef={detailsContent}
+      />
     </li>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 import { useMounted } from "@/hooks/useMounted";
-import { useReturnFocusToKeyboardUsers } from "@/hooks/useReturnFocus";
+import { useReturnFocusToKeyboardUsers } from "@/hooks/useReturnFocusToKeyboardUsers";
 import { useScrollLock } from "@/hooks/useScrollLock";
 import { ICON } from "@/lib/styles";
 import { X } from "lucide-react";

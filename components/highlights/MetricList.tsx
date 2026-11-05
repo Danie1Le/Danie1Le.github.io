@@ -2,6 +2,7 @@ import { useCountUp } from "@/hooks/useCountUp";
 import type { Metric } from "@/lib/content";
 import { animDelay } from "@/lib/motion";
 import type { CSSProperties } from "react";
+import ProgressTrack from "./ProgressTrack";
 
 const stagger = (index: number) => animDelay(0.08 + index * 0.07);
 
@@ -26,9 +27,12 @@ function MetricItem({ metric, index, progress }: { metric: Metric; index: number
         {Math.round(metric.value * progress)}
         <span className="text-[0.5em] align-top text-[var(--brand)]">{metric.unit}</span>
       </p>
-      <span className="mt-4 block h-[3px] bg-[color-mix(in_srgb,var(--ink)_14%,transparent)]" aria-hidden="true">
-        <span className="bar-grow block h-full bg-[var(--brand)]" style={{ width: `${metric.value}%`, ...stagger(index) }} />
-      </span>
+      <ProgressTrack
+        as="span"
+        className="mt-4 block bg-[color-mix(in_srgb,var(--ink)_14%,transparent)]"
+        fillClassName="bar-grow"
+        fillStyle={{ width: `${metric.value}%`, ...stagger(index) }}
+      />
       <p className="mt-3 t-small text-[var(--dim)] max-w-[30ch]">
         <span className="sr-only">{metric.value}{metric.unit} </span>
         {metric.label}

@@ -57,7 +57,6 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
     camera.glow = easeToward(camera.glow, shape.glow ?? 0, rate);
     const fitScale = Math.min((height * 0.4) / (shape.halfHeight ?? 1), (width * 0.46) / shape.halfWidth);
     camera.scale = camera.scale ? easeToward(camera.scale, fitScale, rate) : fitScale;
-    return makeCamera(width, height, camera.scale, camera.yaw, camera.tilt);
   };
 
   const placePixels = (shape: Shape, rate: number, { project, view }: ReturnType<typeof makeCamera>, pixelSize: number) => {
@@ -65,9 +64,9 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
     const printedShadow = !!shape.hillshaded && !colors.darkGround;
     for (let i = 0; i < PIXEL_COUNT; i++) {
       const p = shape.move ? shape.move(shape.points[i], t) : shape.points[i];
-      position.x[i] += (p.x - position.x[i]) * rate;
-      position.y[i] += (p.y - position.y[i]) * rate;
-      position.z[i] += (p.z - position.z[i]) * rate;
+      position.x[i] = easeToward(position.x[i], p.x, rate);
+      position.y[i] = easeToward(position.y[i], p.y, rate);
+      position.z[i] = easeToward(position.z[i], p.z, rate);
       const onScreen = project(position.x[i], position.y[i], position.z[i]);
       const brightness = p.brightness ?? 1;
       screenX[i] = onScreen.x;
@@ -96,12 +95,13 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
     if (frameCount++ % THEME_CHECK_EVERY === 0) readThemeColors();
     const rate = easeRate(dt);
     const width = canvas.width, height = canvas.height, pixelSize = Math.max(1.5, height / 110);
-    const view = easeCamera(shape, rate, width, height);
-    const d: Draw = { ctx, width, height, t, formed: formed(), screenX, screenY, project: view.project, ink: colors.ink, red: colors.red, pixelSize };
+    easeCamera(shape, rate, width, height);
+    const lens = makeCamera(width, height, camera.scale, camera.yaw, camera.tilt);
+    const d: Draw = { ctx, width, height, t, formed: formed(), screenX, screenY, project: lens.project, ink: colors.ink, red: colors.red, pixelSize };
 
     ctx.clearRect(0, 0, width, height);
     shape.drawBehind?.(d);
-    paintPixels(placePixels(shape, rate, view, pixelSize));
+    paintPixels(placePixels(shape, rate, lens, pixelSize));
     shape.drawInFront?.(d);
     if (camera.glow > MIN_GLOW && colors.darkGround && width > 0) addGlow(ctx, width, height, camera.glow);
     ctx.globalAlpha = 1;

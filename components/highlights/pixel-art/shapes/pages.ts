@@ -5,11 +5,14 @@ import type { Pt, Shape } from "../types";
 import { onScanLine } from "./scanLine";
 
 const PAGE_COUNT = 5;
+const MIDDLE_PAGE = (PAGE_COUNT - 1) / 2;
 const PAGE_WIDTH = 1.1;
 const PAGE_HEIGHT = 1.44;
 const PAGE_SPACING = 1.55;
 const PAGES_WITH_ERRORS = [1, 3];
 const OUTLINE_PIXELS = 90;
+const TEXT_COLUMNS = 20;
+const TEXT_LINES = 8;
 const SCAN_TOP = 0.8;
 const SCAN_TRAVEL = 1.75;
 const SCAN_MS = ROLE_MS * 0.75;
@@ -32,16 +35,16 @@ const pageOutline = (centerX: number): Pt[] =>
   });
 
 const textLines = (centerX: number): Pt[] =>
-  grid(20, 8, (column, line) => {
+  grid(TEXT_COLUMNS, TEXT_LINES, (column, line) => {
     const length = 0.8 - (line % 3) * 0.16;
-    return { x: centerX - 0.4 + (column / 19) * length, y: 0.5 - line * 0.13, z: 0 };
+    return { x: centerX - 0.4 + (column / (TEXT_COLUMNS - 1)) * length, y: 0.5 - line * 0.13, z: 0 };
   });
 
 const pageNumber = (centerX: number, flagged: boolean): Pt[] =>
   grid(10, 3, (column, row) => ({ x: centerX - 0.1 + column * 0.022, y: -0.6 + row * 0.03, z: 0, flagged }));
 
 function page(index: number): Pt[] {
-  const centerX = (index - 2) * PAGE_SPACING;
+  const centerX = (index - MIDDLE_PAGE) * PAGE_SPACING;
   return [...pageOutline(centerX), ...textLines(centerX), ...pageNumber(centerX, PAGES_WITH_ERRORS.includes(index))];
 }
 

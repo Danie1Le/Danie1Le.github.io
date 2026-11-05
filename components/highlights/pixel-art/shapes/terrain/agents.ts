@@ -1,9 +1,9 @@
 import { ROLE_MS } from "../../constants";
 import { seededRandom } from "../../math";
 import { times } from "../../sequence";
-import { COLS, ROWS, SUMMIT, type Cell, clampColumn, clampRow, heightAt } from "./heightMap";
+import { COLS, ROWS, SUMMIT, type Cell, heightAt, nudge } from "./heightMap";
 
-export type Agent = { column: number; row: number; trail: Cell[] };
+export type Agent = { at: Cell; trail: Cell[] };
 
 const MOVES: Cell[] = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
 const AGENT_COUNT = 18;
@@ -14,47 +14,48 @@ const TRAIL_LENGTH = 80;
 const CLIMB_CHANCE = 0.92;
 const [summitColumn, summitRow] = SUMMIT;
 
-const distanceToSummit = (column: number, row: number) => Math.max(Math.abs(column - summitColumn), Math.abs(row - summitRow));
+const distanceToSummit = ([column, row]: Cell) => Math.max(Math.abs(column - summitColumn), Math.abs(row - summitRow));
 
 function spawnAgent(a: number): Agent {
   let column = 0, row = 0;
   for (let tries = 0; tries < SPAWN_TRIES; tries++) {
     column = Math.floor(seededRandom(a + tries * 7.1 + 0.5) * COLS);
     row = Math.floor(seededRandom(a * 3 + tries * 3.3 + 0.7) * ROWS);
-    if (distanceToSummit(column, row) >= MIN_START_DISTANCE) break;
+    if (distanceToSummit([column, row]) >= MIN_START_DISTANCE) break;
   }
-  return { column, row, trail: [[column, row]] };
+  const at: Cell = [column, row];
+  return { at, trail: [at] };
 }
 
 const spawn = () => times(AGENT_COUNT, spawnAgent);
 
-function towardSummit(agent: Agent): Cell {
-  const toColumn = summitColumn - agent.column, toRow = summitRow - agent.row;
+function towardSummit([column, row]: Cell): Cell {
+  const toColumn = summitColumn - column, toRow = summitRow - row;
   return [Math.sign(toColumn), Math.abs(toRow) * 2.5 > Math.abs(toColumn) ? Math.sign(toRow) : 0];
 }
 
-function uphill(agent: Agent): Cell {
-  let best = -Infinity, move: Cell = [0, 0];
-  for (const [dc, dr] of MOVES) {
-    const column = clampColumn(agent.column + dc), row = clampRow(agent.row + dr);
-    const moved = column !== agent.column || row !== agent.row;
-    if (moved && heightAt(column, row) > best) {
-      best = heightAt(column, row);
-      move = [dc, dr];
+function uphill(at: Cell): Cell {
+  const [column, row] = at;
+  let best = -Infinity, bestMove: Cell = [0, 0];
+  for (const move of MOVES) {
+    const [nextColumn, nextRow] = nudge(at, move);
+    const moved = nextColumn !== column || nextRow !== row;
+    if (moved && heightAt(nextColumn, nextRow) > best) {
+      best = heightAt(nextColumn, nextRow);
+      bestMove = move;
     }
   }
-  return move;
+  return bestMove;
 }
 
 const anyDirection = () => MOVES[Math.floor(Math.random() * MOVES.length)];
 
 function step(agent: Agent, drive: number) {
   const roll = Math.random();
-  if (distanceToSummit(agent.column, agent.row) <= 1) return;
-  const [dc, dr] = roll < drive ? towardSummit(agent) : roll < CLIMB_CHANCE ? uphill(agent) : anyDirection();
-  agent.column = clampColumn(agent.column + dc);
-  agent.row = clampRow(agent.row + dr);
-  agent.trail.push([agent.column, agent.row]);
+  if (distanceToSummit(agent.at) <= 1) return;
+  const move = roll < drive ? towardSummit(agent.at) : roll < CLIMB_CHANCE ? uphill(agent.at) : anyDirection();
+  agent.at = nudge(agent.at, move);
+  agent.trail.push(agent.at);
   if (agent.trail.length > TRAIL_LENGTH) agent.trail.shift();
 }
 

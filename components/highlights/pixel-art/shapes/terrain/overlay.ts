@@ -13,7 +13,7 @@ const RIPPLE_SPREAD = 0.5;
 const RING_SEGMENTS = 32;
 const TRAIL_FADE = [0.15, 0.3, 0.5, 0.8];
 
-const cell = ({ project }: Draw, i: number, j: number) => project(columnX(i), heightAt(i, j) + ABOVE_GROUND, rowZ(j));
+const projectCell = ({ project }: Draw, [column, row]: Cell) => project(columnX(column), heightAt(column, row) + ABOVE_GROUND, rowZ(row));
 
 export function drawMesh({ ctx, screenX, screenY, formed, ink, pixelSize }: Draw) {
   ctx.strokeStyle = ink;
@@ -28,7 +28,7 @@ export function drawBeacon(d: Draw) {
   const { ctx, t, formed, project, red, pixelSize } = d;
   const [summitColumn, summitRow] = SUMMIT;
   const summitX = columnX(summitColumn), summitY = heightAt(summitColumn, summitRow), summitZ = rowZ(summitRow);
-  const base = cell(d, summitColumn, summitRow), top = project(summitX, summitY + FLAG_POLE_HEIGHT, summitZ);
+  const base = projectCell(d, SUMMIT), top = project(summitX, summitY + FLAG_POLE_HEIGHT, summitZ);
   const ripple = (t % RIPPLE_MS) / RIPPLE_MS;
 
   const ring = (radius: number, alpha: number) => {
@@ -82,12 +82,12 @@ export function drawPaths(d: Draw, agents: Agent[]) {
   TRAIL_FADE.forEach((alpha, quarter) => {
     ctx.globalAlpha = alpha * formed;
     ctx.beginPath();
-    for (const { trail } of agents) tracePath(ctx, trailSlice(trail, quarter).map(([i, j]) => cell(d, i, j)));
+    for (const { trail } of agents) tracePath(ctx, trailSlice(trail, quarter).map((cell) => projectCell(d, cell)));
     ctx.stroke();
   });
   ctx.globalAlpha = formed;
   for (const agent of agents) {
-    const { x, y } = cell(d, agent.column, agent.row);
+    const { x, y } = projectCell(d, agent.at);
     fillSquare(ctx, x, y, pixelSize * 2.6);
   }
 }

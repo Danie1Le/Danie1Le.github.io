@@ -1,10 +1,13 @@
 import { getTheme, subscribeTheme, switchTheme, type Theme } from "@/lib/theme";
+import type { MouseEvent } from "react";
 import { useSyncExternalStore } from "react";
 
-/** The current theme and a click handler that switches it (the new theme opens as a circle from the click). */
+const SERVER_THEME = (): Theme => "dark";
+
 export function useTheme() {
-  const theme = useSyncExternalStore(subscribeTheme, getTheme, (): Theme => "dark");
+  const theme = useSyncExternalStore(subscribeTheme, getTheme, SERVER_THEME);
   const isLight = theme === "light";
-  const toggle = (e: React.MouseEvent) => switchTheme(isLight ? "dark" : "light", e.clientX, e.clientY);
-  return { isLight, toggle };
+  const nextTheme: Theme = isLight ? "dark" : "light";
+  const toggle = (e: MouseEvent) => switchTheme(nextTheme, e.clientX, e.clientY);
+  return { isLight, nextTheme, toggle };
 }

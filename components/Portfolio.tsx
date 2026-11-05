@@ -10,7 +10,7 @@ import ContactSection from "./contactSection"
 import ExperienceSection from "./experienceSection"
 import HeroSection from "./heroSection"
 import HighlightsSection from "./highlightsSection"
-import NavBar from "./navBar"
+import NavBar from "./nav/NavBar"
 import ProjectsSection from "./projectsSection"
 import ImagePreviewModal from "./ui/ImagePreviewModal"
 

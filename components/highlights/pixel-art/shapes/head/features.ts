@@ -1,56 +1,58 @@
-import { smoothstep, normalize } from "../../math";
+import { normalize, smoothstep } from "../../math";
+import { around, spiral, spread } from "../../sequence";
 import type { Pt } from "../../types";
-import { HW, frontZ, inHead } from "./profile";
+import { EYE_X, EYE_Y, MOUTH_Y } from "./landmarks";
+import { faceSurfaceZ, halfWidthAt, inHead } from "./profile";
 
-// What the head's surface doesn't give on its own: the drawn features of the face, the ears and the neck.
+const SLOPE_STEP = 0.004;
+const EAR_Y = 0.12;
 
-/** A contour pixel lying on the face, lit by the face's own surface direction there. */
-const onFace = (x: number, y: number, brightness: number): Pt | null => {
-  const z = frontZ(x, y);
+function onFace(x: number, y: number, brightness: number): Pt | null {
+  const z = faceSurfaceZ(x, y);
   if (!isFinite(z)) return null;
-  const e = 0.004, zx = (frontZ(x + e, y) - frontZ(x - e, y)) / (2 * e), zy = (frontZ(x, y + e) - frontZ(x, y - e)) / (2 * e);
-  return { x, y, z, brightness, normal: normalize([zx, zy, -1]) }; // outward normal of the surface z = frontZ(x, y)
-};
-
-/** Almond eyes with their irises, then the line of the mouth. */
-export function faceLines(): Pt[] {
-  const pts: Pt[] = [];
-  const add = (p: Pt | null) => p && pts.push(p);
-  for (const s of [-1, 1]) {
-    for (let j = 0; j < 36; j++) { // almond eye
-      const u = (j / 36) * Math.PI * 2;
-      add(onFace(s * 0.3 + Math.cos(u) * 0.12, 0.2 + Math.sin(u) * (Math.sin(u) > 0 ? 0.045 : 0.03), 1.5));
-    }
-    for (let j = 0; j < 8; j++) { const u = (j / 8) * Math.PI * 2; add(onFace(s * 0.3 + Math.cos(u) * 0.025, 0.2 + Math.sin(u) * 0.025, 1.8)); } // iris
-  }
-  for (let j = 0; j < 50; j++) { const u = (j / 49) * 2 - 1; add(onFace(u * 0.23, -0.515 + 0.025 * (1 - u * u), 1.5)); } // mouth line
-  return pts;
+  const slopeX = (faceSurfaceZ(x + SLOPE_STEP, y) - faceSurfaceZ(x - SLOPE_STEP, y)) / (2 * SLOPE_STEP);
+  const slopeY = (faceSurfaceZ(x, y + SLOPE_STEP) - faceSurfaceZ(x, y - SLOPE_STEP)) / (2 * SLOPE_STEP);
+  return { x, y, z, brightness, normal: normalize([slopeX, slopeY, -1]) };
 }
 
-/** Each ear: the outer rim (helix) with its lobe, and the fold inside it. */
-export function ears(): Pt[] {
-  const pts: Pt[] = [];
-  for (const s of [-1, 1]) {
-    const ex = s * (HW(0.12) + 0.015);
-    for (let j = 0; j < 48; j++) {
-      const u = -Math.PI * 0.6 + (j / 47) * Math.PI * 1.8, lobe = Math.sin(u) < 0 ? 0.75 : 1;
-      pts.push({ x: ex, y: 0.12 + Math.sin(u) * 0.26, z: 0.36 + Math.cos(u) * 0.13 * lobe, brightness: 1.3, normal: normalize([s, 0.1, 0.35]) });
-    }
-    for (let j = 0; j < 30; j++) {
-      const u = -Math.PI * 0.3 + (j / 29) * Math.PI * 1.4;
-      pts.push({ x: ex - s * 0.01, y: 0.14 + Math.sin(u) * 0.14, z: 0.34 + Math.cos(u) * 0.07, brightness: 0.9, normal: normalize([s, 0, 0.3]) });
-    }
-  }
-  return pts;
+const almondEye = (side: number) =>
+  around(36, (angle) => onFace(side * EYE_X + Math.cos(angle) * 0.12, EYE_Y + Math.sin(angle) * (Math.sin(angle) > 0 ? 0.045 : 0.03), 1.5));
+
+const iris = (side: number) =>
+  around(8, (angle) => onFace(side * EYE_X + Math.cos(angle) * 0.025, EYE_Y + Math.sin(angle) * 0.025, 1.8));
+
+const mouthLine = () =>
+  spread(50, (fraction) => {
+    const across = fraction * 2 - 1;
+    return onFace(across * 0.23, MOUTH_Y + 0.025 * (1 - across * across), 1.5);
+  });
+
+const isPoint = (p: Pt | null): p is Pt => p !== null;
+
+export const faceLines = (): Pt[] =>
+  [...[-1, 1].flatMap((side) => [...almondEye(side), ...iris(side)]), ...mouthLine()].filter(isPoint);
+
+function ear(side: number): Pt[] {
+  const earX = side * (halfWidthAt(EAR_Y) + 0.015);
+  const helix = spread(48, (fraction): Pt => {
+    const angle = -Math.PI * 0.6 + fraction * Math.PI * 1.8, lobe = Math.sin(angle) < 0 ? 0.75 : 1;
+    return { x: earX, y: EAR_Y + Math.sin(angle) * 0.26, z: 0.36 + Math.cos(angle) * 0.13 * lobe, brightness: 1.3, normal: normalize([side, 0.1, 0.35]) };
+  });
+  const innerFold = spread(30, (fraction): Pt => {
+    const angle = -Math.PI * 0.3 + fraction * Math.PI * 1.4;
+    return { x: earX - side * 0.01, y: 0.14 + Math.sin(angle) * 0.14, z: 0.34 + Math.cos(angle) * 0.07, brightness: 0.9, normal: normalize([side, 0, 0.3]) };
+  });
+  return [...helix, ...innerFold];
 }
 
-/** The neck, from under the skull, flaring into the top of the shoulders (what the head hides is left out). */
-export function neck(): Pt[] {
-  const pts: Pt[] = [];
-  for (let j = 0; j < 320; j++) {
-    const u = j * 2.399963, k = j / 320, y = -0.45 - k * 1.18, flare = smoothstep(Math.max(0, (k - 0.65) / 0.35));
-    const r = 0.37 + 0.4 * flare, x = Math.cos(u) * r, z = 0.38 - 0.08 * k + Math.sin(u) * r * 0.85;
-    if (!inHead(x, y, z)) pts.push({ x, y, z, brightness: 1, normal: normalize([Math.cos(u), 0.5 * flare, Math.sin(u)]) });
-  }
-  return pts;
-}
+export const ears = (): Pt[] => [-1, 1].flatMap(ear);
+
+const NECK_PIXELS = 320;
+
+export const neck = (): Pt[] =>
+  spiral(NECK_PIXELS, (angle, down): Pt => {
+    const y = -0.45 - down * 1.18;
+    const flare = smoothstep(Math.max(0, (down - 0.65) / 0.35));
+    const radius = 0.37 + 0.4 * flare, x = Math.cos(angle) * radius, z = 0.38 - 0.08 * down + Math.sin(angle) * radius * 0.85;
+    return { x, y, z, brightness: 1, normal: normalize([Math.cos(angle), 0.5 * flare, Math.sin(angle)]) };
+  }).filter((p) => !inHead(p.x, p.y, p.z));

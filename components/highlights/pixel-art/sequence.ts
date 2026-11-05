@@ -5,6 +5,9 @@ export const times = <T>(count: number, make: (index: number) => T) => Array.fro
 export const around = <T>(count: number, make: (angle: number, index: number) => T) =>
   times(count, (i) => make((i / count) * TAU, i));
 
+export const spread = <T>(count: number, make: (fraction: number, index: number) => T) =>
+  times(count, (i) => make(i / (count - 1), i));
+
 export const spiral = <T>(count: number, make: (angle: number, down: number) => T) =>
   times(count, (i) => make(i * GOLDEN_ANGLE, i / count));
 

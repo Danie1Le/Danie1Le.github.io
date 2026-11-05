@@ -21,12 +21,18 @@ export const easeToward = (current: number, target: number, rate: number) => cur
 
 export const signedPow = (value: number, exponent: number) => Math.sign(value) * Math.abs(value) ** exponent;
 
+export const average = (values: number[]) => values.reduce((sum, value) => sum + value, 0) / values.length;
+
 export const normalize = (v: Vec3): Vec3 => {
   const length = Math.hypot(v[0], v[1], v[2]) || 1;
   return [v[0] / length, v[1] / length, v[2] / length];
 };
 
 export const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+export const subtract = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+
+export const cross = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
 export const wrapAngle = (angle: number) => Math.atan2(Math.sin(angle), Math.cos(angle));
 

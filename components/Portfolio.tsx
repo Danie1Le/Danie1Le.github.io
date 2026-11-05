@@ -11,7 +11,7 @@ import ExperienceSection from "./experience/ExperienceSection"
 import HeroSection from "./hero/HeroSection"
 import HighlightsSection from "./highlights/HighlightsSection"
 import NavBar from "./nav/NavBar"
-import ProjectsSection from "./projectsSection"
+import ProjectsSection from "./projects/ProjectsSection"
 import ImagePreviewModal from "./ui/ImagePreviewModal"
 
 export default function Portfolio() {

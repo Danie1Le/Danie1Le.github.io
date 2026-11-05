@@ -1,19 +1,20 @@
 import { ROLE_MS } from "../../constants";
 import { seededRandom } from "../../math";
 import { times } from "../../sequence";
-import { COLS, ROWS, SUMMIT, clampColumn, clampRow, heightAt } from "./heightMap";
+import { COLS, ROWS, SUMMIT, type Cell, clampColumn, clampRow, heightAt } from "./heightMap";
 
-export type Agent = { column: number; row: number; trail: number[][] };
+export type Agent = { column: number; row: number; trail: Cell[] };
 
-const MOVES = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
+const MOVES: Cell[] = [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]];
 const AGENT_COUNT = 18;
 const MIN_START_DISTANCE = 18;
 const SPAWN_TRIES = 20;
 const STEP_MS = 90;
 const TRAIL_LENGTH = 80;
 const CLIMB_CHANCE = 0.92;
+const [summitColumn, summitRow] = SUMMIT;
 
-const distanceToSummit = (column: number, row: number) => Math.max(Math.abs(column - SUMMIT[0]), Math.abs(row - SUMMIT[1]));
+const distanceToSummit = (column: number, row: number) => Math.max(Math.abs(column - summitColumn), Math.abs(row - summitRow));
 
 function spawnAgent(a: number): Agent {
   let column = 0, row = 0;
@@ -27,13 +28,13 @@ function spawnAgent(a: number): Agent {
 
 const spawn = () => times(AGENT_COUNT, spawnAgent);
 
-function towardSummit(agent: Agent) {
-  const toColumn = SUMMIT[0] - agent.column, toRow = SUMMIT[1] - agent.row;
+function towardSummit(agent: Agent): Cell {
+  const toColumn = summitColumn - agent.column, toRow = summitRow - agent.row;
   return [Math.sign(toColumn), Math.abs(toRow) * 2.5 > Math.abs(toColumn) ? Math.sign(toRow) : 0];
 }
 
-function uphill(agent: Agent) {
-  let best = -Infinity, move = [0, 0];
+function uphill(agent: Agent): Cell {
+  let best = -Infinity, move: Cell = [0, 0];
   for (const [dc, dr] of MOVES) {
     const column = clampColumn(agent.column + dc), row = clampRow(agent.row + dr);
     const moved = column !== agent.column || row !== agent.row;

@@ -3,7 +3,7 @@ import { TAU } from "../../math";
 import { spread, times } from "../../sequence";
 import type { Draw } from "../../types";
 import type { Agent } from "./agents";
-import { COLS, ROWS, SUMMIT, columnX, heightAt, rowZ } from "./heightMap";
+import { COLS, ROWS, SUMMIT, type Cell, columnX, heightAt, rowZ } from "./heightMap";
 
 const ABOVE_GROUND = 0.03;
 const FLAG_POLE_HEIGHT = 0.9;
@@ -67,7 +67,7 @@ export function drawBeacon(d: Draw) {
   flag();
 }
 
-function trailSlice(trail: number[][], quarter: number) {
+function trailSlice(trail: Cell[], quarter: number) {
   const from = Math.floor((quarter * trail.length) / 4);
   const to = Math.min(trail.length - 1, Math.floor(((quarter + 1) * trail.length) / 4));
   return trail.slice(from, to + 1);

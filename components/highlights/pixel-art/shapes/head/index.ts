@@ -9,6 +9,8 @@ import { headSurface } from "./profile";
 
 const TURN_MS = ROLE_MS * 0.92;
 const SCAN_PERIOD_MS = 2800;
+const SCAN_TOP = 1.45;
+const SCAN_TRAVEL = 2.95;
 const SCAN_LINE_THICKNESS = 0.022;
 const CENTERING_LIFT = 0.23;
 
@@ -26,7 +28,7 @@ function headPointsNear(target: number, features: Pt[]) {
   return headSurface(Math.sqrt(atUnitSpacing / roomForSurface));
 }
 
-const scanLineY = (t: number) => 1.45 - ((t / SCAN_PERIOD_MS) % 1) * 2.95;
+const scanLineY = (t: number) => SCAN_TOP - ((t / SCAN_PERIOD_MS) % 1) * SCAN_TRAVEL;
 
 export function head(): Shape {
   const features = [...faceLines(), ...ears(), ...neck()];

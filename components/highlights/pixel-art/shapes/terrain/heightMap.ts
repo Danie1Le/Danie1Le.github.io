@@ -3,6 +3,8 @@ import { grid } from "../../sequence";
 import { MAP_DEPTH, MAP_LEFT, MAP_NEAR, MAP_WIDTH } from "./extents";
 import { fractal } from "./fractal";
 
+export type Cell = [column: number, row: number];
+
 export const COLS = 80, ROWS = 30;
 
 export const columnX = (i: number) => MAP_LEFT + (i / (COLS - 1)) * MAP_WIDTH;
@@ -22,7 +24,7 @@ const HEIGHTS = RAW.map(sharpenPeaks);
 
 export const heightAt = (i: number, j: number) => HEIGHTS[j * COLS + i];
 
-export const SUMMIT = (() => {
+export const SUMMIT = ((): Cell => {
   const k = HEIGHTS.indexOf(Math.max(...HEIGHTS));
   return [k % COLS, Math.floor(k / COLS)];
 })();

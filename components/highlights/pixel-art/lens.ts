@@ -3,7 +3,11 @@ import type { Screen } from "./types";
 
 const PERSPECTIVE_DISTANCE = 4;
 
-export function makeCamera(width: number, height: number, scale: number, yaw: number, tilt: number) {
+type Camera = { scale: number; yaw: number; tilt: number };
+
+export type Lens = ReturnType<typeof makeLens>;
+
+export function makeLens(width: number, height: number, { scale, yaw, tilt }: Camera) {
   const cosYaw = Math.cos(yaw), sinYaw = Math.sin(yaw), cosTilt = Math.cos(tilt), sinTilt = Math.sin(tilt);
 
   const toView = (x: number, y: number, z: number): Vec3 => {

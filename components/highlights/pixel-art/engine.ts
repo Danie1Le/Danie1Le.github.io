@@ -1,8 +1,8 @@
 import type { Art } from "@/lib/content";
 import { createBloom } from "./bloom";
 import { fillSquare } from "./canvas";
-import { makeCamera } from "./camera";
 import { PIXEL_COUNT, ROLE_MS } from "./constants";
+import { type Lens, makeLens } from "./lens";
 import { clamp01, easeToward, seededRandom, wrapAngle } from "./math";
 import { depthAlpha, isLightColor, litAlpha } from "./shading";
 import { SHAPES } from "./shapes";
@@ -59,7 +59,7 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
     camera.scale = camera.scale ? easeToward(camera.scale, fitScale, rate) : fitScale;
   };
 
-  const placePixels = (shape: Shape, rate: number, { project, view }: ReturnType<typeof makeCamera>, pixelSize: number) => {
+  const placePixels = (shape: Shape, rate: number, { project, view }: Lens, pixelSize: number) => {
     const redPixels: number[] = [];
     const printedShadow = !!shape.hillshaded && !colors.darkGround;
     for (let i = 0; i < PIXEL_COUNT; i++) {
@@ -96,7 +96,7 @@ export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolea
     const rate = easeRate(dt);
     const width = canvas.width, height = canvas.height, pixelSize = Math.max(1.5, height / 110);
     easeCamera(shape, rate, width, height);
-    const lens = makeCamera(width, height, camera.scale, camera.yaw, camera.tilt);
+    const lens = makeLens(width, height, camera);
     const d: Draw = { ctx, width, height, t, formed: formed(), screenX, screenY, project: lens.project, ink: colors.ink, red: colors.red, pixelSize };
 
     ctx.clearRect(0, 0, width, height);

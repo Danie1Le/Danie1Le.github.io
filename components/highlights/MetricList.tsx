@@ -29,7 +29,8 @@ function MetricItem({ metric, index, progress }: { metric: Metric; index: number
       </p>
       <ProgressTrack
         as="span"
-        className="mt-4 block bg-[color-mix(in_srgb,var(--ink)_14%,transparent)]"
+        tint="soft"
+        className="mt-4"
         fillClassName="bar-grow"
         fillStyle={{ width: `${metric.value}%`, ...stagger(index) }}
       />

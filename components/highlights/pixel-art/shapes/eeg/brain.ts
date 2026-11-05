@@ -1,5 +1,5 @@
-import { GOLDEN_ANGLE, distanceToSegment, normalize, valueNoise, type Vec3 } from "../../math";
-import { times } from "../../sequence";
+import { distanceToSegment, normalize, valueNoise, type Vec3 } from "../../math";
+import { spiral, times } from "../../sequence";
 import { inEllipsoid, placeAt, shell, turn } from "../../surfaces";
 import type { Ellipsoid, Pt } from "../../types";
 import { redSquare } from "../redSquare";
@@ -12,6 +12,7 @@ const FLAT_UNDERSIDE = 0.72;
 const TEMPORAL_SHARE = 0.3;
 const DRAWN_LINE_COUNT = 640;
 const ELECTRODES = 8;
+const BRAINSTEM_PIXELS = 70;
 
 const foldHeight = (x: number, y: number, z: number) =>
   Math.sin(8.5 * (valueNoise(x * 4.4 + z * 2.8 + 5, y * 4.6 - z * 2.2) + 0.6 * valueNoise(z * 5.8 - y * 3, x * 5.5 + 1)));
@@ -61,15 +62,14 @@ function cortexDrawing(): Pt[] {
 const cerebellum = (): Pt[] =>
   shell(160, CEREBELLUM, (p) => !inCerebrum(p)).map((p) => ({ ...p, brightness: 0.3 + 0.9 * Math.abs(Math.sin((p.y - 0.35 * p.x) * 40)) }));
 
-function brainstem(): Pt[] {
-  const pts: Pt[] = [];
-  for (let j = 0; j < 70; j++) {
-    const angle = j * GOLDEN_ANGLE, down = j / 70;
-    const p = { x: -0.2 + 0.08 * down + Math.cos(angle) * 0.11, y: -0.24 - down * 0.58, z: Math.sin(angle) * 0.11 };
-    if (!inCerebrum({ ...p }) && !inEllipsoid(p, CEREBELLUM)) pts.push({ ...p, brightness: 0.7, normal: [Math.cos(angle), 0, Math.sin(angle)] });
-  }
-  return pts;
-}
+const brainstem = (): Pt[] =>
+  spiral(BRAINSTEM_PIXELS, (angle, down): Pt => ({
+    x: -0.2 + 0.08 * down + Math.cos(angle) * 0.11,
+    y: -0.24 - down * 0.58,
+    z: Math.sin(angle) * 0.11,
+    brightness: 0.7,
+    normal: [Math.cos(angle), 0, Math.sin(angle)],
+  })).filter((p) => !inCerebrum(p) && !inEllipsoid(p, CEREBELLUM));
 
 function electrode(index: number): Pt[] {
   const [cx, cy] = CEREBRUM.center, [rx, ry, rz] = CEREBRUM.radii;

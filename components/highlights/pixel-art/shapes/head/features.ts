@@ -1,5 +1,5 @@
-import { GOLDEN_ANGLE, normalize, smoothstep } from "../../math";
-import { around, spread } from "../../sequence";
+import { normalize, smoothstep } from "../../math";
+import { around, spiral, spread } from "../../sequence";
 import type { Pt } from "../../types";
 import { faceSurfaceZ, halfWidth, inHead } from "./profile";
 
@@ -50,13 +50,10 @@ export const ears = (): Pt[] => [-1, 1].flatMap(ear);
 
 const NECK_PIXELS = 320;
 
-export function neck(): Pt[] {
-  const pts: Pt[] = [];
-  for (let j = 0; j < NECK_PIXELS; j++) {
-    const angle = j * GOLDEN_ANGLE, down = j / NECK_PIXELS, y = -0.45 - down * 1.18;
+export const neck = (): Pt[] =>
+  spiral(NECK_PIXELS, (angle, down): Pt => {
+    const y = -0.45 - down * 1.18;
     const flare = smoothstep(Math.max(0, (down - 0.65) / 0.35));
     const radius = 0.37 + 0.4 * flare, x = Math.cos(angle) * radius, z = 0.38 - 0.08 * down + Math.sin(angle) * radius * 0.85;
-    if (!inHead(x, y, z)) pts.push({ x, y, z, brightness: 1, normal: normalize([Math.cos(angle), 0.5 * flare, Math.sin(angle)]) });
-  }
-  return pts;
-}
+    return { x, y, z, brightness: 1, normal: normalize([Math.cos(angle), 0.5 * flare, Math.sin(angle)]) };
+  }).filter((p) => !inHead(p.x, p.y, p.z));

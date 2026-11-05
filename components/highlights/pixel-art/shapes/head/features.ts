@@ -37,7 +37,7 @@ function ear(side: number): Pt[] {
   const earX = side * (halfWidth(EAR_Y) + 0.015);
   const helix = spread(48, (fraction): Pt => {
     const angle = -Math.PI * 0.6 + fraction * Math.PI * 1.8, lobe = Math.sin(angle) < 0 ? 0.75 : 1;
-    return { x: earX, y: 0.12 + Math.sin(angle) * 0.26, z: 0.36 + Math.cos(angle) * 0.13 * lobe, brightness: 1.3, normal: normalize([side, 0.1, 0.35]) };
+    return { x: earX, y: EAR_Y + Math.sin(angle) * 0.26, z: 0.36 + Math.cos(angle) * 0.13 * lobe, brightness: 1.3, normal: normalize([side, 0.1, 0.35]) };
   });
   const innerFold = spread(30, (fraction): Pt => {
     const angle = -Math.PI * 0.3 + fraction * Math.PI * 1.4;

@@ -7,10 +7,10 @@ export type Cell = [column: number, row: number];
 
 export const COLS = 80, ROWS = 30;
 
-export const columnX = (i: number) => MAP_LEFT + (i / (COLS - 1)) * MAP_WIDTH;
-export const rowZ = (j: number) => MAP_NEAR + (j / (ROWS - 1)) * MAP_DEPTH;
-export const clampColumn = (i: number) => clamp(i, 0, COLS - 1);
-export const clampRow = (j: number) => clamp(j, 0, ROWS - 1);
+const columnX = (i: number) => MAP_LEFT + (i / (COLS - 1)) * MAP_WIDTH;
+const rowZ = (j: number) => MAP_NEAR + (j / (ROWS - 1)) * MAP_DEPTH;
+const clampColumn = (i: number) => clamp(i, 0, COLS - 1);
+const clampRow = (j: number) => clamp(j, 0, ROWS - 1);
 export const nudge = ([column, row]: Cell, [dc, dr]: Cell): Cell => [clampColumn(column + dc), clampRow(row + dr)];
 
 const summitBump = (x: number, z: number) => 0.55 * Math.exp(-((x - 1.4) ** 2 + (z + 0.1) ** 2) / 0.18);

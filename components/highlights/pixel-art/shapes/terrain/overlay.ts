@@ -69,9 +69,9 @@ export function drawBeacon(d: Draw) {
   flag();
 }
 
-function trailSlice(trail: Cell[], quarter: number) {
-  const from = Math.floor((quarter * trail.length) / 4);
-  const to = Math.min(trail.length - 1, Math.floor(((quarter + 1) * trail.length) / 4));
+function trailSlice(trail: Cell[], segment: number) {
+  const from = Math.floor((segment * trail.length) / TRAIL_FADE.length);
+  const to = Math.min(trail.length - 1, Math.floor(((segment + 1) * trail.length) / TRAIL_FADE.length));
   return trail.slice(from, to + 1);
 }
 
@@ -81,10 +81,10 @@ export function drawPaths(d: Draw, agents: Agent[]) {
   ctx.fillStyle = red;
   ctx.lineWidth = Math.max(1.5, pixelSize * 0.7);
   ctx.lineJoin = "round";
-  TRAIL_FADE.forEach((alpha, quarter) => {
+  TRAIL_FADE.forEach((alpha, segment) => {
     ctx.globalAlpha = alpha * formed;
     ctx.beginPath();
-    for (const { trail } of agents) tracePath(ctx, trailSlice(trail, quarter).map((cell) => projectCell(d, cell)));
+    for (const { trail } of agents) tracePath(ctx, trailSlice(trail, segment).map((cell) => projectCell(d, cell)));
     ctx.stroke();
   });
   ctx.globalAlpha = formed;

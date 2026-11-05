@@ -1,10 +1,10 @@
-import { TAU, clamp01, cross, normalize, signedPow, subtract, type Vec3 } from "../../math";
+import { TAU, clamp, clamp01, cross, normalize, signedPow, subtract, type Vec3 } from "../../math";
 import type { Pt } from "../../types";
 import { relief } from "./face";
 
 const SLICE_HEIGHTS = [1.17, 1.13, 1.05, 0.85, 0.55, 0.25, 0, -0.25, -0.45, -0.6, -0.8, -0.95, -1.04];
-export const CROWN_Y = SLICE_HEIGHTS[0];
-export const CHIN_Y = SLICE_HEIGHTS[SLICE_HEIGHTS.length - 1];
+const CROWN_Y = SLICE_HEIGHTS[0];
+const CHIN_Y = SLICE_HEIGHTS[SLICE_HEIGHTS.length - 1];
 
 const segmentAbove = (y: number) => {
   let i = 0;
@@ -18,7 +18,7 @@ const catmullRom = (p0: number, p1: number, p2: number, p3: number, k: number) =
 const smoothCurveThrough = (values: number[]) => (y: number) => {
   const i = segmentAbove(y);
   const k = clamp01((SLICE_HEIGHTS[i] - y) / (SLICE_HEIGHTS[i] - SLICE_HEIGHTS[i + 1]));
-  const at = (index: number) => values[Math.max(0, Math.min(values.length - 1, index))];
+  const at = (index: number) => values[clamp(index, 0, values.length - 1)];
   return catmullRom(at(i - 1), at(i), at(i + 1), at(i + 2), k);
 };
 
@@ -35,7 +35,7 @@ const sliceAt = (y: number) => {
 
 const reliefFadeIn = (towardFront: number) => Math.min(1, towardFront * 3);
 
-export const slicePoint = (y: number, angle: number): Vec3 => {
+const slicePoint = (y: number, angle: number): Vec3 => {
   const { halfWidth, centerZ, halfDepth } = sliceAt(y);
   const cos = Math.cos(angle), sin = Math.sin(angle), onFront = sin < 0;
   const exponent = 2 / (onFront ? frontSquareness(y) : backSquareness(y));

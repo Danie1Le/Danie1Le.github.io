@@ -1,38 +1,43 @@
-import { N, ROLE_MS } from "../../constants";
-import { ease } from "../../math";
-import { fit } from "../../surfaces";
-import type { Draw, Shape } from "../../types";
+import { fillDot } from "../../canvas";
+import { PIXEL_COUNT, ROLE_MS } from "../../constants";
+import { TAU, smoothstep } from "../../math";
+import { toPixelCount } from "../../surfaces";
+import type { Draw, Pt, Shape } from "../../types";
 import { ears, faceLines, neck } from "./features";
 import { headSurface } from "./profile";
 
-// ResVR: a human head as a hologram, built like a contour model from horizontal slices (see profile.ts), with the
-// face's features, ears and neck added. Every pixel carries its surface direction, so it is lit live as the head turns.
+const TURN_MS = ROLE_MS * 0.92;
+const SCAN_PERIOD_MS = 2800;
+const SCAN_LINE_THICKNESS = 0.022;
+const CENTERING_LIFT = 0.23;
 
-/** The dotted wall behind the hologram. */
-const dottedWall = ({ ctx, W, H, ink, settle }: Draw) => {
-  const step = H / 8, r = step * 0.11;
+function dottedWall({ ctx, width, height, ink, formed }: Draw) {
+  const step = height / 8, radius = step * 0.11;
   ctx.fillStyle = ink;
-  ctx.globalAlpha = 0.07 * settle;
-  for (let y = step / 2; y < H; y += step)
-    for (let x = (W / 2) % step; x < W; x += step) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
-};
+  ctx.globalAlpha = 0.07 * formed;
+  for (let y = step / 2; y < height; y += step)
+    for (let x = (width / 2) % step; x < width; x += step) fillDot(ctx, x, y, radius);
+}
+
+function headPointsNear(target: number, features: Pt[]) {
+  const roomForSurface = target - features.length;
+  const atUnitSpacing = headSurface(1).length;
+  return headSurface(Math.sqrt(atUnitSpacing / roomForSurface));
+}
+
+const scanLineY = (t: number) => 1.45 - ((t / SCAN_PERIOD_MS) % 1) * 2.95;
 
 export function head(): Shape {
-  const extra = [...faceLines(), ...ears(), ...neck()];
-  const want = N - extra.length, first = headSurface(1);
-  const surface = headSurface(Math.sqrt(first.length / want)); // spaced so the whole figure lands near N pixels
+  const features = [...faceLines(), ...ears(), ...neck()];
+  const surface = headPointsNear(PIXEL_COUNT, features);
   return {
-    points: fit([...surface, ...extra].map((p) => ({ ...p, y: p.y + 0.23 }))), // centre the figure (crown 1.4 … shoulders -1.4)
-    // Turntable: starts facing the viewer, eases through one full clockwise turn, settles facing them again.
-    yaw: (t) => -Math.PI * 2 * ease(Math.min(1, t / (ROLE_MS * 0.92))),
-    tilt: (t) => 0.14 + 0.22 * Math.sin(t / 1100), // a gentle nod shows the crown
-    span: 1.05,
-    half: 1.62,
+    points: toPixelCount([...surface, ...features].map((p) => ({ ...p, y: p.y + CENTERING_LIFT }))),
+    yaw: (t) => -TAU * smoothstep(Math.min(1, t / TURN_MS)),
+    tilt: (t) => 0.14 + 0.22 * Math.sin(t / 1100),
+    halfWidth: 1.05,
+    halfHeight: 1.62,
     glow: 1,
-    live: (p, _i, t) => { // a red scan line sweeps down the figure
-      const scan = 1.45 - ((t / 2800) % 1) * 2.95;
-      return Math.abs(p.y - scan) < 0.022 ? { ...p, red: true } : p;
-    },
-    under: dottedWall,
+    move: (p, t) => (Math.abs(p.y - scanLineY(t)) < SCAN_LINE_THICKNESS ? { ...p, red: true } : p),
+    drawBehind: dottedWall,
   };
 }

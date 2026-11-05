@@ -1,91 +1,123 @@
 import type { Art } from "@/lib/content";
 import { createBloom } from "./bloom";
+import { fillSquare } from "./canvas";
 import { makeCamera } from "./camera";
-import { N, ROLE_MS } from "./constants";
-import { rnd, wrap } from "./math";
+import { PIXEL_COUNT, ROLE_MS } from "./constants";
+import { clamp01, easeToward, seededRandom, wrapAngle } from "./math";
 import { depthAlpha, isLightColor, litAlpha } from "./shading";
 import { SHAPES } from "./shapes";
-import type { Draw } from "./types";
+import type { Draw, Shape } from "./types";
 
 export type Engine = ReturnType<typeof createEngine>;
 
-/**
- * The picture's engine: one set of N pixels on `canvas`, easing toward the current shape each frame.
- * No React and no timers: whoever owns it calls `frame(dt)` (see PixelArt.tsx). With `reduce` set, every frame
- * shows the shape finished and still.
- */
+const EASE_KEPT_PER_FRAME = 0.925;
+const FRAME_MS = 16.7;
+const THEME_CHECK_EVERY = 30;
+const FORMING_STARTS_MS = 500;
+const FORMING_MS = 900;
+const MAX_PIXEL_RATIO = 2;
+const CONTOUR_GROWTH = 1.25;
+const RED_GROWTH = 1.4;
+const MIN_GLOW = 0.02;
+
+function scatteredStart() {
+  const x = new Float32Array(PIXEL_COUNT), y = new Float32Array(PIXEL_COUNT), z = new Float32Array(PIXEL_COUNT);
+  for (let i = 0; i < PIXEL_COUNT; i++) {
+    x[i] = (seededRandom(i) - 0.5) * 10;
+    y[i] = (seededRandom(i + 1) - 0.5) * 3;
+    z[i] = (seededRandom(i + 2) - 0.5) * 2;
+  }
+  return { x, y, z };
+}
+
 export function createEngine(canvas: HTMLCanvasElement, art: Art, reduce: boolean) {
   const ctx = canvas.getContext("2d")!;
   const addGlow = createBloom();
-  const pos = new Float32Array(N * 3); // start scattered, so the first shape forms out of loose pixels
-  for (let i = 0; i < N; i++) [pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]] = [(rnd(i) - 0.5) * 10, (rnd(i + 1) - 0.5) * 3, (rnd(i + 2) - 0.5) * 2];
-  const sx = new Float32Array(N), sy = new Float32Array(N), alpha = new Float32Array(N), dot = new Float32Array(N);
-  let yaw = 0, tilt = 0, scale = 0, glow = 0, ink = "#eeece8", red = "#ef4444", darkGround = true;
-  let tick = 0, t = 0;
+  const position = scatteredStart();
+  const screenX = new Float32Array(PIXEL_COUNT), screenY = new Float32Array(PIXEL_COUNT);
+  const alpha = new Float32Array(PIXEL_COUNT), dotSize = new Float32Array(PIXEL_COUNT);
+  const camera = { yaw: 0, tilt: 0, scale: 0, glow: 0 };
+  const colors = { ink: "#eeece8", red: "#ef4444", darkGround: true };
+  let frameCount = 0, t = 0;
 
-  /** Read the theme's ink and accent from CSS. */
-  const readColors = () => {
-    const cs = getComputedStyle(canvas);
-    ink = cs.getPropertyValue("--ink").trim() || ink;
-    red = cs.getPropertyValue("--brand").trim() || red;
-    darkGround = isLightColor(ink);
+  const readThemeColors = () => {
+    const style = getComputedStyle(canvas);
+    colors.ink = style.getPropertyValue("--ink").trim() || colors.ink;
+    colors.red = style.getPropertyValue("--brand").trim() || colors.red;
+    colors.darkGround = isLightColor(colors.ink);
   };
 
-  /** Draw the next frame, `dt` ms after the last. */
-  const frame = (dt: number) => {
-    const sh = SHAPES[art];
-    t = reduce ? ROLE_MS : t + dt;
-    if (tick++ % 30 === 0) readColors(); // every 30th frame is plenty to catch a theme switch
-    const k = reduce ? 1 : 1 - Math.pow(0.925, dt / 16.7); // frame-rate independent ease toward the target
-    yaw += wrap(sh.yaw(t) - yaw) * k;
-    tilt += ((typeof sh.tilt === "function" ? sh.tilt(t) : sh.tilt) - tilt) * k;
-    glow += ((sh.glow ?? 0) - glow) * k;
+  const easeRate = (dt: number) => (reduce ? 1 : 1 - Math.pow(EASE_KEPT_PER_FRAME, dt / FRAME_MS));
 
-    const W = canvas.width, H = canvas.height, size = Math.max(1.5, H / 110);
-    const fitScale = Math.min((H * 0.4) / (sh.half ?? 1), (W * 0.46) / sh.span);
-    scale = scale ? scale + (fitScale - scale) * k : fitScale;
-    const { project, view } = makeCamera(W, H, scale, yaw, tilt);
-    const settle = reduce ? 1 : Math.max(0, Math.min(1, (t - 500) / 900));
-    const d: Draw = { ctx, W, H, t, settle, sx, sy, project, ink, red, size };
+  const formed = () => (reduce ? 1 : clamp01((t - FORMING_STARTS_MS) / FORMING_MS));
 
-    ctx.clearRect(0, 0, W, H);
-    sh.under?.(d);
-    const reds: number[] = [];
-    for (let i = 0; i < N; i++) {
-      let p = sh.points[i];
-      if (sh.live) p = sh.live(p, i, t);
-      pos[i * 3] += (p.x - pos[i * 3]) * k;
-      pos[i * 3 + 1] += (p.y - pos[i * 3 + 1]) * k;
-      pos[i * 3 + 2] += (p.z - pos[i * 3 + 2]) * k;
-      const [x, y, persp, z2] = project(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2], p.spin);
-      const a = p.a ?? 1;
-      sx[i] = x; sy[i] = y;
-      alpha[i] = p.n ? litAlpha(view(p.n), a, darkGround) : depthAlpha(z2, a, !!sh.hill && !darkGround);
-      dot[i] = size * persp * (a > 1 ? 1.25 : 1);
-      if (p.red) reds.push(i);
+  const easeCamera = (shape: Shape, rate: number, width: number, height: number) => {
+    camera.yaw += wrapAngle(shape.yaw(t) - camera.yaw) * rate;
+    camera.tilt = easeToward(camera.tilt, shape.tilt(t), rate);
+    camera.glow = easeToward(camera.glow, shape.glow ?? 0, rate);
+    const fitScale = Math.min((height * 0.4) / (shape.halfHeight ?? 1), (width * 0.46) / shape.halfWidth);
+    camera.scale = camera.scale ? easeToward(camera.scale, fitScale, rate) : fitScale;
+    return makeCamera(width, height, camera.scale, camera.yaw, camera.tilt);
+  };
+
+  const placePixels = (shape: Shape, rate: number, { project, view }: ReturnType<typeof makeCamera>, pixelSize: number) => {
+    const redPixels: number[] = [];
+    const printedShadow = !!shape.hillshaded && !colors.darkGround;
+    for (let i = 0; i < PIXEL_COUNT; i++) {
+      const p = shape.move ? shape.move(shape.points[i], t) : shape.points[i];
+      position.x[i] += (p.x - position.x[i]) * rate;
+      position.y[i] += (p.y - position.y[i]) * rate;
+      position.z[i] += (p.z - position.z[i]) * rate;
+      const onScreen = project(position.x[i], position.y[i], position.z[i]);
+      const brightness = p.brightness ?? 1;
+      screenX[i] = onScreen.x;
+      screenY[i] = onScreen.y;
+      alpha[i] = p.normal ? litAlpha(view(p.normal), brightness, colors.darkGround) : depthAlpha(onScreen.depth, brightness, printedShadow);
+      dotSize[i] = pixelSize * onScreen.perspective * (brightness > 1 ? CONTOUR_GROWTH : 1);
+      if (p.red) redPixels.push(i);
     }
-    ctx.fillStyle = ink;
-    for (let i = 0; i < N; i++) {
+    return redPixels;
+  };
+
+  const paintPixels = (redPixels: number[]) => {
+    ctx.fillStyle = colors.ink;
+    for (let i = 0; i < PIXEL_COUNT; i++) {
       ctx.globalAlpha = alpha[i];
-      ctx.fillRect(sx[i] - dot[i] / 2, sy[i] - dot[i] / 2, dot[i], dot[i]);
+      fillSquare(ctx, screenX[i], screenY[i], dotSize[i]);
     }
-    ctx.fillStyle = red;
+    ctx.fillStyle = colors.red;
     ctx.globalAlpha = 1;
-    for (const i of reds) { const r = dot[i] * 1.4; ctx.fillRect(sx[i] - r / 2, sy[i] - r / 2, r, r); }
-    sh.over?.(d);
-    if (glow > 0.02 && darkGround && W > 0) addGlow(ctx, W, H, glow); // dark theme only
+    for (const i of redPixels) fillSquare(ctx, screenX[i], screenY[i], dotSize[i] * RED_GROWTH);
+  };
+
+  const frame = (dt: number) => {
+    const shape = SHAPES[art];
+    t = reduce ? ROLE_MS : t + dt;
+    if (frameCount++ % THEME_CHECK_EVERY === 0) readThemeColors();
+    const rate = easeRate(dt);
+    const width = canvas.width, height = canvas.height, pixelSize = Math.max(1.5, height / 110);
+    const view = easeCamera(shape, rate, width, height);
+    const d: Draw = { ctx, width, height, t, formed: formed(), screenX, screenY, project: view.project, ink: colors.ink, red: colors.red, pixelSize };
+
+    ctx.clearRect(0, 0, width, height);
+    shape.drawBehind?.(d);
+    paintPixels(placePixels(shape, rate, view, pixelSize));
+    shape.drawInFront?.(d);
+    if (camera.glow > MIN_GLOW && colors.darkGround && width > 0) addGlow(ctx, width, height, camera.glow);
     ctx.globalAlpha = 1;
   };
 
   return {
     frame,
-    /** Switch to another role's picture: its clock restarts and the pixels start moving there. */
-    show(next: Art) { art = next; t = 0; frame(0); },
-    /** Match the canvas to its CSS size (sharp on high-density screens, up to 2×). */
+    show(next: Art) {
+      art = next;
+      t = 0;
+      frame(0);
+    },
     resize() {
-      const dpr = Math.min(2, window.devicePixelRatio || 1);
-      canvas.width = canvas.clientWidth * dpr;
-      canvas.height = canvas.clientHeight * dpr;
+      const pixelRatio = Math.min(MAX_PIXEL_RATIO, window.devicePixelRatio || 1);
+      canvas.width = canvas.clientWidth * pixelRatio;
+      canvas.height = canvas.clientHeight * pixelRatio;
       frame(0);
     },
   };

@@ -1,40 +1,51 @@
-import { N } from "./constants";
-import { unit } from "./math";
-import type { Pt } from "./types";
+import { PIXEL_COUNT } from "./constants";
+import { GOLDEN_ANGLE, normalize, times, type Vec3 } from "./math";
+import type { Ellipsoid, Pt } from "./types";
 
-/** Exactly N points from any list, by even up- or down-sampling, so every shape has the same pixel count. */
-export const fit = (pts: Pt[]) => Array.from({ length: N }, (_, i) => pts[Math.floor((i * pts.length) / N)]);
+const INSIDE = 0.97;
 
-/** n points spread evenly over an ellipsoid's surface (a Fibonacci sphere), centre c, radii r. */
-export const ellipsoid = (n: number, c: number[], r: number[], extra: Partial<Pt> = {}): Pt[] =>
-  Array.from({ length: n }, (_, i) => {
-    const y = 1 - (2 * (i + 0.5)) / n, rr = Math.sqrt(1 - y * y), th = i * 2.399963;
-    return { x: c[0] + Math.cos(th) * rr * r[0], y: c[1] + y * r[1], z: c[2] + Math.sin(th) * rr * r[2], spin: true, ...extra };
+export const toPixelCount = (pts: Pt[]) => times(PIXEL_COUNT, (i) => pts[Math.floor((i * pts.length) / PIXEL_COUNT)]);
+
+export const ellipsoid = (count: number, { center: c, radii: r }: Ellipsoid, extra: Partial<Pt> = {}): Pt[] =>
+  times(count, (i) => {
+    const y = 1 - (2 * (i + 0.5)) / count, ringRadius = Math.sqrt(1 - y * y), angle = i * GOLDEN_ANGLE;
+    return { x: c[0] + Math.cos(angle) * ringRadius * r[0], y: c[1] + y * r[1], z: c[2] + Math.sin(angle) * ringRadius * r[2], ...extra };
   });
 
-/** Is p just inside the ellipsoid (centre c, radii r)? Used to drop points one part hides inside another. */
-export const inEllipsoid = (p: Pt, c: number[], r: number[]) => ((p.x - c[0]) / r[0]) ** 2 + ((p.y - c[1]) / r[1]) ** 2 + ((p.z - c[2]) / r[2]) ** 2 < 0.97;
+export const inEllipsoid = (p: Pt, { center: c, radii: r }: Ellipsoid) =>
+  ((p.x - c[0]) / r[0]) ** 2 + ((p.y - c[1]) / r[1]) ** 2 + ((p.z - c[2]) / r[2]) ** 2 < INSIDE;
 
-/** Points on an ellipsoid that pass `keep`, each with its outward surface direction. */
-export const shell = (n: number, c: number[], r: number[], keep: (p: Pt) => boolean): Pt[] =>
-  ellipsoid(n, c, r).filter(keep).map((p) => ({ ...p, n: unit([(p.x - c[0]) / r[0] ** 2, (p.y - c[1]) / r[1] ** 2, (p.z - c[2]) / r[2] ** 2]) }));
+const ellipsoidNormal = (p: Pt, { center: c, radii: r }: Ellipsoid) =>
+  normalize([(p.x - c[0]) / r[0] ** 2, (p.y - c[1]) / r[1] ** 2, (p.z - c[2]) / r[2] ** 2]);
 
-/** A rounded box (a superellipsoid: exponent 2 is an ellipsoid, higher is boxier), with surface directions. */
-export const roundBox = (n: number, c: number[], r: number[], p: number, extra: Partial<Pt> = {}): Pt[] =>
-  ellipsoid(n, [0, 0, 0], [1, 1, 1]).map(({ x, y, z }) => {
-    const k = (Math.abs(x / r[0]) ** p + Math.abs(y / r[1]) ** p + Math.abs(z / r[2]) ** p) ** (-1 / p);
-    const g = (v: number, rr: number) => (Math.sign(v) * Math.abs(v / rr) ** (p - 1)) / rr;
-    return { x: c[0] + x * k, y: c[1] + y * k, z: c[2] + z * k, spin: true, n: unit([g(x * k, r[0]), g(y * k, r[1]), g(z * k, r[2])]), ...extra };
+export const shell = (count: number, shape: Ellipsoid, keep: (p: Pt) => boolean): Pt[] =>
+  ellipsoid(count, shape).filter(keep).map((p) => ({ ...p, normal: ellipsoidNormal(p, shape) }));
+
+const UNIT_SPHERE: Ellipsoid = { center: [0, 0, 0], radii: [1, 1, 1] };
+
+const superellipsoidSum = (x: number, y: number, z: number, r: Vec3, power: number) =>
+  Math.abs(x / r[0]) ** power + Math.abs(y / r[1]) ** power + Math.abs(z / r[2]) ** power;
+
+export const inRoundBox = (p: Pt, radii: Vec3, power: number) => superellipsoidSum(p.x, p.y, p.z, radii, power) < INSIDE;
+
+export const roundBox = (count: number, c: Vec3, r: Vec3, power: number, extra: Partial<Pt> = {}): Pt[] =>
+  ellipsoid(count, UNIT_SPHERE).map(({ x, y, z }) => {
+    const toSurface = superellipsoidSum(x, y, z, r, power) ** (-1 / power);
+    const gradient = (v: number, radius: number) => (Math.sign(v) * Math.abs(v / radius) ** (power - 1)) / radius;
+    const sx = x * toSurface, sy = y * toSurface, sz = z * toSurface;
+    return { x: c[0] + sx, y: c[1] + sy, z: c[2] + sz, normal: normalize([gradient(sx, r[0]), gradient(sy, r[1]), gradient(sz, r[2])]), ...extra };
   });
 
-/** Turn a point and its surface direction about a vertical axis through (cx, cz), the same way the camera's yaw turns. */
-export const turn = (p: Pt, ang: number, cx: number, cz: number): Pt => {
-  const c = Math.cos(ang), s = Math.sin(ang), x = p.x - cx, z = p.z - cz;
-  return { ...p, x: cx + x * c + z * s, z: cz - x * s + z * c, n: p.n && [p.n[0] * c + p.n[2] * s, p.n[1], -p.n[0] * s + p.n[2] * c] };
+export const turn = (p: Pt, angle: number, cx: number, cz: number): Pt => {
+  const c = Math.cos(angle), s = Math.sin(angle), x = p.x - cx, z = p.z - cz;
+  const normal = p.normal && [p.normal[0] * c + p.normal[2] * s, p.normal[1], -p.normal[0] * s + p.normal[2] * c];
+  return { ...p, x: cx + x * c + z * s, z: cz - x * s + z * c, normal };
 };
 
-/** Roll a point about a horizontal (front-to-back) axis through (cx, cy), the way a wheel turns. */
-export const roll = (p: Pt, ang: number, cx: number, cy: number): Pt => {
-  const c = Math.cos(ang), s = Math.sin(ang), x = p.x - cx, y = p.y - cy;
-  return { ...p, x: cx + x * c - y * s, y: cy + x * s + y * c, n: p.n && [p.n[0] * c - p.n[1] * s, p.n[0] * s + p.n[1] * c, p.n[2]] };
+export const roll = (p: Pt, angle: number, cx: number, cy: number): Pt => {
+  const c = Math.cos(angle), s = Math.sin(angle), x = p.x - cx, y = p.y - cy;
+  const normal = p.normal && [p.normal[0] * c - p.normal[1] * s, p.normal[0] * s + p.normal[1] * c, p.normal[2]];
+  return { ...p, x: cx + x * c - y * s, y: cy + x * s + y * c, normal };
 };
+
+export const placeAt = (p: Pt, [px, py, pz]: Vec3, scale = 1): Pt => ({ ...p, x: p.x * scale + px, y: p.y * scale + py, z: p.z * scale + pz });

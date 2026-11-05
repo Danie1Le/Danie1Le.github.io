@@ -1,14 +1,16 @@
-/** Hologram glow: a quarter-size blurred copy of the frame, added back on top of it at `strength` (0-1). */
+const GLOW_OPACITY = 0.85;
+
 export function createBloom() {
-  const bloom = document.createElement("canvas");
-  const bctx = bloom.getContext("2d")!;
-  return (ctx: CanvasRenderingContext2D, W: number, H: number, strength: number) => {
-    bloom.width = Math.max(1, W >> 2); bloom.height = Math.max(1, H >> 2);
-    bctx.filter = "blur(2px)";
-    bctx.drawImage(ctx.canvas, 0, 0, bloom.width, bloom.height);
+  const blurred = document.createElement("canvas");
+  const blurredCtx = blurred.getContext("2d")!;
+  return (ctx: CanvasRenderingContext2D, width: number, height: number, strength: number) => {
+    blurred.width = Math.max(1, width >> 2);
+    blurred.height = Math.max(1, height >> 2);
+    blurredCtx.filter = "blur(2px)";
+    blurredCtx.drawImage(ctx.canvas, 0, 0, blurred.width, blurred.height);
     ctx.globalCompositeOperation = "lighter";
-    ctx.globalAlpha = 0.85 * strength;
-    ctx.drawImage(bloom, 0, 0, W, H);
+    ctx.globalAlpha = GLOW_OPACITY * strength;
+    ctx.drawImage(blurred, 0, 0, width, height);
     ctx.globalCompositeOperation = "source-over";
   };
 }

@@ -1,64 +1,92 @@
+import { fillSquare, tracePath } from "../../canvas";
+import { TAU, spread, times } from "../../math";
 import type { Draw } from "../../types";
 import type { Agent } from "./agents";
-import { COLS, ROWS, SUMMIT, gx, gy, gz } from "./grid";
+import { COLS, ROWS, SUMMIT, columnX, heightAt, rowZ } from "./grid";
 
-// What's drawn over the map's pixels: its mesh, the goal's beacon, and the agents' paths.
+const ABOVE_GROUND = 0.03;
+const FLAG_POLE_HEIGHT = 0.9;
+const RIPPLE_MS = 1400;
+const RING_RADIUS = 0.2;
+const RIPPLE_SPREAD = 0.5;
+const RING_SEGMENTS = 32;
+const TRAIL_FADE = [0.15, 0.3, 0.5, 0.8];
 
-/** Screen position of a grid cell, just above the ground. */
-const cell = ({ project }: Draw, i: number, j: number) => project(gx(i), gy(i, j) + 0.03, gz(j));
+const cell = ({ project }: Draw, i: number, j: number) => project(columnX(i), heightAt(i, j) + ABOVE_GROUND, rowZ(j));
 
-/** The surface mesh, through the pixels themselves (every other row). */
-export function drawMesh({ ctx, sx, sy, settle, ink, size }: Draw) {
+export function drawMesh({ ctx, screenX, screenY, formed, ink, pixelSize }: Draw) {
   ctx.strokeStyle = ink;
-  ctx.lineWidth = Math.max(1, size * 0.3);
-  ctx.globalAlpha = 0.08 * settle;
+  ctx.lineWidth = Math.max(1, pixelSize * 0.3);
+  ctx.globalAlpha = 0.08 * formed;
   ctx.beginPath();
-  for (let j = 0; j < ROWS; j += 2) for (let i = 0; i < COLS; i++) (i ? ctx.lineTo : ctx.moveTo).call(ctx, sx[j * COLS + i], sy[j * COLS + i]);
+  for (let j = 0; j < ROWS; j += 2) tracePath(ctx, times(COLS, (i) => ({ x: screenX[j * COLS + i], y: screenY[j * COLS + i] })));
   ctx.stroke();
 }
 
-/** The goal: a red flag on the summit, with a ring rippling out from it. */
 export function drawBeacon(d: Draw) {
-  const { ctx, t, settle, project, red, size } = d;
-  const [bx, by] = cell(d, SUMMIT[0], SUMMIT[1]), [, topY] = project(gx(SUMMIT[0]), gy(SUMMIT[0], SUMMIT[1]) + 0.9, gz(SUMMIT[1]));
-  const ripple = (t % 1400) / 1400;
-  const ring = (rr: number, alpha: number) => {
-    ctx.globalAlpha = settle * alpha;
+  const { ctx, t, formed, project, red, pixelSize } = d;
+  const [summitColumn, summitRow] = SUMMIT;
+  const summitX = columnX(summitColumn), summitY = heightAt(summitColumn, summitRow), summitZ = rowZ(summitRow);
+  const base = cell(d, summitColumn, summitRow), top = project(summitX, summitY + FLAG_POLE_HEIGHT, summitZ);
+  const ripple = (t % RIPPLE_MS) / RIPPLE_MS;
+
+  const ring = (radius: number, alpha: number) => {
+    ctx.globalAlpha = formed * alpha;
     ctx.beginPath();
-    for (let k = 0; k <= 32; k++) {
-      const u = (k / 32) * Math.PI * 2;
-      const [x, y] = project(gx(SUMMIT[0]) + Math.cos(u) * rr, gy(SUMMIT[0], SUMMIT[1]), gz(SUMMIT[1]) + Math.sin(u) * rr);
-      k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-    }
+    tracePath(ctx, spread(RING_SEGMENTS + 1, (fraction) => {
+      const angle = fraction * TAU;
+      return project(summitX + Math.cos(angle) * radius, summitY, summitZ + Math.sin(angle) * radius);
+    }));
     ctx.stroke();
   };
+
+  const pole = () => {
+    ctx.globalAlpha = formed;
+    ctx.beginPath();
+    ctx.moveTo(base.x, base.y);
+    ctx.lineTo(base.x, top.y);
+    ctx.stroke();
+  };
+
+  const flag = () => {
+    const size = pixelSize * 4.2;
+    ctx.fillStyle = red;
+    ctx.beginPath();
+    ctx.moveTo(base.x, top.y);
+    ctx.lineTo(base.x + size * 1.6, top.y + size * 0.55);
+    ctx.lineTo(base.x, top.y + size * 1.1);
+    ctx.fill();
+  };
+
   ctx.strokeStyle = red;
-  ctx.lineWidth = Math.max(1.5, size * 0.6);
-  ring(0.2, 0.9);
-  ring(0.2 + 0.5 * ripple, 1 - ripple);
-  ctx.globalAlpha = settle;
-  ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx, topY); ctx.stroke(); // the pole
-  ctx.fillStyle = red;
-  const f = size * 4.2;
-  ctx.beginPath(); ctx.moveTo(bx, topY); ctx.lineTo(bx + f * 1.6, topY + f * 0.55); ctx.lineTo(bx, topY + f * 1.1); ctx.fill(); // its flag
+  ctx.lineWidth = Math.max(1.5, pixelSize * 0.6);
+  ring(RING_RADIUS, 0.9);
+  ring(RING_RADIUS + RIPPLE_SPREAD * ripple, 1 - ripple);
+  pole();
+  flag();
 }
 
-/** The agents' paths, fading toward their oldest steps, and each agent's current square. */
+function trailSlice(trail: number[][], quarter: number) {
+  const from = Math.floor((quarter * trail.length) / 4);
+  const to = Math.min(trail.length - 1, Math.floor(((quarter + 1) * trail.length) / 4));
+  return trail.slice(from, to + 1);
+}
+
 export function drawPaths(d: Draw, agents: Agent[]) {
-  const { ctx, settle, red, size } = d;
+  const { ctx, formed, red, pixelSize } = d;
   ctx.strokeStyle = red;
   ctx.fillStyle = red;
-  ctx.lineWidth = Math.max(1.5, size * 0.7);
+  ctx.lineWidth = Math.max(1.5, pixelSize * 0.7);
   ctx.lineJoin = "round";
-  [0.15, 0.3, 0.5, 0.8].forEach((alpha, q) => {
-    ctx.globalAlpha = alpha * settle;
+  TRAIL_FADE.forEach((alpha, quarter) => {
+    ctx.globalAlpha = alpha * formed;
     ctx.beginPath();
-    for (const { trail } of agents) {
-      const from = Math.floor((q * trail.length) / 4), to = Math.min(trail.length - 1, Math.floor(((q + 1) * trail.length) / 4));
-      for (let n = from; n <= to; n++) { const [x, y] = cell(d, trail[n][0], trail[n][1]); n > from ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
-    }
+    for (const { trail } of agents) tracePath(ctx, trailSlice(trail, quarter).map(([i, j]) => cell(d, i, j)));
     ctx.stroke();
   });
-  ctx.globalAlpha = settle;
-  for (const ag of agents) { const [x, y] = cell(d, ag.i, ag.j), s = size * 2.6; ctx.fillRect(x - s / 2, y - s / 2, s, s); }
+  ctx.globalAlpha = formed;
+  for (const agent of agents) {
+    const { x, y } = cell(d, agent.column, agent.row);
+    fillSquare(ctx, x, y, pixelSize * 2.6);
+  }
 }

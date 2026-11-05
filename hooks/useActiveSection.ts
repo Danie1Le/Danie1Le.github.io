@@ -1,18 +1,17 @@
+import { observeIntersections } from "@/lib/observe";
 import { useEffect, useState } from "react";
 
-/** The id of the section crossing the upper third of the screen (the first id until one does). */
+const UPPER_THIRD_OF_SCREEN = "-35% 0px -60% 0px";
+
 export function useActiveSection(ids: string[]) {
   const [active, setActive] = useState(ids[0]);
   useEffect(() => {
-    const spy = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && setActive(entry.target.id)),
-      { rootMargin: "-35% 0px -60% 0px" }
+    const sections = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => el !== null);
+    return observeIntersections(
+      sections,
+      (entry) => entry.isIntersecting && setActive(entry.target.id),
+      { rootMargin: UPPER_THIRD_OF_SCREEN }
     );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) spy.observe(el);
-    });
-    return () => spy.disconnect();
   }, [ids]);
   return active;
 }

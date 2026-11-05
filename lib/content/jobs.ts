@@ -7,7 +7,7 @@ export interface Job {
   details: string[];
   skills: string[];
   current: boolean;
-  previewImage?: string; // a poster, opened from the eye button beside the title
+  poster?: string;
 }
 
 export const jobs: Job[] = [
@@ -29,7 +29,7 @@ export const jobs: Job[] = [
     ],
     skills: ["Python", "Docling", "RapidOCR", "pytest", "Docker", "Azure DevOps", "Vue.js", "TypeScript", "C#"],
     current: true,
-    previewImage: "/Intern_Project.png",
+    poster: "/Intern_Project.png",
   },
   {
     title: "Undergraduate Machine Learning Researcher",
@@ -45,7 +45,7 @@ export const jobs: Job[] = [
     ],
     skills: ["Python", "Keras", "NumPy", "Deep Learning", "EEG"],
     current: true,
-    previewImage: "/ML_EEG_Research.png",
+    poster: "/ML_EEG_Research.png",
   },
   {
     title: "Computer Science Grader",
@@ -56,7 +56,6 @@ export const jobs: Job[] = [
     details: [
       "Maintained 100% on-time grading delivery by evaluating 25-30 weekly data structures assignments",
       "Improved programming skills for 25 students by providing targeted code review and debugging support"
-
     ],
     skills: ["Data Structures", "Code Review", "Debugging", "C"],
     current: false,
@@ -90,6 +89,6 @@ export const jobs: Job[] = [
     ],
     skills: ["C#", ".NET", "Python", "Machine Learning", "Genetic Algorithms"],
     current: false,
-    previewImage: "/ML_Research.png",
+    poster: "/ML_Research.png",
   },
 ];

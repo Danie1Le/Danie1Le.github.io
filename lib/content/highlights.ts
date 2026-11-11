@@ -9,8 +9,8 @@ export const highlights: Highlight[] = [
   {
     where: "Framatome", art: "pages",
     metrics: [
-      { value: 95, unit: "%", label: "of page-number errors caught before engineering documents are submitted" },
-      { value: 99, unit: "%", label: "of unmarked blank pages detected from OCR signals" },
+      { value: 95, unit: "%", label: "accuracy flagging compliance errors in engineering documents, including scanned and rotated pages" },
+      { value: 86, unit: "%", label: "pytest coverage on check logic, measured against a 300-document regression suite" },
       { value: 55, unit: "%", label: "less deployment setup time with automated Docker releases" },
       { value: 60, unit: "%", label: "less time to find active checks in the review UI" },
     ],
@@ -18,9 +18,9 @@ export const highlights: Highlight[] = [
   {
     where: "EEG research", art: "signal",
     metrics: [
-      { value: 94, unit: "%", label: "accuracy telling audio from visual attention in unseen subjects" },
-      { value: 52, unit: "%", label: "less steering flicker from a real-time averaging predictor" },
-      { value: 85, unit: "%", label: "leave-one-sitting-out accuracy, up from 81% after fixing feature scaling" },
+      { value: 85, unit: "%", label: "accuracy on unseen sessions telling whether a driver is focusing on sound or sight" },
+      { value: 64, unit: "%", label: "less steering jitter from a real-time averaging predictor" },
+      { value: 100, unit: "%", label: "pytest coverage on the real-time predictor" },
     ],
   },
   {

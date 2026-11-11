@@ -18,16 +18,14 @@ export const jobs: Job[] = [
     location: "Lynchburg, VA",
     description: "AI & Automations Team",
     details: [
-      "Flagged page-number errors in engineering documents before submission with 95% accuracy by leading development of a Python precheck that validates PDFs against compliance standards using Docling",
-      "Recovered page numbers from scanned and misoriented documents by building a rotation-aware OCR fallback using RapidOCR when sparse Docling output could not be validated reliably",
-      "Detected unmarked blank pages with 99% accuracy by validating content and required notation using OCR signals",
-      "Validated AI check output before deployment with a 300-document JSON regression suite and pytest unit tests",
-      "Reduced deployment setup time by 55% via automated Docker releases to UAT and production using Azure DevOps",
-      "Resolved UAT edge cases in page numbering and blank-page handling by partnering with stakeholders for feedback",
-      "Cut time to locate active checks by 60% through a review UI that surfaces them first using Vue.js/TypeScript",
-      "Eliminated redirect errors for signed-in users by fixing authentication defects in a C# document-upload API"
+      "Flagged compliance errors in engineering documents, such as page numbering, with 95%+ accuracy across all checks, including scanned and rotated pages, by designing and building a Docling-based Python precheck with RapidOCR",
+      "Measured check accuracy by building a 300-document JSON regression suite, with 86% pytest coverage on check logic",
+      "Reduced deployment setup time by 55% via automated Docker releases to UAT and production in Azure DevOps",
+      "Cut time to locate active checks by 60% through a review UI that surfaces them first using Vue/TypeScript",
+      "Resolved UAT edge cases in page-number and blank-page checks by working directly with customers and engineers",
+      "Eliminated redirect errors for signed-in users by fixing authentication defects in a C#/.NET document-upload API"
     ],
-    skills: ["Python", "Docling", "RapidOCR", "pytest", "Docker", "Azure DevOps", "Vue.js", "TypeScript", "C#"],
+    skills: ["Python", "Docling", "RapidOCR", "pytest", "Docker", "Azure DevOps", "Vue.js", "TypeScript", "C#", ".NET"],
     current: true,
     poster: "/Intern_Project.png",
   },
@@ -38,12 +36,12 @@ export const jobs: Job[] = [
     location: "Portland, OR",
     description: "EEG Brain-Computer Interface",
     details: [
-      "Achieved 94% accuracy on 2 held-out subjects classifying audio vs. visual attention for the team's brain-controlled RC car by training a Conv1D network on 8-channel EEG data using Keras",
-      "Exposed random-split leakage inflating accuracy from 73% to 100% with leave-one-sitting-out validation in NumPy",
-      "Improved leave-one-sitting-out accuracy from 81% to 85% by fixing a feature-scaling flaw via ablation studies",
-      "Lowered replayed steering flicker by 52% with a real-time averaging predictor in Python, backed by 57 unit tests"
+      "Achieved 85% accuracy on unseen recording sessions detecting whether a driver is focusing on sound or sight to steer the team's brain-controlled RC car by training a Keras CNN on 8-channel OpenBCI EEG signals",
+      "Exposed data leakage behind a reported 98.5% accuracy by re-scoring it with leave-one-sitting-out cross-validation",
+      "Fixed an input-scaling bug that dropped a held-out sitting to chance by comparing per-electrode and shared scaling",
+      "Lowered steering jitter 64% on unseen sessions via a real-time averaging Python predictor at 100% pytest coverage"
     ],
-    skills: ["Python", "Keras", "NumPy", "Deep Learning", "EEG"],
+    skills: ["Python", "Keras", "NumPy", "Deep Learning", "EEG", "pytest"],
     current: true,
     poster: "/ML_EEG_Research.png",
   },

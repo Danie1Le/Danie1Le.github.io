@@ -13,6 +13,22 @@ export const isVideo = (url: string) => url.endsWith(".mp4");
 
 export const projects: Project[] = [
   {
+    title: "Rocket Telemetry Monitor",
+    description: "Streaming pipeline that ingests 1,500 simulated rocket readings per second and autoscales its workers on Kubernetes.",
+    images: ["/Telemetry_Monitor.png"],
+    alt: "Chart of queue depth and worker replicas during a 10-minute load test",
+    tech: ["Java", "Spring Boot", "Python", "AWS", "Kubernetes", "Terraform"],
+    github: "https://github.com/Danie1Le/Telemetry-Monitor",
+  },
+  {
+    title: "Dropoff",
+    description: "Food-delivery backend of three Spring Boot services that trade Kafka events, handling up to 50 orders per second.",
+    images: ["/Dropoff.png"],
+    alt: "Grafana dashboard of order throughput during a k6 load test",
+    tech: ["Java", "Spring Boot", "Kafka", "PostgreSQL", "Redis", "Docker"],
+    github: "https://github.com/Danie1Le/Dropoff",
+  },
+  {
     title: "Dr. Mole",
     description: "AI-powered mobile app for detecting skin cancer over time. Placed 3rd in Health & Wellness track and 6th overall at HackUP.",
     images: ["/Dr_Mole.png"],

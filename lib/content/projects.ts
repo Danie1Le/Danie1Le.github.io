@@ -14,7 +14,7 @@ export const isVideo = (url: string) => url.endsWith(".mp4");
 export const projects: Project[] = [
   {
     title: "Dropoff",
-    description: "Food-delivery backend of three Spring Boot services that trade Kafka events, handling 50 orders per second without losing an event across forced crashes.",
+    description: "Food-delivery backend of three Spring Boot services that trade Kafka events, handling up to 50 orders per second.",
     images: ["/Dropoff.png"],
     tech: ["Java", "Spring Boot", "Kafka", "PostgreSQL", "Redis", "Docker"],
     github: "https://github.com/Danie1Le/Dropoff",

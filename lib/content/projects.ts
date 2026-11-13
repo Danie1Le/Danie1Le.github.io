@@ -13,6 +13,13 @@ export const isVideo = (url: string) => url.endsWith(".mp4");
 
 export const projects: Project[] = [
   {
+    title: "Dropoff",
+    description: "Food-delivery backend of three Spring Boot services that trade Kafka events, handling 50 orders per second without losing an event across forced crashes.",
+    images: ["/Dropoff.png"],
+    tech: ["Java", "Spring Boot", "Kafka", "PostgreSQL", "Redis", "Docker"],
+    github: "https://github.com/Danie1Le/Dropoff",
+  },
+  {
     title: "Dr. Mole",
     description: "AI-powered mobile app for detecting skin cancer over time. Placed 3rd in Health & Wellness track and 6th overall at HackUP.",
     images: ["/Dr_Mole.png"],

@@ -14,8 +14,9 @@ export const isVideo = (url: string) => url.endsWith(".mp4");
 export const projects: Project[] = [
   {
     title: "Rocket Telemetry Monitor",
-    description: "Streaming pipeline that ingests 1,500 simulated rocket sensor readings per second, autoscales its workers on Kubernetes and raises alerts on sensor faults.",
+    description: "Streaming pipeline that ingests 1,500 simulated rocket readings per second and autoscales its workers on Kubernetes.",
     images: ["/Telemetry_Monitor.png"],
+    alt: "Chart of queue depth and worker replicas during a 10-minute load test",
     tech: ["Java", "Spring Boot", "Python", "AWS", "Kubernetes", "Terraform"],
     github: "https://github.com/Danie1Le/Telemetry-Monitor",
   },
